@@ -22,8 +22,10 @@ public:
     ~Tank();
     float getCapicaity();
     void setTankTrim(float value);
-    int setShipId(int id);
-    int setTankCapacity(TankInfo info);
+    void setShipId(int id);
+    void setTankId(int id);
+    void setTankName(QString name);
+    void  setTankCapacity(TankInfo info);
 
 signals :
     int tryQueryBankInfo(int shipId , int tankId,float sounding);
@@ -37,6 +39,8 @@ private:
     float capacity;
 
     int shipId ;
+    int tankId;
+    QString tankName;
 
     QLabel *labelName ;
     QLabel *labelEqual ;

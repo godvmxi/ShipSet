@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 #include <sqlutils.h>
 #include <QString>
+#include <QVector>
 namespace Ui {
 class MainWindow;
 }
@@ -27,7 +28,10 @@ private:
     QHBoxLayout *layoutCommon ;
 
     int shipNumber;
-    Tank *widgetTankItems;
+    int shipId;
+    ShipInfo shipInfo;
+//    Tank *widgetTankItems;
+    QVector<Tank> *widgetTankItems;
 
 
 

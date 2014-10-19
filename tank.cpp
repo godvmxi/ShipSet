@@ -38,10 +38,18 @@ float Tank::getCapicaity()
 void Tank::setTankTrim(float value){
     this->trim = value;
 }
-int Tank::setShipId( int id){
+void Tank::setShipId( int id){
     this->shipId = id;
 }
-int Tank::setTankCapacity(TankInfo info)
+void Tank::setTankId( int id){
+    this->tankId = id;
+}
+void Tank::setTankName( QString name){
+    this->tankName = name;
+    this->labelName->setText(name);
+}
+
+void  Tank::setTankCapacity(TankInfo info)
 {
-    return true;
+    return ;
 }
