@@ -22,7 +22,7 @@ signals:
 
 public slots:
     ShipInfo queryShipInfo(int shipId);
-    TankInfo queryTankCapicity(int shipId,int tankId,float sounding);
+    TankInfo queryTankInfo(int shipId,int tankId,float sounding);
 
 private :
     QString      dbName;

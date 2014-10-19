@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->sqlCore =  new sqlUtils();
     this->sqlCore->setDbFile("ship.db");
     this->sqlCore->queryShipInfo(0);
+    this->sqlCore->queryTankInfo(1,2,5);
 
 }
 

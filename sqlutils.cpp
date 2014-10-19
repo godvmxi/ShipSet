@@ -58,7 +58,7 @@ ShipInfo sqlUtils::queryShipInfo(int shipId){
     return info;
 }
 
-TankInfo sqlUtils::queryTankCapicity(int shipId,int tankId,float sounding){
+TankInfo sqlUtils::queryTankInfo(int shipId,int tankId,float sounding){
     TankInfo info;
     QSqlQuery query(this->db);
     QString sql = QString("SELECT * FROM tankInfo where shipId = %1").arg(shipId);
