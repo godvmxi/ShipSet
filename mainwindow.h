@@ -6,6 +6,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <sqlutils.h>
+#include <QString>
 namespace Ui {
 class MainWindow;
 }

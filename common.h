@@ -1,22 +1,26 @@
 #ifndef COMMON_H
 #define COMMON_H
 #include <QString>
+#include <QDate>
 #define MAX_CAPACITY_PER_TANK    20
 typedef struct {
+    int shipId;
     QString crt;
     QString shipName;
-    int tankNumberr;
+    int tankNumber;
     int capacityNumber;
     float shipTrimMin;\
-    float shipStep;
-    QString finalDate;
+    float shipTrimStep;
+    QDate finalDate;
 }ShipInfo;
 
 typedef struct {
+    int shipId;
     int tankId;
-    float sounding;
+    int sounding;
     float  capacity[MAX_CAPACITY_PER_TANK];
 }TankInfo;
-
+void showTankInfo(TankInfo *info);
+void showShipInfo(ShipInfo *info);
 
 #endif // COMMON_H

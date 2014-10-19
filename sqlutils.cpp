@@ -19,8 +19,8 @@ int sqlUtils::setDbFile(QString fileName){
         exit(1);
     }
     qDebug()<<"open db success";
-    QSqlQuery query(this->db);
-    qDebug()<<query.exec("SELECT * FROM info ; ");
+
+
 
 
 
@@ -31,11 +31,52 @@ int sqlUtils::setDbFile(QString fileName){
    else{
         qDebug()<<"support not size ";
    }
-   while(query.next()) {
-       qDebug()<<query.value(0).toString();
-   }
-        qDebug()<<"end sqlite";
-
 
     return true;
+}
+
+ShipInfo sqlUtils::queryShipInfo(int shipId){
+    ShipInfo info;
+    QSqlQuery query(this->db);
+    QString sql = QString("SELECT * FROM shipInfo where shipId = %1").arg(shipId);
+    qDebug()<< sql;
+    query.exec(sql);
+
+    while(query.next()) {
+
+        qDebug()<<query.value(0) << query.value(1)<< query.value(2)<< query.value(3)<< query.value(4)<< query.value(5)<< query.value(6)<< query.value(7);
+        info.shipId = query.value(0).toInt();
+        info.crt = query.value(1).toString();
+        info.shipName = query.value(2).toString();
+        info.tankNumber = query.value(3).toInt();
+        info.capacityNumber = query.value(4).toInt();
+        info.shipTrimMin = query.value(5).toFloat();
+        info.shipTrimStep = query.value(6).toFloat();
+        info.finalDate = query.value(7).toDate();
+    }
+    showShipInfo(&info);
+    return info;
+}
+
+TankInfo sqlUtils::queryTankCapicity(int shipId,int tankId,float sounding){
+    TankInfo info;
+    QSqlQuery query(this->db);
+    QString sql = QString("SELECT * FROM tankInfo where shipId = %1").arg(shipId);
+    qDebug()<< sql;
+    query.exec(sql);
+
+
+    while(query.next()) {
+
+//        qDebug()<<query.value(0) << query.value(1)<< query.value(2)<< query.value(3)<< query.value(4)<< query.value(5)<< query.value(6)<< query.value(7);
+        info.shipId = query.value(0).toInt();
+        info.tankId = query.value(1).toInt();
+        info.sounding = query.value(2).toInt();
+        for(int i = 0;i<13;i++){
+            info.capacity[i]  = query.value(3+i ).toInt();
+        }
+    }
+    showTankInfo(&info);
+    return info;
+
 }

@@ -5,6 +5,7 @@
 #include <QString>
 #include <QSqlDatabase>
 #include <QSqlDriver>
+#include "common.h"
 
 class sqlUtils : public QObject
 {
@@ -13,16 +14,18 @@ public:
     explicit sqlUtils(QObject *parent = 0);
     int setDbFile(QString fileName);
 
+
 signals:
-    int queryShipInfo();
-    int queryTankCapicity(int tankId,float sounding);
+
 
 
 
 public slots:
+    ShipInfo queryShipInfo(int shipId);
+    TankInfo queryTankCapicity(int shipId,int tankId,float sounding);
 
 private :
-    QString dbName;
+    QString      dbName;
     QSqlDatabase db;
 
 };

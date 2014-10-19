@@ -6,6 +6,7 @@
 #include <QLineEdit>
 #include <QHBoxLayout>
 #include <QString>
+#include "common.h"
 
 
 namespace Ui {
@@ -21,6 +22,11 @@ public:
     ~tank();
     float getCapicaity();
     void setTankTrim(float value);
+    int setShipId(int id);
+    int setTankCapacity(TankInfo info);
+
+signals :
+    int tryQueryBankInfo(int shipId , int tankId,float sounding);
 
 private:
 
@@ -29,6 +35,8 @@ private:
     float trim ;
 
     float capacity;
+
+    int shipId ;
 
     QLabel *labelName ;
     QLabel *labelEqual ;

@@ -15,7 +15,8 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     tank.cpp \
-    sqlutils.cpp
+    sqlutils.cpp \
+    common.cpp
 
 HEADERS  += mainwindow.h \
     tank.h \

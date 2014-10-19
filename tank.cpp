@@ -24,6 +24,7 @@ tank::tank(QWidget *parent,QString name) :
 
     this->setLayout(this->mainLayout);
     this->lineEditTrim->setEnabled(false);
+    this->shipId = 0;
 }
 
 tank::~tank()
@@ -36,4 +37,11 @@ float tank::getCapicaity()
 }
 void tank::setTankTrim(float value){
     this->trim = value;
+}
+int tank::setShipId( int id){
+    this->shipId = id;
+}
+int tank::setTankCapacity(TankInfo info)
+{
+    return true;
 }
