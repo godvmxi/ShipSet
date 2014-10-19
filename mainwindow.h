@@ -22,11 +22,14 @@ public:
 private:
     Ui::MainWindow *ui;
     sqlUtils *sqlCore;
-    tank *tank_1;
-    tank *tank_2;
-    tank *tank_3;
+
     QVBoxLayout *mainLayout;
     QHBoxLayout *layoutCommon ;
+
+    int shipNumber;
+    Tank *widgetTankItems;
+
+
 
 
 

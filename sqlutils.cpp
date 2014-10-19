@@ -80,3 +80,17 @@ TankInfo sqlUtils::queryTankInfo(int shipId,int tankId,float sounding){
     return info;
 
 }
+
+int sqlUtils::queryShipNumber(void){
+    QSqlQuery query(this->db);
+    QString sql = QString("SELECT * FROM shipInfo");
+    qDebug()<< sql;
+    query.exec(sql);
+    int result = 0 ;
+    while(query.next()) {
+        result++;
+    }
+    qDebug()<<"ship number -> " <<result;
+    return result ;
+
+}

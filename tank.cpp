@@ -1,7 +1,7 @@
 #include "tank.h"
 
 
-tank::tank(QWidget *parent,QString name) :
+Tank::Tank(QWidget *parent,QString name) :
     QWidget(parent)
 {
     this->labelName = new QLabel("");
@@ -27,21 +27,21 @@ tank::tank(QWidget *parent,QString name) :
     this->shipId = 0;
 }
 
-tank::~tank()
+Tank::~Tank()
 {
 
 }
-float tank::getCapicaity()
+float Tank::getCapicaity()
 {
     return this->capacity;
 }
-void tank::setTankTrim(float value){
+void Tank::setTankTrim(float value){
     this->trim = value;
 }
-int tank::setShipId( int id){
+int Tank::setShipId( int id){
     this->shipId = id;
 }
-int tank::setTankCapacity(TankInfo info)
+int Tank::setTankCapacity(TankInfo info)
 {
     return true;
 }

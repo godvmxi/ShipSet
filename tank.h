@@ -10,16 +10,16 @@
 
 
 namespace Ui {
-class tank;
+class Tank;
 }
 
-class tank : public QWidget
+class Tank : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit tank(QWidget *parent = 0,QString name =tr("NULL"));
-    ~tank();
+    explicit Tank(QWidget *parent = 0,QString name =tr("NULL"));
+    ~Tank();
     float getCapicaity();
     void setTankTrim(float value);
     int setShipId(int id);
