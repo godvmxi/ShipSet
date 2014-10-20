@@ -9,7 +9,7 @@ typedef struct {
     QString shipName;
     int tankNumber;
     int capacityNumber;
-    float shipTrimMin;\
+    float shipTrimMin;
     float shipTrimStep;
     QDate finalDate;
 }ShipInfo;
