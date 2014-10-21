@@ -30,11 +30,11 @@ public:
     void  setTankCapacity(TankInfo info);
 
 signals :
-    int tryQueryBankInfo(int shipId , int tankId,int sounding);
+    void tryQueryBankInfo(int shipId , int tankId,int sounding);
 
 public slots:
     bool setTankInfo(TankInfo info);
-    bool updateTankInfo(void);
+    void updateTankInfo(void);
 private:
 
     int sounding ;

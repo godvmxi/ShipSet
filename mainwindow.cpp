@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
         }
 
         itemTank->setTankName(tankName);
-        itemTank->setTankId(i);
+        itemTank->setTankId(i+1);
         itemTank->setShipId(this->shipId);
         this->mainLayout->addWidget(itemTank);
         this->widgetTankItems[i] = (size_t)itemTank;

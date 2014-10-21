@@ -15,8 +15,8 @@ Tank::Tank(QWidget *parent) :
     this->lineEditTrim  = new QLineEdit();
     this->lineEditCapacity = new QLineEdit();
 
-    this->regExpValidatorTemperature  = new QRegExpValidator(QRegExp("^(-?\d+)(\.\d+)?$" ));
-    this->regExpValidatorSounding   = new QRegExpValidator(QRegExp("^\d+(\.\d+)?$"));
+//    this->regExpValidatorTemperature  = new QRegExpValidator(QRegExp("^(-?\d+)(\.\d+)?$" ));
+//    this->regExpValidatorSounding   = new QRegExpValidator(QRegExp("^\d+(\.\d+)?$"));
 //    this->lineEditSounding->setValidator(this->regExpValidatorSounding);
 //    this->lineEditTemrature->setValidator(this->regExpValidatorTemperature);
 
@@ -39,7 +39,6 @@ Tank::Tank(QWidget *parent) :
     this->lineEditTrim->setEnabled(false);
     this->shipId = 0;
     connect(this->pushButtonEqual,SIGNAL(clicked()),this,SLOT(updateTankInfo()) );
-//    connect(this->lineEditTemrature,SIGNAL(textChanged(QString)),this,SLOT(updateTankInfo()));
 }
 
 Tank::~Tank()
@@ -75,18 +74,19 @@ bool Tank::setTankInfo(TankInfo info){
    qDebug()<<"receive my tankInfo" <<this->shipId<<this->tankId;
    return true;
 }
-bool Tank::updateTankInfo(void)
+void Tank::updateTankInfo(void)
 {
     QString stringTemperature = this->lineEditTemrature->text();
     QString stringSounding =  this->lineEditSounding->text();
     if (stringTemperature.size() == 0 || stringSounding == 0){
         qDebug()<<"temp or sounding can not be empty";
-        return false;
+        return ;
     }
     this->temprature = stringTemperature.toFloat();
     this->sounding =int  (stringSounding.toFloat() * 1000);
-    qDebug()<<"try get capacity -> "<< this->sounding<<this->temprature;
+    qDebug()<<"try get capacity -> "<<this->shipId<<this->tankId<< this->sounding<<this->temprature;
 
     emit this->tryQueryBankInfo(this->shipId,this->tankId,this->sounding);
-    return true;
+    qDebug()<<"emit update tank info over";
+    return ;
 }

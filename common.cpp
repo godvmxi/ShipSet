@@ -2,14 +2,14 @@
 #include <QDebug>
 
 void showTankInfo(TankInfo *info){
-    qDebug()<<"Show ship info ";
+    qDebug()<<"Show tank info ";
     qDebug()<<"shipId         "<< info->shipId;
 
     qDebug()<<"shipName       "<< info->tankId;
     qDebug()<<"tankNumber     "<< info->sounding;
-//    for(int i = 0 ;i<13;i++){
-//        qDebug()<<"capcacity_"<< i << info->capacity[i];
-//    }
+    for(int i = 0 ;i<13;i++){
+        qDebug()<<"capcacity_"<< i << info->capacity[i];
+    }
     qDebug()<<"==============";
 }
 void showShipInfo(ShipInfo *info){

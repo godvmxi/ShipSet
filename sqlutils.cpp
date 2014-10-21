@@ -36,7 +36,7 @@ int sqlUtils::setDbFile(QString fileName){
 }
 
 ShipInfo sqlUtils::queryShipInfo(int shipId){
-    ShipInfo info;
+    ShipInfo info = {0};
     QSqlQuery query(this->db);
     QString sql = QString("SELECT * FROM shipInfo where shipId = %1").arg(shipId);
     qDebug()<< sql;
@@ -59,26 +59,32 @@ ShipInfo sqlUtils::queryShipInfo(int shipId){
 }
 
 TankInfo sqlUtils::queryTankInfo(int shipId,int tankId,int sounding){
-    TankInfo info;
+    TankInfo info = {0};
     QSqlQuery query(this->db);
-    QString sql = QString("SELECT * FROM tankInfo where shipId = %1 and tankId = %1 and sounding = %1").arg(shipId).arg(tankId).arg(sounding);
+    QString sql = QString("SELECT * FROM tankInfo where shipId = %1 and tankId = %2 and sounding = %3").arg(shipId).arg(tankId).arg(sounding);
     qDebug()<< sql;
     query.exec(sql);
 
 
     while(query.next()) {
 
-//        qDebug()<<query.value(0) << query.value(1)<< query.value(2)<< query.value(3)<< query.value(4)<< query.value(5)<< query.value(6)<< query.value(7);
+        qDebug()<<query.value(0) << query.value(1)<< query.value(2)<< query.value(3);
         info.shipId = query.value(0).toInt();
         info.tankId = query.value(1).toInt();
         info.sounding = query.value(2).toInt();
-//        for(int i = 0;i<13;i++){
-//            info.capacity[i]  = query.value(3+i ).toInt();
-//        }
+        QString temp = query.value(3).toString();
+        QStringList capacitys =  temp.split(" ");
+        qDebug() << temp;
+        qDebug()<<capacitys;
+
+        for (int i = 0;i<capacitys.size();i++){
+            info.capacity[i] = capacitys.at(i).toFloat();
+            qDebug()<< i<<capacitys.at(i)  << info.capacity[i];
+        }
+
     }
     showTankInfo(&info);
     return info;
-
 }
 
 int sqlUtils::queryShipNumber(void){
