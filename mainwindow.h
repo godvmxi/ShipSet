@@ -10,6 +10,7 @@
 #include <QVector>
 #include "common.h"
 #include <QDoubleSpinBox>
+#include <QScrollArea>
 namespace Ui {
 class MainWindow;
 }
@@ -48,6 +49,9 @@ private:
 //    QVector<Tank> widgetTankItems;
     size_t widgetTankItems[24];
 
+    QScrollArea *scrollAreaTankItemsTable;
+    QWidget *widgetTankItemsTable ;
+    QVBoxLayout *vBoxLayoutTankItemsTable;
 
     //widget head info
     QLabel *labelCrt ;

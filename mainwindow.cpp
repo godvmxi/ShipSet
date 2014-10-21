@@ -12,7 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->mainLayout =  new QVBoxLayout();
-    this->setFixedWidth(440);
+    this->setFixedWidth(480);
+    this->setFixedHeight(500);
 
 
 
@@ -27,9 +28,14 @@ MainWindow::MainWindow(QWidget *parent) :
     this->addWidgeHeadInfo();
     this->mainLayout->addWidget(this->widgetHeadInfo);
     this->labelTableTitle = new QLabel();
-    this->labelTableTitle->setText(QString::fromUtf8("  舱     室       测深高度          舱室温度                                  舱室容量"));
+    this->labelTableTitle->setText(QString::fromUtf8("     舱     室       测深高度          舱室温度                                  舱室容量"));
     this->mainLayout->addWidget(this->labelTableTitle);
 
+    this->widgetTankItemsTable = new QWidget();
+    this->widgetTankItemsTable->setFixedWidth(440);
+    this->vBoxLayoutTankItemsTable = new QVBoxLayout();
+    this->scrollAreaTankItemsTable = new QScrollArea();
+    this->scrollAreaTankItemsTable->setFixedWidth(460);
 
     QString left = QString::fromUtf8("左 ");
     QString right = QString::fromUtf8("右 ");
@@ -61,12 +67,16 @@ MainWindow::MainWindow(QWidget *parent) :
         itemTank->setTankName(tankName);
         itemTank->setTankId(i+1);
         itemTank->setShipId(this->shipId);
-        this->mainLayout->addWidget(itemTank);
+        this->vBoxLayoutTankItemsTable->addWidget(itemTank);
         this->widgetTankItems[i] = (size_t)itemTank;
         //connect
 
         connect(itemTank,SIGNAL(tryQueryBankInfo(int,int)),this,SLOT(queryTankInfoSlot(int,int)));
     }
+    this->widgetTankItemsTable->setLayout(this->vBoxLayoutTankItemsTable);
+    this->scrollAreaTankItemsTable->setWidget(this->widgetTankItemsTable);
+    this->mainLayout->addWidget(this->scrollAreaTankItemsTable);
+
     this->addWidgeFootInfo();
     this->mainLayout->addWidget(this->widgetFootInfo);
     ui->centralWidget->setLayout(this->mainLayout);
@@ -87,7 +97,7 @@ void MainWindow::addWidgeHeadInfo(void){
     this->widgetHeadInfo = new QWidget();
     this->hBoxLayoutHeadInfo = new QHBoxLayout();
 
-    this->labelCrt->setText(QString::fromUtf8("证书号 : ")+this->shipInfo.crt);
+    this->labelCrt->setText(QString::fromUtf8("  证书号 : ")+this->shipInfo.crt);
     this->labelShipName->setText(QString::fromUtf8("船名 : ")+this->shipInfo.shipName);
     this->labelTrim->setText(QString::fromUtf8("纵倾值 : "));
     this->labelTrim->setFixedWidth(60);
@@ -223,7 +233,7 @@ void MainWindow::shipTrimChanged(QString d){
 
 void MainWindow::pushButtonCalTotalCapacity(void){
     qDebug()<<"cal total capacity";
-//    qDebug()<<this->geometry();
+    qDebug()<<this->geometry();
     float totalCapacity = 0;
     float eachCapacity = 0;
     Tank *tank;
