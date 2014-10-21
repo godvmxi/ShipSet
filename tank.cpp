@@ -39,7 +39,11 @@ Tank::Tank(QWidget *parent) :
     this->lineEditTrim->setEnabled(false);
     this->shipId = 0;
     connect(this->pushButtonEqual,SIGNAL(clicked()),this,SLOT(updateTankInfo()) );
+
+    this->lineEditSounding->setText("4.200");
+    this->lineEditTemrature->setText("37.5");
 }
+
 
 Tank::~Tank()
 {
@@ -58,6 +62,8 @@ void Tank::setShipId( int id){
 void Tank::setTankId( int id){
     this->tankId = id;
 }
+
+
 void Tank::setTankName( QString name){
     this->tankName = name;
     this->labelName->setText(name);
@@ -69,9 +75,11 @@ void  Tank::setTankCapacity(TankInfo info)
     return ;
 }
 bool Tank::setTankInfo(TankInfo info){
-   if( info.tankId != this->tankId && info.shipId != this->shipId )
+    if( (info.tankId != this->tankId) || ( info.shipId != this->shipId ) )
        return false;
    qDebug()<<"receive my tankInfo" <<this->shipId<<this->tankId;
+
+
    return true;
 }
 void Tank::updateTankInfo(void)
@@ -86,7 +94,16 @@ void Tank::updateTankInfo(void)
     this->sounding =int  (stringSounding.toFloat() * 1000);
     qDebug()<<"try get capacity -> "<<this->shipId<<this->tankId<< this->sounding<<this->temprature;
 
-    emit this->tryQueryBankInfo(this->shipId,this->tankId,this->sounding);
-    qDebug()<<"emit update tank info over";
+    emit this->tryQueryBankInfo(this->tankId,this->sounding);
+//    qDebug()<<"emit update tank info over";
     return ;
 }
+int Tank::getTankId(void){
+   return this->tankId;
+}
+void Tank:: setTankCapacity(float value)
+{
+    this->capacity =  value ;
+    this->lineEditCapacity->setText(QString("%1").arg(value));
+}
+

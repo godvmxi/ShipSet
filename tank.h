@@ -28,9 +28,13 @@ public:
     void setTankId(int id);
     void setTankName(QString name);
     void  setTankCapacity(TankInfo info);
+    void  setTankCapacity(float value);
+
+    int getTankId(void);
 
 signals :
     void tryQueryBankInfo(int shipId , int tankId,int sounding);
+    void tryQueryBankInfo(int tankId,int sounding);
 
 public slots:
     bool setTankInfo(TankInfo info);

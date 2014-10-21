@@ -54,7 +54,7 @@ ShipInfo sqlUtils::queryShipInfo(int shipId){
         info.shipTrimStep = query.value(6).toFloat();
         info.finalDate = query.value(7).toDate();
     }
-    showShipInfo(&info);
+//    showShipInfo(&info);
     return info;
 }
 
@@ -62,28 +62,29 @@ TankInfo sqlUtils::queryTankInfo(int shipId,int tankId,int sounding){
     TankInfo info = {0};
     QSqlQuery query(this->db);
     QString sql = QString("SELECT * FROM tankInfo where shipId = %1 and tankId = %2 and sounding = %3").arg(shipId).arg(tankId).arg(sounding);
-    qDebug()<< sql;
+//    qDebug()<< sql;
     query.exec(sql);
 
 
     while(query.next()) {
 
-        qDebug()<<query.value(0) << query.value(1)<< query.value(2)<< query.value(3);
+//        qDebug()<<query.value(0) << query.value(1)<< query.value(2)<< query.value(3);
         info.shipId = query.value(0).toInt();
         info.tankId = query.value(1).toInt();
         info.sounding = query.value(2).toInt();
         QString temp = query.value(3).toString();
         QStringList capacitys =  temp.split(" ");
-        qDebug() << temp;
-        qDebug()<<capacitys;
+//        qDebug() << temp;
+//        qDebug()<<capacitys;
 
         for (int i = 0;i<capacitys.size();i++){
             info.capacity[i] = capacitys.at(i).toFloat();
-            qDebug()<< i<<capacitys.at(i)  << info.capacity[i];
+//            qDebug()<< i<<capacitys.at(i)  << info.capacity[i];
         }
 
     }
-    showTankInfo(&info);
+//    showTankInfo(&info);
+    emit this->reportTankInfo(info);
     return info;
 }
 
