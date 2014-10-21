@@ -30,12 +30,8 @@ private:
     int shipNumber;
     int shipId;
     ShipInfo shipInfo;
-//    Tank *widgetTankItems;
-    QVector<Tank> *widgetTankItems;
 
-
-
-
+    QVector<Tank> widgetTankItems;
 
 
 

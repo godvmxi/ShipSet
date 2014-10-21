@@ -1,11 +1,11 @@
 #include "tank.h"
 
 
-Tank::Tank(QWidget *parent,QString name) :
+Tank::Tank(QWidget *parent) :
     QWidget(parent)
 {
     this->labelName = new QLabel("");
-    this->labelName->setText(name);
+//    this->labelName->setText(name);
     this->labelName->setFixedWidth(80);
     this->labelEqual = new QLabel("  -->  ");
     this->lineEditSounding = new QLineEdit();

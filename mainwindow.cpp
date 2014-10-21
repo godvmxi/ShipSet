@@ -11,17 +11,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->shipId = 0;
     this->sqlCore =  new sqlUtils();
-    this->sqlCore->setDbFile("ship.db");
+    this->sqlCore->setDbFile("ships.db");
     this->shipNumber = this->sqlCore->queryShipNumber();
     this->shipInfo = this->sqlCore->queryShipInfo(this->shipId);
 
-    this->widgetTankItems =  new QVector<Tank>(this->shipInfo.tankNumber);
+
 
     for(int i = 0 ; i< this->shipInfo.tankNumber;i++)
     {
         int tankId = i /2 + 1;
         QString tankName ;
-        Tank temp = (*this->widgetTankItems)[i];
+        Tank *temp = new Tank();
 
         if(i%2 == 0){
             tankName = QString("左 %1 舱").arg(tankId);
@@ -30,10 +30,11 @@ MainWindow::MainWindow(QWidget *parent) :
             tankName = QString("右 %1 舱").arg(tankId);
         }
 
-        temp.setTankName(tankName);
-        temp.setTankId(i);
-        temp.setShipId(this->shipId);
-        this->mainLayout->addWidget(&((*this->widgetTankItems)[i] ));
+        temp->setTankName(tankName);
+        temp->setTankId(i);
+        temp->setShipId(this->shipId);
+        this->mainLayout->addWidget(temp);
+//        this->widgetTankItems.append(*temp);
     }
 //    for(int i = 0;i<this->shipInfo.tankNumber;i++){
 //        this->mainLayout->addWidget( &((*this->widgetTankItems)[i] ));

@@ -18,7 +18,7 @@ class Tank : public QWidget
     Q_OBJECT
 
 public:
-    explicit Tank(QWidget *parent = 0,QString name =tr("NULL"));
+    explicit Tank(QWidget *parent = 0);
     ~Tank();
     float getCapicaity();
     void setTankTrim(float value);
