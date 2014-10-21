@@ -8,6 +8,7 @@
 #include <sqlutils.h>
 #include <QString>
 #include <QVector>
+#include "common.h"
 namespace Ui {
 class MainWindow;
 }
