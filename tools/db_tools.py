@@ -92,7 +92,7 @@ def add_ship_info(fileName):
     for line in bufs :
         if line[0] == "#":
             continue
-        line = line.replace("\n","").replace("\r",'').replace(" ","")
+        line = line.replace("\n","").replace("\r",'').replace(" ","").replace(codecs.BOM_UTF8,"") 
         if len(line) > 0:
             lines.append(line)
     pprint.pprint( lines)
@@ -140,14 +140,70 @@ def add_ship_info(fileName):
     db_cursor.execute(sql)
     db_conn.commit()
     db_cursor.close()
+    db_conn.close()
         
         
 
 def add_tank_info(fileName):
-    pass
+    fd = open(fileName,'r')
+    db_conn = init_db_file(result_db_file)
+    db_cursor =db_conn.cursor()
+    line = fd.readline()
+    line = line.replace("\n","").replace("\r",'').replace(" ","").replace(codecs.BOM_UTF8,"") 
+
+
+    shipId =  int(line,10)
+
+    line = fd.readline()
+
+    line = line.replace("\n","").replace("\r",'').replace(" ","")
+    
+    tankId =  int(line)
+    print( "ship tank info -> %s  %s"%(shipId,tankId) )
+    lines =  fd.readlines()
+    for line in lines :
+
+        if line[0] == "#":
+            continue
+        line = line.replace("\n","").replace("\r",'')
+        if len(line) == 0:
+            continue
+        dat = line.split()
+        sounding = int (float(dat[0] ) * 1000 )
+        sql = "SELECT * FROM tankInfo WHERE shipId = %s and tankId = %s and sounding = %s"%(shipId,tankId,sounding )
+        db_cursor.execute(sql)
+        result = db_cursor.fetchall()
+        if len(result)!= 0:
+            sql = "DELETE FROM tankInfo WHERE shipId = %s and tankId = %s and sounding = %s"%(shipId,tankId,sounding )
+            db_cursor.execute(sql)
+        capacitys = " ".join(dat[3:])
+        print("update info -> %s %s  %s  %s"%(shipId,tankId,sounding,capacitys )) 
+        sql = '''INSERT INTO tankInfo VALUES(%s,%s,%s,"%s") ;'''%(shipId,tankId,sounding,capacitys)
+        db_cursor.execute(sql)
+        
+    db_conn.commit()
+    db_cursor.close()
+    db_conn.close()
+   
 def del_ship_info(shipId):
+    db_conn = init_db_file(result_db_file)
+    db_cursor =db_conn.cursor()
+    sql = "DELETE FROM shipInfo where shipId = %s"%shipId
+    db_cursor.execute(sql)
+    db_conn.commit()
+    db_cursor.close()
+    db_conn.close()
+    
     pass
 def del_tank_info(shipId,tankId):
+    db_conn = init_db_file(result_db_file)
+    db_cursor =db_conn.cursor()
+    sql = "DELETE FROM tankInfo where shipId = %s and tankId"%(shipId,tankId)
+    db_cursor.execute(sql)
+    db_conn.commit()
+    db_cursor.close()
+    db_conn.close()
+    
     pass
     fd =  open(fileName,'r')
     for i in range(0,6) :
@@ -179,6 +235,8 @@ if __name__ == "__main__" :
             pass
         pass
     elif sys.argv[1] == "--help" :
+        print help
+    else :
         print help
     sys.exit(0)
     shipId = int(sys.argv[1])
