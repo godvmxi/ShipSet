@@ -8,7 +8,7 @@ Tank::Tank(QWidget *parent) :
 {
     this->labelName = new QLabel("");
 //    this->labelName->setText(name);
-    this->labelName->setFixedWidth(80);
+    this->labelName->setFixedWidth(60);
     this->labelEqual = new QLabel("  -->  ");
     this->lineEditSounding = new QLineEdit();
     this->lineEditTemrature = new QLineEdit();
@@ -42,6 +42,7 @@ Tank::Tank(QWidget *parent) :
 
     this->lineEditSounding->setText("4.200");
     this->lineEditTemrature->setText("37.5");
+    this->lineEditCapacity->setText("0");
 }
 
 

@@ -25,9 +25,11 @@ public:
 public slots :
     void queryTankInfoSlot(int tankId,int sounding);
     void shipTrimChanged(QString d);
+    void pushButtonCalTotalCapacity(void);
 
 private:
     void addWidgeHeadInfo(void);
+    void addWidgeFootInfo(void);
     void updateWidgetTankTrim(void);
     float queryTankCapacity(int tankId,int sounding);
     Ui::MainWindow *ui;
@@ -52,12 +54,17 @@ private:
     QLabel *labelShipName ;
     QLabel *labelTrim ;
     QDoubleSpinBox *doubleSpinBoxTrim ;
-    QLabel *labelFinalDate;
+
     QWidget *widgetHeadInfo;
     QHBoxLayout *hBoxLayoutHeadInfo ;
     //widget table title
-
-    //widget result
+    QLabel   *labelTableTitle;
+    //widget foot info
+    QLabel *labelFinalDate;
+    QPushButton *pushButtonTotalCapacity;
+    QLabel *labelTotalCapacity;
+    QHBoxLayout *hBoxLayoutFootInfo ;
+    QWidget *widgetFootInfo;
 };
 
 #endif // MAINWINDOW_H

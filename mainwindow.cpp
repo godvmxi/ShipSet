@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->mainLayout =  new QVBoxLayout();
+    this->setFixedWidth(440);
 
 
 
@@ -21,8 +22,14 @@ MainWindow::MainWindow(QWidget *parent) :
     this->shipNumber = this->sqlCore->queryShipNumber();
     this->shipInfo = this->sqlCore->queryShipInfo(this->shipId);
 
+
+
     this->addWidgeHeadInfo();
     this->mainLayout->addWidget(this->widgetHeadInfo);
+    this->labelTableTitle = new QLabel();
+    this->labelTableTitle->setText(QString::fromUtf8("  舱     室       测深高度          舱室温度                                  舱室容量"));
+    this->mainLayout->addWidget(this->labelTableTitle);
+
 
     QString left = QString::fromUtf8("左 ");
     QString right = QString::fromUtf8("右 ");
@@ -60,6 +67,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
         connect(itemTank,SIGNAL(tryQueryBankInfo(int,int)),this,SLOT(queryTankInfoSlot(int,int)));
     }
+    this->addWidgeFootInfo();
+    this->mainLayout->addWidget(this->widgetFootInfo);
     ui->centralWidget->setLayout(this->mainLayout);
 }
 
@@ -74,7 +83,7 @@ void MainWindow::addWidgeHeadInfo(void){
     this->labelShipName = new QLabel();
     this->labelTrim = new QLabel();
     this->doubleSpinBoxTrim = new QDoubleSpinBox();
-    this->labelFinalDate =  new QLabel();
+
     this->widgetHeadInfo = new QWidget();
     this->hBoxLayoutHeadInfo = new QHBoxLayout();
 
@@ -87,7 +96,7 @@ void MainWindow::addWidgeHeadInfo(void){
     this->doubleSpinBoxTrim->setMaximum(this->shipInfo.shipTrimMin + this->shipInfo.shipTrimStep*this->shipInfo.capacityNumber);
     this->doubleSpinBoxTrim->setFixedWidth(60);
     this->doubleSpinBoxTrim->setValue(this->shipInfo.shipTrimMin);
-    this->labelFinalDate->setText(QString::fromUtf8("有效期 : ")+this->shipInfo.finalDate.toString());
+
 
     this->shipTrimMax = this->shipInfo.shipTrimMin +  this->shipInfo.shipTrimStep * (this->shipInfo.capacityNumber - 1) ;
 
@@ -95,7 +104,7 @@ void MainWindow::addWidgeHeadInfo(void){
     this->hBoxLayoutHeadInfo->addWidget(this->labelShipName);
     this->hBoxLayoutHeadInfo->addWidget(this->labelTrim);
     this->hBoxLayoutHeadInfo->addWidget(this->doubleSpinBoxTrim);
-    this->hBoxLayoutHeadInfo->addWidget(this->labelFinalDate);
+//    this->hBoxLayoutHeadInfo->addWidget(this->labelFinalDate);
 
     this->widgetHeadInfo->setLayout(this->hBoxLayoutHeadInfo);
     connect(this->doubleSpinBoxTrim,SIGNAL(valueChanged(QString)),this,SLOT(shipTrimChanged(QString)) );
@@ -103,6 +112,30 @@ void MainWindow::addWidgeHeadInfo(void){
 
 
 }
+void MainWindow::addWidgeFootInfo(void){
+    this->pushButtonTotalCapacity = new QPushButton();
+    this->pushButtonTotalCapacity->setText(QString::fromUtf8("   总容量  "));
+    this->labelTotalCapacity = new QLabel();
+    this->labelTotalCapacity->setText("      0.000");
+    this->labelTotalCapacity->setFixedWidth(100);
+
+    this->labelFinalDate =  new QLabel();
+    this->labelFinalDate->setText(QString::fromUtf8("软件有效期 : ")+this->shipInfo.finalDate.toString("dd/MM/yyyy"));
+    this->widgetFootInfo =  new QWidget();
+    this->hBoxLayoutFootInfo = new QHBoxLayout();
+
+    this->labelFinalDate->setFixedWidth(400);
+
+    this->hBoxLayoutFootInfo->addWidget(this->labelFinalDate);
+    this->hBoxLayoutFootInfo->addWidget(this->pushButtonTotalCapacity);
+    this->hBoxLayoutFootInfo->addWidget(this->labelTotalCapacity);
+    this->hBoxLayoutFootInfo->setAlignment(Qt::AlignRight);
+    this->widgetFootInfo->setLayout(this->hBoxLayoutFootInfo);
+
+    connect(this->pushButtonTotalCapacity,SIGNAL(clicked()),this,SLOT(pushButtonCalTotalCapacity()) );
+
+}
+
 void MainWindow::updateWidgetTankTrim(void){
 
 }
@@ -181,4 +214,9 @@ void MainWindow::shipTrimChanged(QString d){
     }
     this->currentShipTrim = trim;
 //    qDebug()<<"ship trim changed ->" <<d  << this->currentShipTrim;
+}
+
+void MainWindow::pushButtonCalTotalCapacity(void){
+    qDebug()<<"cal total capacity";
+    qDebug()<<this->geometry();
 }
