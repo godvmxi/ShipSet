@@ -28,8 +28,8 @@ Tank::Tank(QWidget *parent) :
     this->mainLayout->addWidget(this->labelName);
     this->mainLayout->addWidget(this->lineEditSounding);
     this->mainLayout->addWidget(this->lineEditTemrature);
-    this->mainLayout->addWidget(this->lineEditTrim);
-    this->mainLayout->addWidget(this->labelEqual);
+//    this->mainLayout->addWidget(this->lineEditTrim);
+//    this->mainLayout->addWidget(this->labelEqual);
     this->mainLayout->addWidget(this->pushButtonEqual);
     this->mainLayout->addWidget(this->lineEditCapacity);
 
@@ -103,7 +103,10 @@ int Tank::getTankId(void){
 }
 void Tank:: setTankCapacity(float value)
 {
-    this->capacity =  value ;
-    this->lineEditCapacity->setText(QString("%1").arg(value));
+    double dat =  value;
+    double new_value = value *(1+2*0.0002*((double)this->temprature -20));
+    this->capacity =  new_value ;
+    qDebug()<<"Tank-> "<<this->tankId <<"old capacity-> "<<value <<new_value;
+    this->lineEditCapacity->setText(QString("%1").arg(new_value));
 }
 

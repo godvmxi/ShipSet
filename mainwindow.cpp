@@ -124,6 +124,8 @@ void MainWindow::queryTankInfoSlot(int tankId,int sounding)
         capacity = this->queryTankCapacity(tankId,sounding);
     }
     Tank *tank =  (Tank *)this->widgetTankItems[tankId - 1];
+    //temprature modify
+
     tank->setTankCapacity(capacity);
 
 
