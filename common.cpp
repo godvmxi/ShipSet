@@ -7,9 +7,9 @@ void showTankInfo(TankInfo *info){
 
     qDebug()<<"shipName       "<< info->tankId;
     qDebug()<<"tankNumber     "<< info->sounding;
-    for(int i = 0 ;i<13;i++){
-        qDebug()<<"capcacity_"<< i << info->capacity[i];
-    }
+//    for(int i = 0 ;i<13;i++){
+//        qDebug()<<"capcacity_"<< i << info->capacity[i];
+//    }
     qDebug()<<"==============";
 }
 void showShipInfo(ShipInfo *info){

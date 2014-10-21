@@ -58,10 +58,10 @@ ShipInfo sqlUtils::queryShipInfo(int shipId){
     return info;
 }
 
-TankInfo sqlUtils::queryTankInfo(int shipId,int tankId,float sounding){
+TankInfo sqlUtils::queryTankInfo(int shipId,int tankId,int sounding){
     TankInfo info;
     QSqlQuery query(this->db);
-    QString sql = QString("SELECT * FROM tankInfo where shipId = %1").arg(shipId);
+    QString sql = QString("SELECT * FROM tankInfo where shipId = %1 and tankId = %1 and sounding = %1").arg(shipId).arg(tankId).arg(sounding);
     qDebug()<< sql;
     query.exec(sql);
 
@@ -72,9 +72,9 @@ TankInfo sqlUtils::queryTankInfo(int shipId,int tankId,float sounding){
         info.shipId = query.value(0).toInt();
         info.tankId = query.value(1).toInt();
         info.sounding = query.value(2).toInt();
-        for(int i = 0;i<13;i++){
-            info.capacity[i]  = query.value(3+i ).toInt();
-        }
+//        for(int i = 0;i<13;i++){
+//            info.capacity[i]  = query.value(3+i ).toInt();
+//        }
     }
     showTankInfo(&info);
     return info;

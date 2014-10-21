@@ -1,4 +1,6 @@
 #include "tank.h"
+#include <QDebug>
+#include <QRegExpValidator>
 
 
 Tank::Tank(QWidget *parent) :
@@ -13,6 +15,14 @@ Tank::Tank(QWidget *parent) :
     this->lineEditTrim  = new QLineEdit();
     this->lineEditCapacity = new QLineEdit();
 
+    this->regExpValidatorTemperature  = new QRegExpValidator(QRegExp("^(-?\d+)(\.\d+)?$" ));
+    this->regExpValidatorSounding   = new QRegExpValidator(QRegExp("^\d+(\.\d+)?$"));
+//    this->lineEditSounding->setValidator(this->regExpValidatorSounding);
+//    this->lineEditTemrature->setValidator(this->regExpValidatorTemperature);
+
+    this->pushButtonEqual = new QPushButton();
+    this->pushButtonEqual->setText("  -->  ");
+
     this->mainLayout = new QHBoxLayout();
 
     this->mainLayout->addWidget(this->labelName);
@@ -20,11 +30,16 @@ Tank::Tank(QWidget *parent) :
     this->mainLayout->addWidget(this->lineEditTemrature);
     this->mainLayout->addWidget(this->lineEditTrim);
     this->mainLayout->addWidget(this->labelEqual);
+    this->mainLayout->addWidget(this->pushButtonEqual);
     this->mainLayout->addWidget(this->lineEditCapacity);
+
+
 
     this->setLayout(this->mainLayout);
     this->lineEditTrim->setEnabled(false);
     this->shipId = 0;
+    connect(this->pushButtonEqual,SIGNAL(clicked()),this,SLOT(updateTankInfo()) );
+//    connect(this->lineEditTemrature,SIGNAL(textChanged(QString)),this,SLOT(updateTankInfo()));
 }
 
 Tank::~Tank()
@@ -51,5 +66,27 @@ void Tank::setTankName( QString name){
 
 void  Tank::setTankCapacity(TankInfo info)
 {
+    qDebug()<<info.shipId<<info.tankId<<info.sounding;
     return ;
+}
+bool Tank::setTankInfo(TankInfo info){
+   if( info.tankId != this->tankId && info.shipId != this->shipId )
+       return false;
+   qDebug()<<"receive my tankInfo" <<this->shipId<<this->tankId;
+   return true;
+}
+bool Tank::updateTankInfo(void)
+{
+    QString stringTemperature = this->lineEditTemrature->text();
+    QString stringSounding =  this->lineEditSounding->text();
+    if (stringTemperature.size() == 0 || stringSounding == 0){
+        qDebug()<<"temp or sounding can not be empty";
+        return false;
+    }
+    this->temprature = stringTemperature.toFloat();
+    this->sounding =int  (stringSounding.toFloat() * 1000);
+    qDebug()<<"try get capacity -> "<< this->sounding<<this->temprature;
+
+    emit this->tryQueryBankInfo(this->shipId,this->tankId,this->sounding);
+    return true;
 }

@@ -21,16 +21,18 @@ MainWindow::MainWindow(QWidget *parent) :
     QString left = QString::fromUtf8("左 ");
     QString right = QString::fromUtf8("右 ");
     QString room = QString::fromUtf8(" 舱");
+
+//    qDebug()<<sizeof(size_t)<<sizeof(size_t *);
+    char numberChar[] = "一二三四五六七八九十";
     for(int i = 0 ; i< this->shipInfo.tankNumber;i++)
     {
         int tankId = i /2 + 1;
         QString tankName ;
-        char name[64];
-        Tank *temp = new Tank();
-        char numberChar[] = "一二三四五六七八九十";
+//        char name[64];
+        Tank *itemTank = new Tank();
         char tmp[32] = {0};
         QString index ;
-        qDebug()<<strlen(numberChar);
+//        qDebug()<<strlen(numberChar);
         if(i%2 == 0){
             tankId -= 1;
             memcpy(tmp,numberChar + tankId*3,3);
@@ -45,20 +47,16 @@ MainWindow::MainWindow(QWidget *parent) :
 //            sprintf(name,"右 %d 舱",tankId);
         }
 
-        temp->setTankName(tankName);
-        temp->setTankId(i);
-        temp->setShipId(this->shipId);
-        this->mainLayout->addWidget(temp);
-//        this->widgetTankItems.append(*temp);
+        itemTank->setTankName(tankName);
+        itemTank->setTankId(i);
+        itemTank->setShipId(this->shipId);
+        this->mainLayout->addWidget(itemTank);
+        this->widgetTankItems[i] = (size_t)itemTank;
+        //connect
+        connect(itemTank,SIGNAL(tryQueryBankInfo(int,int,int)),this->sqlCore,SLOT(queryTankInfo(int,int,int)));
+        connect(this->sqlCore,SIGNAL(reportTankInfo(TankInfo)),itemTank,SLOT(setTankInfo(TankInfo)));
     }
-//    for(int i = 0;i<this->shipInfo.tankNumber;i++){
-//        this->mainLayout->addWidget( &((*this->widgetTankItems)[i] ));
-//    }
-
     ui->centralWidget->setLayout(this->mainLayout);
-
-//    this->sqlCore->queryTankInfo(1,2,5);
-
 }
 
 MainWindow::~MainWindow()

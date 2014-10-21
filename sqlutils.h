@@ -16,14 +16,15 @@ public:
 
 
 signals:
-
+    void reportShipInfo(ShipInfo info);
+    void reportTankInfo(TankInfo info);
 
 
 
 public slots:
     int queryShipNumber(void);
     ShipInfo queryShipInfo(int shipId);
-    TankInfo queryTankInfo(int shipId,int tankId,float sounding);
+    TankInfo queryTankInfo(int shipId,int tankId,int sounding);
 
 private :
     QString      dbName;

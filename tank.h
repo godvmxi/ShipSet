@@ -7,6 +7,8 @@
 #include <QHBoxLayout>
 #include <QString>
 #include "common.h"
+#include <QPushButton>
+#include <QRegExpValidator>
 
 
 namespace Ui {
@@ -28,11 +30,14 @@ public:
     void  setTankCapacity(TankInfo info);
 
 signals :
-    int tryQueryBankInfo(int shipId , int tankId,float sounding);
+    int tryQueryBankInfo(int shipId , int tankId,int sounding);
 
+public slots:
+    bool setTankInfo(TankInfo info);
+    bool updateTankInfo(void);
 private:
 
-    float sounding ;
+    int sounding ;
     float temprature ;
     float trim ;
 
@@ -48,11 +53,12 @@ private:
     QLineEdit *lineEditTemrature;
     QLineEdit *lineEditTrim;
     QLineEdit *lineEditCapacity;
+    QPushButton *pushButtonEqual;
 
     //layout
     QHBoxLayout *mainLayout;
-
-
+    QRegExpValidator *regExpValidatorSounding;
+    QRegExpValidator *regExpValidatorTemperature;
 
 };
 

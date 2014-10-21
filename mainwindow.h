@@ -32,7 +32,8 @@ private:
     int shipId;
     ShipInfo shipInfo;
 
-    QVector<Tank> widgetTankItems;
+//    QVector<Tank> widgetTankItems;
+    size_t widgetTankItems[24];
 
 
 
