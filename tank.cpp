@@ -85,14 +85,9 @@ bool Tank::setTankInfo(TankInfo info){
 }
 void Tank::updateTankInfo(void)
 {
-    QString stringTemperature = this->lineEditTemrature->text();
-    QString stringSounding =  this->lineEditSounding->text();
-    if (stringTemperature.size() == 0 || stringSounding == 0){
-        qDebug()<<"temp or sounding can not be empty";
+    if (this->checkDataValidator() ==  false)
         return ;
-    }
-    this->temprature = stringTemperature.toFloat();
-    this->sounding =int  (stringSounding.toFloat() * 1000);
+
     qDebug()<<"try get capacity -> "<<this->shipId<<this->tankId<< this->sounding<<this->temprature;
 
     emit this->tryQueryBankInfo(this->tankId,this->sounding);
@@ -102,6 +97,10 @@ void Tank::updateTankInfo(void)
 int Tank::getTankId(void){
    return this->tankId;
 }
+int Tank::getSounding(void){
+    return this->sounding;
+}
+
 void Tank:: setTankCapacity(float value)
 {
     double dat =  value;
@@ -110,4 +109,14 @@ void Tank:: setTankCapacity(float value)
     qDebug()<<"Tank-> "<<this->tankId <<"old capacity-> "<<value <<new_value;
     this->lineEditCapacity->setText(QString("%1").arg(new_value));
 }
-
+bool Tank::checkDataValidator(void){
+    QString stringTemperature = this->lineEditTemrature->text();
+    QString stringSounding =  this->lineEditSounding->text();
+    if (stringTemperature.size() == 0 || stringSounding == 0){
+        qDebug()<<"temp or sounding can not be empty";
+        return false;
+    }
+    this->temprature = stringTemperature.toFloat();
+    this->sounding =int  (stringSounding.toFloat() * 1000);
+    return true;
+}

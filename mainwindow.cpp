@@ -150,11 +150,15 @@ void MainWindow::queryTankInfoSlot(int tankId,int sounding)
         qDebug()<<"will query two sounding -> "<<tankId << sounding_1 << sounding_2;
         float capacity_1 = this->queryTankCapacity(tankId,sounding_1);
         float capacity_2 = this->queryTankCapacity(tankId,sounding_2);
+        if((capacity_1 < 0) || capacity_2 < 0)
+            return ;
         capacity = (capacity_2 - capacity_1 ) /10 * temp + capacity_1 ;
         qDebug()<<capacity <<capacity_1<<capacity_2;
     }
     else {
         capacity = this->queryTankCapacity(tankId,sounding);
+        if(capacity< 0)
+            return;
     }
     Tank *tank =  (Tank *)this->widgetTankItems[tankId - 1];
     //temprature modify
@@ -169,10 +173,11 @@ float  MainWindow::queryTankCapacity(int tankId,int sounding)
     TankInfo info = this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding);
     if((info.tankId != tankId ) || (info.shipId != this->shipInfo.shipId) ){
         qDebug()<<"query bank error";
+        QMessageBox::critical(NULL, QString::fromUtf8("数据库错误"), QString::fromUtf8("数据库错误,船只和舱室信息--> ")+QString("%1  %2").arg(shipId).arg(tankId), QMessageBox::Yes, QMessageBox::Yes);
         return -1;
     }
     //cal trim .add soon
-    float temp= (this->currentShipTrim -this->shipInfo.shipTrimMin );
+//    float temp= (this->currentShipTrim -this->shipInfo.shipTrimMin );
     int trimFlag = -1; // 0:正好整除, 1:介于二者之间,具体查看min ~max
     float min = 0;
     float max;
@@ -218,5 +223,30 @@ void MainWindow::shipTrimChanged(QString d){
 
 void MainWindow::pushButtonCalTotalCapacity(void){
     qDebug()<<"cal total capacity";
-    qDebug()<<this->geometry();
+//    qDebug()<<this->geometry();
+    float totalCapacity = 0;
+    float eachCapacity = 0;
+    Tank *tank;
+    for(int i = 0;i<this->shipInfo.tankNumber;i++){
+        tank = (Tank *)( this->widgetTankItems[i] );
+        if (tank->checkDataValidator()){
+            int tankId = tank->getTankId();
+            int sounding = tank->getSounding();
+            qDebug()<<"foreach-->"<<tankId<<sounding ;
+            eachCapacity =  this->queryTankCapacity(tankId,sounding);
+            if( eachCapacity >= 0){
+                tank->setTankCapacity(eachCapacity);
+                qDebug()<<"foreach-->"<<tankId<<sounding<<eachCapacity;
+                totalCapacity += eachCapacity;
+            }
+            else {
+                qDebug()<<"abort";
+                return;
+                break;
+
+            }
+        }
+    }
+    this->labelTotalCapacity->setText(QString("      %1").arg(totalCapacity));
+
 }

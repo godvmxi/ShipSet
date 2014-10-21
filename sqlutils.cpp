@@ -64,26 +64,24 @@ TankInfo sqlUtils::queryTankInfo(int shipId,int tankId,int sounding){
     QString sql = QString("SELECT * FROM tankInfo where shipId = %1 and tankId = %2 and sounding = %3").arg(shipId).arg(tankId).arg(sounding);
 //    qDebug()<< sql;
     query.exec(sql);
-
+    int affectLines = 0;
 
     while(query.next()) {
-
-//        qDebug()<<query.value(0) << query.value(1)<< query.value(2)<< query.value(3);
+        affectLines++;
         info.shipId = query.value(0).toInt();
         info.tankId = query.value(1).toInt();
         info.sounding = query.value(2).toInt();
         QString temp = query.value(3).toString();
         QStringList capacitys =  temp.split(" ");
-//        qDebug() << temp;
-//        qDebug()<<capacitys;
-
         for (int i = 0;i<capacitys.size();i++){
             info.capacity[i] = capacitys.at(i).toFloat();
-//            qDebug()<< i<<capacitys.at(i)  << info.capacity[i];
         }
-
     }
 //    showTankInfo(&info);
+    if(affectLines == 0){
+        qDebug("can find target data");
+        return info;
+    }
     emit this->reportTankInfo(info);
     return info;
 }
