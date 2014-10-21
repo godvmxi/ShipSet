@@ -31,10 +31,10 @@ app --add/del   ship/tank   [file]/shipId [tankId]
     result db file : ships.db
     you can del or move it and the app will generate a new one
     for example :
-            app --add  ship   ship.txt
-            app --add  tank   tank.txt
-            app --del  ship   shipId
-            app --del  tank   shipId    tankId
+            app add  ship   ship.txt
+            app add  tank   tank.txt
+            app del  ship   shipId
+            app del  tank   shipId    tankId
             
             
     please format you file like following:
@@ -176,7 +176,7 @@ def add_tank_info(fileName):
         if len(result)!= 0:
             sql = "DELETE FROM tankInfo WHERE shipId = %s and tankId = %s and sounding = %s"%(shipId,tankId,sounding )
             db_cursor.execute(sql)
-        capacitys = " ".join(dat[3:])
+        capacitys = " ".join(dat[2:])
         print("update info -> %s %s  %s  %s"%(shipId,tankId,sounding,capacitys )) 
         sql = '''INSERT INTO tankInfo VALUES(%s,%s,%s,"%s") ;'''%(shipId,tankId,sounding,capacitys)
         db_cursor.execute(sql)
@@ -216,7 +216,7 @@ if __name__ == "__main__" :
     if argc < 2 :
         print(help)
         exit(0)
-    if sys.argv[1] == "--add" :
+    if sys.argv[1] == "add" :
         if sys.argv[2] == 'ship' and argc == 4 :
             add_ship_info(sys.argv[3])
             pass
@@ -226,7 +226,7 @@ if __name__ == "__main__" :
         else :
             print( help)
 
-    elif sys.argv[1] == "--del" :
+    elif sys.argv[1] == "del" :
         if sys.argv[2] == 'ship' and argc == 4 :
             del_ship_info(int(sys.argv[3]) )
             pass
@@ -234,7 +234,7 @@ if __name__ == "__main__" :
             del_tank_info(int(sys.argv[3]),int(sys.argv[4]))
             pass
         pass
-    elif sys.argv[1] == "--help" :
+    elif sys.argv[1] == "help" :
         print help
     else :
         print help
