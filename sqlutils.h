@@ -23,6 +23,7 @@ signals:
 
 public slots:
     int queryShipNumber(void);
+    bool queryShipsInfo(ShipInfo *info);
     ShipInfo queryShipInfo(int shipId);
     TankInfo queryTankInfo(int shipId,int tankId,int sounding);
 

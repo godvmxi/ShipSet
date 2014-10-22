@@ -11,6 +11,7 @@
 #include "common.h"
 #include <QDoubleSpinBox>
 #include <QScrollArea>
+#include <QComboBox>
 namespace Ui {
 class MainWindow;
 }
@@ -41,6 +42,7 @@ private:
 
     int shipNumber;
     int shipId;
+    ShipInfo shipArray[MAX_SHIP_NUMBER];
 
     ShipInfo shipInfo;
     float currentShipTrim ;
@@ -56,6 +58,7 @@ private:
     //widget head info
     QLabel *labelCrt ;
     QLabel *labelShipName ;
+    QComboBox *comboBoxShipName;
     QLabel *labelTrim ;
     QDoubleSpinBox *doubleSpinBoxTrim ;
 

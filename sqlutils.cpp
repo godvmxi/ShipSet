@@ -34,6 +34,27 @@ int sqlUtils::setDbFile(QString fileName){
 
     return true;
 }
+bool sqlUtils::queryShipsInfo(ShipInfo *info){
+    if(info == NULL)
+        return false;
+    QSqlQuery query(this->db);
+    QString sql = QString("SELECT * FROM shipInfo");
+    query.exec(sql);
+    int i = 0;
+    while(query.next()) {
+        qDebug()<<query.value(0) << query.value(1)<< query.value(2)<< query.value(3)<< query.value(4)<< query.value(5)<< query.value(6)<< query.value(7);
+        info[i].shipId = query.value(0).toInt();
+        info[i].crt = query.value(1).toString();
+        info[i].shipName = query.value(2).toString();
+        info[i].tankNumber = query.value(3).toInt();
+        info[i].capacityNumber = query.value(4).toInt();
+        info[i].shipTrimMin = query.value(5).toFloat();
+        info[i].shipTrimStep = query.value(6).toFloat();
+        info[i].finalDate = query.value(7).toDate();
+        i++;
+    }
+    return true;
+}
 
 ShipInfo sqlUtils::queryShipInfo(int shipId){
     ShipInfo info = {0};

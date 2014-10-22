@@ -21,7 +21,18 @@ MainWindow::MainWindow(QWidget *parent) :
     this->sqlCore =  new sqlUtils();
     this->sqlCore->setDbFile("ships.db");
     this->shipNumber = this->sqlCore->queryShipNumber();
-    this->shipInfo = this->sqlCore->queryShipInfo(this->shipId);
+    if((this->shipNumber <= 0 )||(this->shipNumber > MAX_SHIP_NUMBER)){
+        QMessageBox::critical(NULL, QString::fromUtf8("船只数据错误"), QString::fromUtf8("船只信息需要0~20--> ")+QString("%1 ").arg(this->shipNumber), QMessageBox::Yes, QMessageBox::Yes);
+        return ;
+    }
+    this->sqlCore->queryShipsInfo(this->shipArray);
+
+    for(int i = 0 ;i<this->shipNumber;i++){
+        qDebug()<<"shipName --> "<<this->shipArray[i].shipName;
+    }
+    this->shipInfo = this->shipArray[0];
+
+
 
 
 
@@ -91,6 +102,7 @@ void MainWindow::addWidgeHeadInfo(void){
 
     this->labelCrt = new QLabel();
     this->labelShipName = new QLabel();
+    this->comboBoxShipName =  new QComboBox();
     this->labelTrim = new QLabel();
     this->doubleSpinBoxTrim = new QDoubleSpinBox();
 
@@ -98,7 +110,10 @@ void MainWindow::addWidgeHeadInfo(void){
     this->hBoxLayoutHeadInfo = new QHBoxLayout();
 
     this->labelCrt->setText(QString::fromUtf8("  证书号 : ")+this->shipInfo.crt);
-    this->labelShipName->setText(QString::fromUtf8("船名 : ")+this->shipInfo.shipName);
+    this->labelShipName->setText(QString::fromUtf8("船名 : "));
+    for(int i = 0;i<this->shipNumber;i++){
+        this->comboBoxShipName->addItem(this->shipArray[i].shipName);
+    }
     this->labelTrim->setText(QString::fromUtf8("纵倾值 : "));
     this->labelTrim->setFixedWidth(60);
     this->doubleSpinBoxTrim->setMinimum(this->shipInfo.shipTrimMin);
@@ -112,6 +127,7 @@ void MainWindow::addWidgeHeadInfo(void){
 
     this->hBoxLayoutHeadInfo->addWidget(this->labelCrt);
     this->hBoxLayoutHeadInfo->addWidget(this->labelShipName);
+//    this->hBoxLayoutFootInfo->addWidget(this->comboBoxShipName);
     this->hBoxLayoutHeadInfo->addWidget(this->labelTrim);
     this->hBoxLayoutHeadInfo->addWidget(this->doubleSpinBoxTrim);
 //    this->hBoxLayoutHeadInfo->addWidget(this->labelFinalDate);
