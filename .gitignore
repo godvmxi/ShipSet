@@ -28,6 +28,7 @@
 *.app
 
 #vim cache 
-*~
+*.~
+*.pyc
 *.swp
 *.user
