@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->mainLayout =  new QVBoxLayout();
     this->setFixedWidth(480);
-    this->setFixedHeight(500);
+
 
 
 
@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->vBoxLayoutTankItemsTable = new QVBoxLayout();
     this->scrollAreaTankItemsTable = new QScrollArea();
     this->scrollAreaTankItemsTable->setFixedWidth(460);
-
+#if 0
     QString left = QString::fromUtf8("左 ");
     QString right = QString::fromUtf8("右 ");
     QString room = QString::fromUtf8(" 舱");
@@ -84,13 +84,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
         connect(itemTank,SIGNAL(tryQueryBankInfo(int,int)),this,SLOT(queryTankInfoSlot(int,int)));
     }
+#else
+    this->addTankItemsTable(false);
+#endif
     this->widgetTankItemsTable->setLayout(this->vBoxLayoutTankItemsTable);
     this->scrollAreaTankItemsTable->setWidget(this->widgetTankItemsTable);
+    this->scrollAreaTankItemsTable->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     this->mainLayout->addWidget(this->scrollAreaTankItemsTable);
 
     this->addWidgeFootInfo();
     this->mainLayout->addWidget(this->widgetFootInfo);
     ui->centralWidget->setLayout(this->mainLayout);
+    this->setFixedHeight(this->getWindowsHeight());
 }
 
 MainWindow::~MainWindow()
@@ -285,6 +290,7 @@ void MainWindow::comboBoxShipCrtChanged(int index)
 {
     qDebug()<<index <<this->shipArray[index].shipName << this->shipArray[index].crt;
     //update class info
+    this->oldShipInfo =  this->shipInfo;
     this->shipInfo =  this->shipArray[index];
     this->shipTrimMax = this->shipInfo.shipTrimMin + this->shipInfo.shipTrimStep  *(this->shipInfo.capacityNumber -1);
     //update head info
@@ -296,12 +302,76 @@ void MainWindow::comboBoxShipCrtChanged(int index)
     this->doubleSpinBoxTrim->setValue(this->shipInfo.shipTrimMin);
     qDebug()<<this->doubleSpinBoxTrim->maximum()<<this->doubleSpinBoxTrim->minimum()<<this->doubleSpinBoxTrim->singleStep();
     //update tank items table
+    addTankItemsTable(true);
+    this->widgetTankItemsTable->setFixedHeight(60*this->shipInfo.tankNumber);
     this->update();
+    qDebug()<<"table item number->"<<this->vBoxLayoutTankItemsTable->count();
+    this->setFixedHeight(this->getWindowsHeight());
 }
 
 void MainWindow::addTankItemsTable(bool clearOld)
 {
+    qDebug()<<"update tank Item table ->" <<this->shipInfo.shipName<<this->shipInfo.tankNumber;
     if(clearOld){
         //do some thing to clear old
+        qDebug()<<"will remove item number -> "<<this->oldShipInfo.tankNumber;
+        Tank *tank;
+        for (int i  = 0;i<this->oldShipInfo.tankNumber;i++){
+            tank = (Tank *)this->widgetTankItems[i];
+            this->vBoxLayoutTankItemsTable->removeWidget(tank);
+            delete tank;
+            this->widgetTankItems[i] = 0;
+        }
     }
+    qDebug()<<"will add item number -> "<<this->shipInfo.tankNumber;
+    QString left = QString::fromUtf8("左 ");
+    QString right = QString::fromUtf8("右 ");
+    QString room = QString::fromUtf8(" 舱");
+    char numberChar[] = "一二三四五六七八九十";
+    for(int i = 0 ; i< this->shipInfo.tankNumber;i++)
+    {
+        int tankId = i /2 + 1;
+        QString tankName ;
+//        char name[64];
+        Tank *itemTank = new Tank();
+        char tmp[32] = {0};
+        QString index ;
+//        qDebug()<<strlen(numberChar);
+        if(i%2 == 0){
+            tankId -= 1;
+            memcpy(tmp,numberChar + tankId*3,3);
+            index =  QString::fromUtf8(tmp);
+            tankName = left + index + room;
+        }
+        else {
+            tankId -= 1;
+            memcpy(tmp,numberChar + tankId*3,3);
+            index =  QString::fromUtf8(tmp);
+            tankName = right + index + room;
+//            sprintf(name,"右 %d 舱",tankId);
+        }
+
+        itemTank->setTankName(tankName);
+        itemTank->setTankId(i+1);
+        itemTank->setShipId(this->shipId);
+        this->vBoxLayoutTankItemsTable->addWidget(itemTank);
+        this->widgetTankItems[i] = (size_t)itemTank;
+        //connect
+
+        connect(itemTank,SIGNAL(tryQueryBankInfo(int,int)),this,SLOT(queryTankInfoSlot(int,int)));
+    }
+}
+//void MainWindow::paintEvent(QPaintEvent *e){
+//    qDebug()<<e;
+////    this->addTankItemsTable(true);
+//}
+int MainWindow::getWindowsHeight(void){
+    int result = 0;
+    int base = 170;
+    if(this->shipInfo.tankNumber > 8)
+        result =  base + (8 *60 );
+    else
+        result =  base + (this->shipInfo.tankNumber *60 );
+    qDebug()<<"window height --> "<<result;
+    return result;
 }

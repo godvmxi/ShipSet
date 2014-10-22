@@ -37,6 +37,8 @@ private:
     void updateWidgetTankTrim(void);
     float queryTankCapacity(int tankId,int sounding);
     void  addTankItemsTable(bool clearOld);
+//    void paintEvent(QPaintEvent *e);
+    int getWindowsHeight(void);
     Ui::MainWindow *ui;
     sqlUtils *sqlCore;
 
@@ -46,7 +48,7 @@ private:
     int shipNumber;
     int shipId;
     ShipInfo shipArray[MAX_SHIP_NUMBER];
-
+    ShipInfo oldShipInfo;
     ShipInfo shipInfo;
     float currentShipTrim ;
     float shipTrimMax ;

@@ -7,7 +7,7 @@ sqlUtils::sqlUtils(QObject *parent) :
     QObject(parent)
 {
    this->db =  QSqlDatabase::addDatabase("QSQLITE");
-    qDebug()<<this->db.drivers();
+    //qDebug()<<this->db.drivers();
 }
 int sqlUtils::setDbFile(QString fileName){
 
@@ -18,18 +18,18 @@ int sqlUtils::setDbFile(QString fileName){
         QMessageBox::critical(NULL, QObject::tr("Collection"), QObject::tr("failed to connect to database!"));
         exit(1);
     }
-    qDebug()<<"open db success";
+    //qDebug()<<"open db success";
 
 
 
 
 
    if (this->db.driver()->hasFeature(QSqlDriver::QuerySize)) {
-        qDebug()<<"support size ";
+        //qDebug()<<"support size ";
 
    }
    else{
-        qDebug()<<"support not size ";
+        //qDebug()<<"support not size ";
    }
 
     return true;
@@ -42,7 +42,7 @@ bool sqlUtils::queryShipsInfo(ShipInfo *info){
     query.exec(sql);
     int i = 0;
     while(query.next()) {
-        qDebug()<<query.value(0) << query.value(1)<< query.value(2)<< query.value(3)<< query.value(4)<< query.value(5)<< query.value(6)<< query.value(7);
+        //qDebug()<<query.value(0) << query.value(1)<< query.value(2)<< query.value(3)<< query.value(4)<< query.value(5)<< query.value(6)<< query.value(7);
         info[i].shipId = query.value(0).toInt();
         info[i].crt = query.value(1).toString();
         info[i].shipName = query.value(2).toString();
@@ -60,12 +60,12 @@ ShipInfo sqlUtils::queryShipInfo(int shipId){
     ShipInfo info = {0};
     QSqlQuery query(this->db);
     QString sql = QString("SELECT * FROM shipInfo where shipId = %1").arg(shipId);
-    qDebug()<< sql;
+//    qDebug()<< sql;
     query.exec(sql);
 
     while(query.next()) {
 
-        qDebug()<<query.value(0) << query.value(1)<< query.value(2)<< query.value(3)<< query.value(4)<< query.value(5)<< query.value(6)<< query.value(7);
+        //qDebug()<<query.value(0) << query.value(1)<< query.value(2)<< query.value(3)<< query.value(4)<< query.value(5)<< query.value(6)<< query.value(7);
         info.shipId = query.value(0).toInt();
         info.crt = query.value(1).toString();
         info.shipName = query.value(2).toString();
@@ -83,7 +83,7 @@ TankInfo sqlUtils::queryTankInfo(int shipId,int tankId,int sounding){
     TankInfo info = {0};
     QSqlQuery query(this->db);
     QString sql = QString("SELECT * FROM tankInfo where shipId = %1 and tankId = %2 and sounding = %3").arg(shipId).arg(tankId).arg(sounding);
-//    qDebug()<< sql;
+//    //qDebug()<< sql;
     query.exec(sql);
     int affectLines = 0;
 
@@ -100,7 +100,7 @@ TankInfo sqlUtils::queryTankInfo(int shipId,int tankId,int sounding){
     }
 //    showTankInfo(&info);
     if(affectLines == 0){
-        qDebug("can find target data");
+        //qDebug("can find target data");
         return info;
     }
     emit this->reportTankInfo(info);
@@ -110,13 +110,13 @@ TankInfo sqlUtils::queryTankInfo(int shipId,int tankId,int sounding){
 int sqlUtils::queryShipNumber(void){
     QSqlQuery query(this->db);
     QString sql = QString("SELECT * FROM shipInfo");
-    qDebug()<< sql;
+    //qDebug()<< sql;
     query.exec(sql);
     int result = 0 ;
     while(query.next()) {
         result++;
     }
-    qDebug()<<"ship number -> " <<result;
+    //qDebug()<<"ship number -> " <<result;
     return result ;
 
 }

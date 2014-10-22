@@ -3,8 +3,8 @@
 #include <QString>
 #include <QDate>
 //#pragma execution_character_set("utf-8")
-#define MAX_CAPACITY_PER_TANK    20
-#define MAX_SHIP_NUMBER          20
+#define MAX_CAPACITY_PER_TANK    40
+#define MAX_SHIP_NUMBER          40
 typedef struct {
     int shipId;
     QString crt;
