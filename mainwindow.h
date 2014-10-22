@@ -12,6 +12,7 @@
 #include <QDoubleSpinBox>
 #include <QScrollArea>
 #include <QComboBox>
+#include <QPaintEvent>
 namespace Ui {
 class MainWindow;
 }
@@ -28,12 +29,14 @@ public slots :
     void queryTankInfoSlot(int tankId,int sounding);
     void shipTrimChanged(QString d);
     void pushButtonCalTotalCapacity(void);
+    void comboBoxShipCrtChanged(int index);
 
 private:
     void addWidgeHeadInfo(void);
     void addWidgeFootInfo(void);
     void updateWidgetTankTrim(void);
     float queryTankCapacity(int tankId,int sounding);
+    void  addTankItemsTable(bool clearOld);
     Ui::MainWindow *ui;
     sqlUtils *sqlCore;
 
@@ -58,7 +61,7 @@ private:
     //widget head info
     QLabel *labelCrt ;
     QLabel *labelShipName ;
-    QComboBox *comboBoxShipName;
+    QComboBox *comboBoxShipCrt;
     QLabel *labelTrim ;
     QDoubleSpinBox *doubleSpinBoxTrim ;
 

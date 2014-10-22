@@ -38,7 +38,7 @@ bool sqlUtils::queryShipsInfo(ShipInfo *info){
     if(info == NULL)
         return false;
     QSqlQuery query(this->db);
-    QString sql = QString("SELECT * FROM shipInfo");
+    QString sql = QString("SELECT * FROM shipInfo ORDER BY shipId");
     query.exec(sql);
     int i = 0;
     while(query.next()) {

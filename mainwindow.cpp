@@ -102,20 +102,23 @@ void MainWindow::addWidgeHeadInfo(void){
 
     this->labelCrt = new QLabel();
     this->labelShipName = new QLabel();
-    this->comboBoxShipName =  new QComboBox();
+    this->comboBoxShipCrt =  new QComboBox();
     this->labelTrim = new QLabel();
     this->doubleSpinBoxTrim = new QDoubleSpinBox();
 
     this->widgetHeadInfo = new QWidget();
     this->hBoxLayoutHeadInfo = new QHBoxLayout();
 
-    this->labelCrt->setText(QString::fromUtf8("  证书号 : ")+this->shipInfo.crt);
-    this->labelShipName->setText(QString::fromUtf8("船名 : "));
+    this->labelCrt->setText(QString::fromUtf8("  证书号 : "));
+    this->labelCrt->setFixedWidth(50);
+    this->labelShipName->setText(QString::fromUtf8("  船名 :    ") +this->shipInfo.shipName);
+    this->comboBoxShipCrt->setFixedWidth(100);
     for(int i = 0;i<this->shipNumber;i++){
-        this->comboBoxShipName->addItem(this->shipArray[i].shipName);
+        this->comboBoxShipCrt->addItem(this->shipArray[i].crt);
     }
+
     this->labelTrim->setText(QString::fromUtf8("纵倾值 : "));
-    this->labelTrim->setFixedWidth(60);
+    this->labelTrim->setFixedWidth(50);
     this->doubleSpinBoxTrim->setMinimum(this->shipInfo.shipTrimMin);
     this->doubleSpinBoxTrim->setSingleStep(this->shipInfo.shipTrimStep);
     this->doubleSpinBoxTrim->setMaximum(this->shipInfo.shipTrimMin + this->shipInfo.shipTrimStep*this->shipInfo.capacityNumber);
@@ -126,14 +129,16 @@ void MainWindow::addWidgeHeadInfo(void){
     this->shipTrimMax = this->shipInfo.shipTrimMin +  this->shipInfo.shipTrimStep * (this->shipInfo.capacityNumber - 1) ;
 
     this->hBoxLayoutHeadInfo->addWidget(this->labelCrt);
+    this->hBoxLayoutHeadInfo->addWidget(this->comboBoxShipCrt);
     this->hBoxLayoutHeadInfo->addWidget(this->labelShipName);
-//    this->hBoxLayoutFootInfo->addWidget(this->comboBoxShipName);
+
     this->hBoxLayoutHeadInfo->addWidget(this->labelTrim);
     this->hBoxLayoutHeadInfo->addWidget(this->doubleSpinBoxTrim);
 //    this->hBoxLayoutHeadInfo->addWidget(this->labelFinalDate);
 
     this->widgetHeadInfo->setLayout(this->hBoxLayoutHeadInfo);
     connect(this->doubleSpinBoxTrim,SIGNAL(valueChanged(QString)),this,SLOT(shipTrimChanged(QString)) );
+    connect(this->comboBoxShipCrt,SIGNAL(currentIndexChanged(int)),this,SLOT(comboBoxShipCrtChanged(int )) );
 
 
 
@@ -275,4 +280,28 @@ void MainWindow::pushButtonCalTotalCapacity(void){
     }
     this->labelTotalCapacity->setText(QString("      %1").arg(totalCapacity));
 
+}
+void MainWindow::comboBoxShipCrtChanged(int index)
+{
+    qDebug()<<index <<this->shipArray[index].shipName << this->shipArray[index].crt;
+    //update class info
+    this->shipInfo =  this->shipArray[index];
+    this->shipTrimMax = this->shipInfo.shipTrimMin + this->shipInfo.shipTrimStep  *(this->shipInfo.capacityNumber -1);
+    //update head info
+    this->labelShipName->setText(QString::fromUtf8("  船名 :    ") +this->shipInfo.shipName);
+
+    this->doubleSpinBoxTrim->setMinimum(this->shipInfo.shipTrimMin);
+    this->doubleSpinBoxTrim->setSingleStep(this->shipInfo.shipTrimStep);
+    this->doubleSpinBoxTrim->setMaximum(this->shipTrimMax);
+    this->doubleSpinBoxTrim->setValue(this->shipInfo.shipTrimMin);
+    qDebug()<<this->doubleSpinBoxTrim->maximum()<<this->doubleSpinBoxTrim->minimum()<<this->doubleSpinBoxTrim->singleStep();
+    //update tank items table
+    this->update();
+}
+
+void MainWindow::addTankItemsTable(bool clearOld)
+{
+    if(clearOld){
+        //do some thing to clear old
+    }
 }
