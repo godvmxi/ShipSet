@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="res.qrc">
-    <normaloff>:/res/res/icon.bmp</normaloff>:/res/res/icon.bmp</iconset>
+    <normaloff>:/res/res/icon2.bmp</normaloff>:/res/res/icon2.bmp</iconset>
   </property>
   <widget class="QWidget" name="centralWidget"/>
   <widget class="QStatusBar" name="statusBar"/>

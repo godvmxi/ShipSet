@@ -30,9 +30,9 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     this->sqlCore->queryShipsInfo(this->shipArray);
 
-    for(int i = 0 ;i<this->shipNumber;i++){
-        qDebug()<<"shipName --> "<<this->shipArray[i].shipName;
-    }
+//    for(int i = 0 ;i<this->shipNumber;i++){
+//        qDebug()<<"shipName --> "<<this->shipArray[i].shipName;
+//    }
     this->shipInfo = this->shipArray[0];
 
 
