@@ -252,7 +252,7 @@ float  MainWindow::queryTankCapacity(int tankId,int sounding)
         return    ( (capacity_2 -capacity_1 ) /this->shipInfo.shipTrimStep )*(this->currentShipTrim -min)  + capacity_1 ;
     }
     else
-        return info.capacity[0];
+        return info.capacity[i];
 }
 void MainWindow::shipTrimChanged(QString d){
 
