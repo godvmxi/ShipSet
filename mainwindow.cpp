@@ -5,6 +5,7 @@
 #include <string.h>
 #include <QDebug>
 #include <QMessageBox>
+#include <QIcon>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -13,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->mainLayout =  new QVBoxLayout();
     this->setFixedWidth(480);
+//    this->setWindowIcon(QIcon(":/icon.bmp"));
 
 
 
@@ -22,7 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->sqlCore->setDbFile("ships.db");
     this->shipNumber = this->sqlCore->queryShipNumber();
     if((this->shipNumber <= 0 )||(this->shipNumber > MAX_SHIP_NUMBER)){
-        QMessageBox::critical(NULL, QString::fromUtf8("船只数据错误"), QString::fromUtf8("船只信息需要0~20--> ")+QString("%1 ").arg(this->shipNumber), QMessageBox::Yes, QMessageBox::Yes);
+        QMessageBox::critical(NULL, QString::fromUtf8("船只数据库损坏"), QString::fromUtf8("船只数据库损坏-->")+QString("%1 ").arg(this->shipNumber), QMessageBox::Yes, QMessageBox::Yes);
+        exit(0);
         return ;
     }
     this->sqlCore->queryShipsInfo(this->shipArray);
@@ -276,7 +279,7 @@ void MainWindow::pushButtonCalTotalCapacity(void){
                 totalCapacity += eachCapacity;
             }
             else {
-                qDebug()<<"abort";
+                qDebug()<<"cal total value error ,abort";
                 return;
                 break;
 
@@ -361,10 +364,7 @@ void MainWindow::addTankItemsTable(bool clearOld)
         connect(itemTank,SIGNAL(tryQueryBankInfo(int,int)),this,SLOT(queryTankInfoSlot(int,int)));
     }
 }
-//void MainWindow::paintEvent(QPaintEvent *e){
-//    qDebug()<<e;
-////    this->addTankItemsTable(true);
-//}
+
 int MainWindow::getWindowsHeight(void){
     int result = 0;
     int base = 170;
