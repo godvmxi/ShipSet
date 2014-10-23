@@ -105,7 +105,7 @@ void Tank:: setTankCapacity(float value)
 {
     double new_value = value *(1+2*0.0002*((double)this->temprature -20));
     this->capacity =  new_value ;
-    qDebug()<<"Tank-> "<<this->tankId <<"old capacity-> "<<value <<new_value;
+//    qDebug()<<"Tank-> "<<this->tankId <<"old capacity-> "<<value <<new_value;
     this->lineEditCapacity->setText(QString("%1").arg(new_value));
 }
 bool Tank::checkDataValidator(void){

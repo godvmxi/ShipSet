@@ -13,6 +13,7 @@
 #include <QScrollArea>
 #include <QComboBox>
 #include <QPaintEvent>
+#include <dialogabout.h>
 namespace Ui {
 class MainWindow;
 }
@@ -30,6 +31,7 @@ public slots :
     void shipTrimChanged(QString d);
     void pushButtonCalTotalCapacity(void);
     void comboBoxShipCrtChanged(int index);
+    void pushButtonAboutSlot(void);
 
 private:
     void addWidgeHeadInfo(void);
@@ -77,6 +79,7 @@ private:
     QLabel *labelTotalCapacity;
     QHBoxLayout *hBoxLayoutFootInfo ;
     QWidget *widgetFootInfo;
+    QPushButton *pushButtonAbout;
 };
 
 #endif // MAINWINDOW_H

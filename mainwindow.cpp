@@ -155,6 +155,7 @@ void MainWindow::addWidgeFootInfo(void){
     this->pushButtonTotalCapacity = new QPushButton();
     this->pushButtonTotalCapacity->setText(QString::fromUtf8("   总容量  "));
     this->labelTotalCapacity = new QLabel();
+    this->pushButtonAbout = new QPushButton(QString::fromUtf8("更多"));
     this->labelTotalCapacity->setText("      0.000");
     this->labelTotalCapacity->setFixedWidth(100);
 
@@ -166,13 +167,17 @@ void MainWindow::addWidgeFootInfo(void){
     this->labelFinalDate->setFixedWidth(400);
 
     this->hBoxLayoutFootInfo->addWidget(this->labelFinalDate);
+    this->hBoxLayoutFootInfo->addWidget(this->pushButtonAbout);
     this->hBoxLayoutFootInfo->addWidget(this->pushButtonTotalCapacity);
     this->hBoxLayoutFootInfo->addWidget(this->labelTotalCapacity);
     this->hBoxLayoutFootInfo->setAlignment(Qt::AlignRight);
     this->widgetFootInfo->setLayout(this->hBoxLayoutFootInfo);
 
-    connect(this->pushButtonTotalCapacity,SIGNAL(clicked()),this,SLOT(pushButtonCalTotalCapacity()) );
 
+
+
+    connect(this->pushButtonTotalCapacity,SIGNAL(clicked()),this,SLOT(pushButtonCalTotalCapacity()) );
+    connect(this->pushButtonAbout,SIGNAL(clicked()),this,SLOT(pushButtonAboutSlot()) );
 }
 
 void MainWindow::updateWidgetTankTrim(void){
@@ -261,8 +266,8 @@ void MainWindow::shipTrimChanged(QString d){
 }
 
 void MainWindow::pushButtonCalTotalCapacity(void){
-    qDebug()<<"cal total capacity";
-    qDebug()<<this->geometry();
+    //qDebug()<<"cal total capacity";
+    //qDebug()<<this->geometry();
     float totalCapacity = 0;
     float eachCapacity = 0;
     Tank *tank;
@@ -271,11 +276,11 @@ void MainWindow::pushButtonCalTotalCapacity(void){
         if (tank->checkDataValidator()){
             int tankId = tank->getTankId();
             int sounding = tank->getSounding();
-            qDebug()<<"foreach-->"<<tankId<<sounding ;
+           // qDebug()<<"foreach-->"<<tankId<<sounding ;
             eachCapacity =  this->queryTankCapacity(tankId,sounding);
             if( eachCapacity >= 0){
                 tank->setTankCapacity(eachCapacity);
-                qDebug()<<"foreach-->"<<tankId<<sounding<<eachCapacity;
+           //     qDebug()<<"foreach-->"<<tankId<<sounding<<eachCapacity;
                 totalCapacity += eachCapacity;
             }
             else {
@@ -314,7 +319,7 @@ void MainWindow::comboBoxShipCrtChanged(int index)
 
 void MainWindow::addTankItemsTable(bool clearOld)
 {
-    qDebug()<<"update tank Item table ->" <<this->shipInfo.shipName<<this->shipInfo.tankNumber;
+//    qDebug()<<"update tank Item table ->" <<this->shipInfo.shipName<<this->shipInfo.tankNumber;
     if(clearOld){
         //do some thing to clear old
         qDebug()<<"will remove item number -> "<<this->oldShipInfo.tankNumber;
@@ -326,7 +331,7 @@ void MainWindow::addTankItemsTable(bool clearOld)
             this->widgetTankItems[i] = 0;
         }
     }
-    qDebug()<<"will add item number -> "<<this->shipInfo.tankNumber;
+//    qDebug()<<"will add item number -> "<<this->shipInfo.tankNumber;
     QString left = QString::fromUtf8("左 ");
     QString right = QString::fromUtf8("右 ");
     QString room = QString::fromUtf8(" 舱");
@@ -372,6 +377,11 @@ int MainWindow::getWindowsHeight(void){
         result =  base + (8 *60 );
     else
         result =  base + (this->shipInfo.tankNumber *60 );
-    qDebug()<<"window height --> "<<result;
+//    qDebug()<<"window height --> "<<result;
     return result;
+}
+void MainWindow::pushButtonAboutSlot(void)
+{
+    DialogAbout about;
+    about.exec();
 }

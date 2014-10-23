@@ -16,14 +16,17 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     tank.cpp \
     sqlutils.cpp \
-    common.cpp
+    common.cpp \
+    dialogabout.cpp
 
 HEADERS  += mainwindow.h \
     tank.h \
     sqlutils.h \
-    common.h
+    common.h \
+    dialogabout.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    dialogabout.ui
 
 RESOURCES += \
     res.qrc
