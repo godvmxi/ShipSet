@@ -57,7 +57,8 @@ bool sqlUtils::queryShipsInfo(ShipInfo *info){
 }
 
 ShipInfo sqlUtils::queryShipInfo(int shipId){
-    ShipInfo info = {0};
+    ShipInfo info ;
+    memset(&info,0,sizeof(ShipInfo));
     QSqlQuery query(this->db);
     QString sql = QString("SELECT * FROM shipInfo where shipId = %1").arg(shipId);
 //    qDebug()<< sql;
@@ -80,7 +81,8 @@ ShipInfo sqlUtils::queryShipInfo(int shipId){
 }
 
 TankInfo sqlUtils::queryTankInfo(int shipId,int tankId,int sounding){
-    TankInfo info = {0};
+    TankInfo info ;
+    memset(&info,0,sizeof(TankInfo));
     QSqlQuery query(this->db);
     QString sql = QString("SELECT * FROM tankInfo where shipId = %1 and tankId = %2 and sounding = %3").arg(shipId).arg(tankId).arg(sounding);
 //    //qDebug()<< sql;
