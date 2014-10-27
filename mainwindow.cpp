@@ -128,7 +128,8 @@ void MainWindow::addWidgeHeadInfo(void){
     this->labelTrim->setText(QString::fromUtf8("纵倾值 : "));
     this->labelTrim->setFixedWidth(50);
     this->doubleSpinBoxTrim->setMinimum(this->shipInfo.shipTrimMin);
-    this->doubleSpinBoxTrim->setSingleStep(this->shipInfo.shipTrimStep);
+    this->doubleSpinBoxTrim->setSingleStep(double(this->shipInfo.shipTrimStep));
+    this->doubleSpinBoxTrim->setDecimals(4);
     this->doubleSpinBoxTrim->setMaximum(this->shipInfo.shipTrimMin + this->shipInfo.shipTrimStep*this->shipInfo.capacityNumber);
     this->doubleSpinBoxTrim->setFixedWidth(60);
     this->doubleSpinBoxTrim->setValue(this->shipInfo.shipTrimMin);
