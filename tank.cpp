@@ -41,7 +41,7 @@ Tank::Tank(QWidget *parent) :
     connect(this->pushButtonEqual,SIGNAL(clicked()),this,SLOT(updateTankInfo()) );
 
     this->lineEditSounding->setText("4.200");
-    this->lineEditTemrature->setText("37.5");
+    this->lineEditTemrature->setText("20");
     this->lineEditCapacity->setText("0");
 }
 

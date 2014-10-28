@@ -136,6 +136,7 @@ void MainWindow::addWidgeHeadInfo(void){
 
 
     this->shipTrimMax = this->shipInfo.shipTrimMin +  this->shipInfo.shipTrimStep * (this->shipInfo.capacityNumber - 1) ;
+    this->currentShipTrim = this->doubleSpinBoxTrim->value();
 
     this->hBoxLayoutHeadInfo->addWidget(this->labelCrt);
     this->hBoxLayoutHeadInfo->addWidget(this->comboBoxShipCrt);
@@ -188,25 +189,28 @@ void MainWindow::updateWidgetTankTrim(void){
 void MainWindow::queryTankInfoSlot(int tankId,int sounding)
 {
     float capacity = 0;
-    if(sounding%10 != 0){
-        int temp = sounding %10 ;
-        int sounding_1 =  sounding -  temp;
-        int sounding_2 =  sounding_1 +10;
-        qDebug()<<"will query two sounding -> "<<tankId << sounding_1 << sounding_2;
-        float capacity_1 = this->queryTankCapacity(tankId,sounding_1);
-        float capacity_2 = this->queryTankCapacity(tankId,sounding_2);
-        if((capacity_1 < 0) || capacity_2 < 0)
-            return ;
-        capacity = (capacity_2 - capacity_1 ) /10 * temp + capacity_1 ;
-        qDebug()<<capacity <<capacity_1<<capacity_2;
-    }
-    else {
-        capacity = this->queryTankCapacity(tankId,sounding);
-        if(capacity< 0)
-            return;
-    }
+//    if(sounding%10 != 0){
+//        int temp = sounding %10 ;
+//        int sounding_1 =  sounding -  temp;
+//        int sounding_2 =  sounding_1 +10;
+//        qDebug()<<"will query two sounding -> "<<tankId << sounding_1 << sounding_2;
+//        float capacity_1 = this->queryTankCapacity(tankId,sounding_1);
+//        float capacity_2 = this->queryTankCapacity(tankId,sounding_2);
+//        if((capacity_1 < 0) || capacity_2 < 0)
+//            return ;
+//        capacity = (capacity_2 - capacity_1 ) /10 * temp + capacity_1 ;
+//        qDebug()<<capacity <<capacity_1<<capacity_2;
+//    }
+//    else {
+//        capacity = this->queryTankCapacity(tankId,sounding);
+//        if(capacity< 0)
+//            return;
+//    }
+    capacity = queryTankCapacity(tankId,sounding);
     Tank *tank =  (Tank *)this->widgetTankItems[tankId - 1];
     //temprature modify
+    //add trim fix
+    //
 
     tank->setTankCapacity(capacity);
 
@@ -214,19 +218,48 @@ void MainWindow::queryTankInfoSlot(int tankId,int sounding)
 }
 float  MainWindow::queryTankCapacity(int tankId,int sounding)
 {
+    float capacity = 0;
 
-    TankInfo info = this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding);
-    if((info.tankId != tankId ) || (info.shipId != this->shipInfo.shipId) ){
-        qDebug()<<"query bank error";
-        QMessageBox::critical(NULL, QString::fromUtf8("数据库错误"), QString::fromUtf8("数据库错误,船只和舱室信息--> ")+QString("%1  %2").arg(shipId).arg(tankId), QMessageBox::Yes, QMessageBox::Yes);
-        return -1;
+    TankInfo resultInfo;
+    if(sounding%10 != 0){
+        int temp = sounding %10 ;
+        int sounding_1 =  sounding -  temp;
+        int sounding_2 =  sounding_1 +10;
+        qDebug()<<"will query two sounding -> "<<tankId << sounding_1 << sounding_2;
+
+        resultInfo        = this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding_1);
+        TankInfo tempInfo = this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding_2);
+
+
+        qDebug()<<resultInfo.sounding<<resultInfo.capacity[0]<<resultInfo.capacity[1]<<resultInfo.capacity[2]\
+                  <<resultInfo.capacity[3]<<resultInfo.capacity[4]<<resultInfo.capacity[5]\
+                    <<resultInfo.capacity[6]<<resultInfo.capacity[7];
+        qDebug()<<tempInfo.sounding<<tempInfo.capacity[0]<<tempInfo.capacity[1]<<tempInfo.capacity[2]\
+                  <<tempInfo.capacity[3]<<tempInfo.capacity[4]<<tempInfo.capacity[5]\
+                    <<tempInfo.capacity[6]<<tempInfo.capacity[7];
+
+        for(int i = 0 ;i <this->shipInfo.capacityNumber;i++){
+            resultInfo.capacity[i] += (tempInfo.capacity[i] - resultInfo.capacity[i] ) /10 * temp ;
+        }
+        resultInfo.sounding = sounding;
+
     }
+    else {
+        qDebug()<<"will query one sounding -> "<<tankId << sounding  ;
+        resultInfo        = this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding);
+    }
+    qDebug()<<resultInfo.sounding<<resultInfo.capacity[0]<<resultInfo.capacity[1]<<resultInfo.capacity[2]\
+              <<resultInfo.capacity[3]<<resultInfo.capacity[4]<<resultInfo.capacity[5]\
+                <<resultInfo.capacity[6]<<resultInfo.capacity[7];
+
     //cal trim .add soon
 //    float temp= (this->currentShipTrim -this->shipInfo.shipTrimMin );
     int trimFlag = -1; // 0:正好整除, 1:介于二者之间,具体查看min ~max
     float min = 0;
     float max;
     int i =0;
+    min = this->shipInfo.shipTrimMin;
+    max = min + this->shipInfo.shipTrimStep ;
     for(i=0;i<this->shipInfo.capacityNumber;i++){
         min = this->shipInfo.shipTrimMin + i * this->shipInfo.shipTrimStep ;
         max = min + this->shipInfo.shipTrimStep ;
@@ -243,17 +276,17 @@ float  MainWindow::queryTankCapacity(int tankId,int sounding)
         }
     }
     if(trimFlag == 0){
-        qDebug()<<"just ok";
-        return info.capacity[i];
+        qDebug()<<"just ok  -> "<<i<<min<< max;
+        return resultInfo.capacity[i];
     }
     else if(trimFlag == 1){
         qDebug()<<"not just ok ->  "<< this->currentShipTrim <<min << max;
-        float capacity_1 =  info.capacity[i];
-        float capacity_2 =  info.capacity[i+1];
+        float capacity_1 =  resultInfo.capacity[i];
+        float capacity_2 =  resultInfo.capacity[i+1];
         return    ( (capacity_2 -capacity_1 ) /this->shipInfo.shipTrimStep )*(this->currentShipTrim -min)  + capacity_1 ;
     }
     else
-        return info.capacity[i];
+        return resultInfo.capacity[i];
 }
 void MainWindow::shipTrimChanged(QString d){
 
