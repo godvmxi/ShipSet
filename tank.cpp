@@ -113,9 +113,25 @@ bool Tank::checkDataValidator(void){
     QString stringSounding =  this->lineEditSounding->text();
     if (stringTemperature.size() == 0 || stringSounding == 0){
         qDebug()<<"temp or sounding can not be empty";
+        this->setTankInvalid(true);
         return false;
     }
     this->temprature = stringTemperature.toFloat();
     this->sounding =int  (stringSounding.toDouble() * 1000);
+    this->setTankInvalid(false);
     return true;
+}
+void Tank::setTankInvalid(bool enable)
+{
+       if(enable){
+           QPalette pal(palette());
+           pal.setBrush(QPalette::Background, Qt::red);
+           setPalette(pal);
+           this->lineEditCapacity->setText("");
+       }
+       else {
+           QPalette pal(palette());
+           pal.setBrush(QPalette::Background, Qt::lightGray);
+           setPalette(pal);
+       }
 }

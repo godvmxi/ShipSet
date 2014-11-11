@@ -33,6 +33,7 @@ public:
 
     int getTankId(void);
     int getSounding(void);
+    void setTankInvalid(bool enable);
 
 signals :
     void tryQueryBankInfo(int shipId , int tankId,int sounding);

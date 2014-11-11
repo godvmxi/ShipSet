@@ -312,18 +312,22 @@ void MainWindow::pushButtonCalTotalCapacity(void){
             int sounding = tank->getSounding();
            // qDebug()<<"foreach-->"<<tankId<<sounding ;
             eachCapacity =  this->queryTankCapacity(tankId,sounding);
-            if( eachCapacity >= 0){
+            //     qDebug()<<"foreach-->"<<tankId<<sounding<<eachCapacity;
+            if(eachCapacity >= 0){
                 tank->setTankCapacity(eachCapacity);
-           //     qDebug()<<"foreach-->"<<tankId<<sounding<<eachCapacity;
-                totalCapacity += eachCapacity;
             }
             else {
                 qDebug()<<"cal total value error ,abort";
                 return;
                 break;
-
             }
         }
+        else {
+            eachCapacity = 0;
+            qDebug()<<"skip no data tank -->"<< tank->getTankId();;
+        }
+         totalCapacity += eachCapacity;
+
     }
     this->labelTotalCapacity->setText(QString("      %1").arg(totalCapacity));
 
