@@ -14,6 +14,7 @@
 #include <QComboBox>
 #include <QPaintEvent>
 #include <dialogabout.h>
+#include <QPixmap>
 namespace Ui {
 class MainWindow;
 }
@@ -80,6 +81,8 @@ private:
     QHBoxLayout *hBoxLayoutFootInfo ;
     QWidget *widgetFootInfo;
     QPushButton *pushButtonAbout;
+    //backgroud
+    QPixmap *pixmapBackgroud;
 };
 
 #endif // MAINWINDOW_H

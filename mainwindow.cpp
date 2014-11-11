@@ -16,9 +16,6 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setFixedWidth(480);
 //    this->setWindowIcon(QIcon(":/icon.bmp"));
 
-
-
-
     this->shipId = 0;
     this->sqlCore =  new sqlUtils();
     this->sqlCore->setDbFile("ships.db");
@@ -34,9 +31,6 @@ MainWindow::MainWindow(QWidget *parent) :
 //        qDebug()<<"shipName --> "<<this->shipArray[i].shipName;
 //    }
     this->shipInfo = this->shipArray[0];
-
-
-
 
 
     this->addWidgeHeadInfo();
@@ -99,6 +93,22 @@ MainWindow::MainWindow(QWidget *parent) :
     this->mainLayout->addWidget(this->widgetFootInfo);
     ui->centralWidget->setLayout(this->mainLayout);
     this->setFixedHeight(this->getWindowsHeight());
+
+    //set backgroud
+    this->pixmapBackgroud = new QPixmap();
+    qDebug()<<this->pixmapBackgroud->load(":/res/res/bk4.jpg");
+    qDebug()<<"bk ipeg --> "<<this->pixmapBackgroud->isNull();
+//    this->setAutoFillBackground(true);
+    QPalette    palette = this->palette();
+    palette.setBrush(this->backgroundRole(),
+                     QBrush(this->pixmapBackgroud->scaled(this->size(),
+                                          Qt::IgnoreAspectRatio,
+                                          Qt::SmoothTransformation)));
+    this->setPalette(palette);
+
+//   this->scrollAreaTankItemsTable->setStyleSheet("border:1px; background-color:transparent ");
+//    this->scrollAreaTankItemsTable->
+
 }
 
 MainWindow::~MainWindow()
@@ -111,6 +121,8 @@ void MainWindow::addWidgeHeadInfo(void){
     this->labelCrt = new QLabel();
     this->labelShipName = new QLabel();
     this->comboBoxShipCrt =  new QComboBox();
+
+//    this->comboBoxShipCrt->setStyleSheet("border:1px; background-color:transparent ");
     this->labelTrim = new QLabel();
     this->doubleSpinBoxTrim = new QDoubleSpinBox();
 
