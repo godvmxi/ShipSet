@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->labelTableTitle = new QLabel();
 #ifdef Q_OS_WIN32
     //modify here ,xuelong for windows
-    this->labelTableTitle->setText(QString::fromUtf8(" 舱名    ??   ??       测深高度            温度                                               容量值"));
+    this->labelTableTitle->setText(QString::fromUtf8("   舱名       测深高度       温度           计算         容量值"));
   #else
     this->labelTableTitle->setText(QString::fromUtf8("      舱名              测深高度            温度                                               容量值"));
 #endif
