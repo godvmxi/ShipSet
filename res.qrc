@@ -3,5 +3,6 @@
         <file>res/icon.bmp</file>
         <file>res/icon2.bmp</file>
         <file>res/bk.jpg</file>
+        <file>res/bk0.jpg</file>
     </qresource>
 </RCC>

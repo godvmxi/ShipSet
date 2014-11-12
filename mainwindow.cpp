@@ -38,9 +38,9 @@ MainWindow::MainWindow(QWidget *parent) :
     this->labelTableTitle = new QLabel();
 #ifdef Q_OS_WIN32
     //modify here ,xuelong for windows
-    this->labelTableTitle->setText(QString::fromUtf8(" 舱名    ??   ??       测深高度            温度                                               舱室容量"));
+    this->labelTableTitle->setText(QString::fromUtf8(" 舱名    ??   ??       测深高度            温度                                               容量值"));
   #else
-    this->labelTableTitle->setText(QString::fromUtf8("      舱名              测深高度            温度                                               舱室容量"));
+    this->labelTableTitle->setText(QString::fromUtf8("      舱名              测深高度            温度                                               容量值"));
 #endif
 
     this->mainLayout->addWidget(this->labelTableTitle);
@@ -101,16 +101,16 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setFixedHeight(this->getWindowsHeight());
 
     //set backgroud
-//    this->pixmapBackgroud = new QPixmap();
-//    qDebug()<<this->pixmapBackgroud->load(":/res/res/bk4.jpg");
-//    qDebug()<<"bk ipeg --> "<<this->pixmapBackgroud->isNull();
-////    this->setAutoFillBackground(true);
-//    QPalette    palette = this->palette();
-//    palette.setBrush(this->backgroundRole(),
-//                     QBrush(this->pixmapBackgroud->scaled(this->size(),
-//                                          Qt::IgnoreAspectRatio,
-//                                          Qt::SmoothTransformation)));
-//    this->setPalette(palette);
+    this->pixmapBackgroud = new QPixmap();
+    qDebug()<<this->pixmapBackgroud->load(":/res/res/bk0.jpg");
+    qDebug()<<"bk ipeg --> "<<this->pixmapBackgroud->isNull();
+//    this->setAutoFillBackground(true);
+    QPalette    palette = this->palette();
+    palette.setBrush(this->backgroundRole(),
+                     QBrush(this->pixmapBackgroud->scaled(this->size(),
+                                          Qt::IgnoreAspectRatio,
+                                          Qt::SmoothTransformation)));
+    this->setPalette(palette);
 
 //   this->scrollAreaTankItemsTable->setStyleSheet("border:1px; background-color:transparent ");
 //    this->scrollAreaTankItemsTable->
