@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->addWidgeHeadInfo();
     this->mainLayout->addWidget(this->widgetHeadInfo);
     this->labelTableTitle = new QLabel();
-    this->labelTableTitle->setText(QString::fromUtf8("     舱     室       测深高度          舱室温度                                  舱室容量"));
+    this->labelTableTitle->setText(QString::fromUtf8("      舱名              测深高度            温度                                               舱室容量"));
     this->mainLayout->addWidget(this->labelTableTitle);
 
     this->widgetTankItemsTable = new QWidget();
@@ -95,16 +95,16 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setFixedHeight(this->getWindowsHeight());
 
     //set backgroud
-    this->pixmapBackgroud = new QPixmap();
-    qDebug()<<this->pixmapBackgroud->load(":/res/res/bk4.jpg");
-    qDebug()<<"bk ipeg --> "<<this->pixmapBackgroud->isNull();
-//    this->setAutoFillBackground(true);
-    QPalette    palette = this->palette();
-    palette.setBrush(this->backgroundRole(),
-                     QBrush(this->pixmapBackgroud->scaled(this->size(),
-                                          Qt::IgnoreAspectRatio,
-                                          Qt::SmoothTransformation)));
-    this->setPalette(palette);
+//    this->pixmapBackgroud = new QPixmap();
+//    qDebug()<<this->pixmapBackgroud->load(":/res/res/bk4.jpg");
+//    qDebug()<<"bk ipeg --> "<<this->pixmapBackgroud->isNull();
+////    this->setAutoFillBackground(true);
+//    QPalette    palette = this->palette();
+//    palette.setBrush(this->backgroundRole(),
+//                     QBrush(this->pixmapBackgroud->scaled(this->size(),
+//                                          Qt::IgnoreAspectRatio,
+//                                          Qt::SmoothTransformation)));
+//    this->setPalette(palette);
 
 //   this->scrollAreaTankItemsTable->setStyleSheet("border:1px; background-color:transparent ");
 //    this->scrollAreaTankItemsTable->
