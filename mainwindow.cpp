@@ -36,7 +36,13 @@ MainWindow::MainWindow(QWidget *parent) :
     this->addWidgeHeadInfo();
     this->mainLayout->addWidget(this->widgetHeadInfo);
     this->labelTableTitle = new QLabel();
+#ifdef Q_OS_WIN32
+    //modify here ,xuelong for windows
+    this->labelTableTitle->setText(QString::fromUtf8(" 舱名    ??   ??       测深高度            温度                                               舱室容量"));
+  #else
     this->labelTableTitle->setText(QString::fromUtf8("      舱名              测深高度            温度                                               舱室容量"));
+#endif
+
     this->mainLayout->addWidget(this->labelTableTitle);
 
     this->widgetTankItemsTable = new QWidget();
