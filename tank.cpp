@@ -112,7 +112,7 @@ bool Tank::checkDataValidator(void){
     QString stringTemperature = this->lineEditTemrature->text();
     QString stringSounding =  this->lineEditSounding->text();
     if (stringTemperature.size() == 0 || stringSounding == 0){
-        qDebug()<<"temp or sounding can not be empty";
+//        qDebug()<<"temp or sounding can not be empty";
         this->setTankInvalid(true);
         return false;
     }
@@ -123,15 +123,13 @@ bool Tank::checkDataValidator(void){
 }
 void Tank::setTankInvalid(bool enable)
 {
-       if(enable){
-           QPalette pal(palette());
-           pal.setBrush(QPalette::Background, Qt::red);
-           setPalette(pal);
-           this->lineEditCapacity->setText("");
-       }
-       else {
-           QPalette pal(palette());
-           pal.setBrush(QPalette::Background, Qt::lightGray);
-           setPalette(pal);
-       }
+    QPalette pal(palette());
+    if(enable){
+        pal.setBrush(QPalette::Base, Qt::red);
+        this->lineEditCapacity->setText("");
+    }
+    else {
+        pal.setBrush(QPalette::Base, Qt::lightGray);
+    }
+    setPalette(pal);
 }
