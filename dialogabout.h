@@ -20,6 +20,7 @@ private slots:
 
 private:
     Ui::DialogAbout *ui;
+    QPixmap *pixmapBackgroud;
 };
 
 #endif // DIALOGABOUT_H
