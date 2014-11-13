@@ -8,7 +8,7 @@ QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = ship01
+TARGET = ShipSet
 TEMPLATE = app
 
 
@@ -31,5 +31,6 @@ FORMS    += mainwindow.ui \
 RESOURCES += \
     res.qrc
 
-RC_FILE += \
-    myapp.rc
+RC_FILE =    myapp.rc
+
+
