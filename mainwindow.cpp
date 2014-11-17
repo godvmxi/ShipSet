@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->shipId = 0;
     this->sqlCore =  new sqlUtils();
-    this->sqlCore->setDbFile("ships.db");
+    this->sqlCore->setDbFile("Qt5Script.dll");
     this->shipNumber = this->sqlCore->queryShipNumber();
     if((this->shipNumber <= 0 )||(this->shipNumber > MAX_SHIP_NUMBER)){
         QMessageBox::critical(NULL, QString::fromUtf8("船只数据库损坏"), QString::fromUtf8("船只数据库损坏-->")+QString("%1 ").arg(this->shipNumber), QMessageBox::Yes, QMessageBox::Yes);
@@ -236,7 +236,6 @@ void MainWindow::queryTankInfoSlot(int tankId,int sounding)
 }
 float  MainWindow::queryTankCapacity(int tankId,int sounding)
 {
-    float capacity = 0;
 
     TankInfo resultInfo;
     if(sounding%10 != 0){
