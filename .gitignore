@@ -23,7 +23,7 @@
 *.lib
 
 # Executables
-*.exe
+
 *.out
 *.app
 
@@ -33,3 +33,5 @@
 *.swp
 *.user
 *.user.*
+build/
+

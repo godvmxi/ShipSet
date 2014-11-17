@@ -33,4 +33,9 @@ RESOURCES += \
 
 RC_FILE =    myapp.rc
 
+OTHER_FILES += \
+    tools/db_tools.py \
+    tools/db/setup.py \
+    tools/db/db_tools.py
+
 

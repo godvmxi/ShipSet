@@ -215,7 +215,7 @@ if __name__ == "__main__" :
     argc = len(sys.argv) 
     if argc < 2 :
         print(help)
-        exit(0)
+        sys.exit(0)
     if sys.argv[1] == "add" :
         if sys.argv[2] == 'ship' and argc == 4 :
             add_ship_info(sys.argv[3])
