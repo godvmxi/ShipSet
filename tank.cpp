@@ -123,13 +123,23 @@ bool Tank::checkDataValidator(void){
 }
 void Tank::setTankInvalid(bool enable)
 {
-    QPalette pal(palette());
+//    QPalette pal(palette());
+
     if(enable){
-        pal.setBrush(QPalette::Base, Qt::red);
+//        pal.setBrush(QPalette::Base, Qt::red);
+        this->lineEditSounding->setStyleSheet("background-color:red;");
+        this->lineEditTemrature->setStyleSheet("background-color:red;");
+        this->lineEditCapacity->setStyleSheet("background-color:red;");
+
         this->lineEditCapacity->setText("");
     }
     else {
-        pal.setBrush(QPalette::Base, Qt::lightGray);
+        this->lineEditSounding->setStyleSheet("background-color:white;");
+        this->lineEditTemrature->setStyleSheet("background-color:white;");
+        this->lineEditCapacity->setStyleSheet("background-color:white;");
     }
-    setPalette(pal);
+//    this->setAutoFillBackground(true);
+//    setPalette(pal);
+
+//    this->update();
 }
