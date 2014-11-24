@@ -90,9 +90,10 @@ def add_ship_info(fileName):
     print bufs
     lines = []
     for line in bufs :
+        
+        line = line.replace("\n","").replace("\r",'').replace(" ","").replace(codecs.BOM_UTF8,"") 
         if line[0] == "#":
             continue
-        line = line.replace("\n","").replace("\r",'').replace(" ","").replace(codecs.BOM_UTF8,"") 
         if len(line) > 0:
             lines.append(line)
     pprint.pprint( lines)
