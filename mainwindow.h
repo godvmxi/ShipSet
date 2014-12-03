@@ -84,6 +84,8 @@ private:
     QPushButton *pushButtonAbout;
     //backgroud
     QPixmap *pixmapBackgroud;
+    //status bar
+    QLabel *labelError ;
 };
 
 #endif // MAINWINDOW_H

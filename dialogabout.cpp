@@ -19,6 +19,7 @@ DialogAbout::DialogAbout(QWidget *parent) :
                                           Qt::IgnoreAspectRatio,
                                           Qt::SmoothTransformation)));
     this->setPalette(palette);
+
 }
 
 DialogAbout::~DialogAbout()

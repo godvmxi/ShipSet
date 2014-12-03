@@ -116,9 +116,11 @@ bool Tank::checkDataValidator(void){
         this->setTankInvalid(true);
         return false;
     }
-    stringSounding.remove(".");
+    qDebug()<<stringSounding << stringSounding.toDouble() *1000 <<(stringSounding.toDouble() *10000)/10;
+    this->sounding = (stringSounding.toDouble() *10000)/10 ;
+    //    stringSounding.remove(".");
     qDebug()<<"sounding --> "<<stringSounding  << this->sounding;
-    this->sounding = int(stringSounding.toInt());
+//    this->sounding = int(stringSounding.toInt());
     if(this->sounding < 0 ){
         this->setTankInvalid(true);
         return false;
@@ -155,4 +157,7 @@ void Tank::setTankInvalid(bool enable)
 //    setPalette(pal);
 
 //    this->update();
+}
+QString Tank::getTankName(void){
+    return this->labelName->text();
 }

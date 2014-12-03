@@ -115,6 +115,9 @@ MainWindow::MainWindow(QWidget *parent) :
 //   this->scrollAreaTankItemsTable->setStyleSheet("border:1px; background-color:transparent ");
 //    this->scrollAreaTankItemsTable->
 
+    this->labelError = new QLabel();
+    this->statusBar()->addWidget(this->labelError);
+
 }
 
 MainWindow::~MainWindow()
@@ -325,6 +328,7 @@ bool  MainWindow::queryTankCapacity(int tankId,int sounding,float *cap)
     }
     else
         *cap = resultInfo.capacity[i];
+    this->labelError->setText("");
     return true;
 }
 void MainWindow::shipTrimChanged(QString d){
@@ -478,9 +482,11 @@ void MainWindow::showSoundingQueryError(int tankId){
         tank = (Tank *)( this->widgetTankItems[i] );
         if(tankId == tank->getTankId()){
             tank->setTankInvalid(true);
+            this->labelError->setText(tank->getTankName() +QString::fromUtf8("  测深高度值超出最大值，请输入正确值"));
             break;
         }
     }
-    QMessageBox::information(NULL, "Error", QString::fromUtf8("测深高度值超出最大值，请输入正确值"), QMessageBox::Yes , QMessageBox::Yes);
+
+//    QMessageBox::information(NULL, "Error",tank->getTankName()+ QString::fromUtf8("  测深高度值超出最大值，请输入正确值"), QMessageBox::Yes , QMessageBox::Yes);
 
 }

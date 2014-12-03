@@ -34,6 +34,7 @@ public:
     int getTankId(void);
     int getSounding(void);
     void setTankInvalid(bool enable);
+    QString getTankName(void);
 
 signals :
     void tryQueryBankInfo(int shipId , int tankId,int sounding);
