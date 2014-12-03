@@ -117,8 +117,16 @@ bool Tank::checkDataValidator(void){
         return false;
     }
     stringSounding.remove(".");
-    this->sounding = int(stringSounding.toInt());
     qDebug()<<"sounding --> "<<stringSounding  << this->sounding;
+    this->sounding = int(stringSounding.toInt());
+    if(this->sounding < 0 ){
+        this->setTankInvalid(true);
+        return false;
+    }
+    else {
+        this->setTankInvalid(false);
+    }
+
 
 //    return true;
     this->temprature = stringTemperature.toFloat();

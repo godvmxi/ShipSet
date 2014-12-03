@@ -33,12 +33,13 @@ public slots :
     void pushButtonCalTotalCapacity(void);
     void comboBoxShipCrtChanged(int index);
     void pushButtonAboutSlot(void);
+    void showSoundingQueryError(int tankId);
 
 private:
     void addWidgeHeadInfo(void);
     void addWidgeFootInfo(void);
     void updateWidgetTankTrim(void);
-    float queryTankCapacity(int tankId,int sounding);
+    bool queryTankCapacity(int tankId,int sounding,float *info);
     void  addTankItemsTable(bool clearOld);
 //    void paintEvent(QPaintEvent *e);
     int getWindowsHeight(void);

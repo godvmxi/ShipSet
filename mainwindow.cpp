@@ -224,7 +224,12 @@ void MainWindow::queryTankInfoSlot(int tankId,int sounding)
 //        if(capacity< 0)
 //            return;
 //    }
-    capacity = queryTankCapacity(tankId,sounding);
+    if( !queryTankCapacity(tankId,sounding,&capacity) )
+    {
+        this->showSoundingQueryError(tankId);
+        return ;
+    }
+
     Tank *tank =  (Tank *)this->widgetTankItems[tankId - 1];
     //temprature modify
     //add trim fix
@@ -234,7 +239,7 @@ void MainWindow::queryTankInfoSlot(int tankId,int sounding)
 
 
 }
-float  MainWindow::queryTankCapacity(int tankId,int sounding)
+bool  MainWindow::queryTankCapacity(int tankId,int sounding,float *cap)
 {
 
     TankInfo resultInfo;
@@ -242,10 +247,20 @@ float  MainWindow::queryTankCapacity(int tankId,int sounding)
         int temp = sounding %10 ;
         int sounding_1 =  sounding -  temp;
         int sounding_2 =  sounding_1 +10;
+        TankInfo tempInfo = {0};
         qDebug()<<"will query two sounding -> "<<tankId << sounding_1 << sounding_2;
 
-        resultInfo        = this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding_1);
-        TankInfo tempInfo = this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding_2);
+        if ( !this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding_1,&resultInfo ) ){
+            qDebug()<<"tank exceed the max";
+            this->showSoundingQueryError(tankId);
+            return false ;
+        }
+        if( !this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding_2,&tempInfo) )
+        {
+            qDebug()<<"tank exceed the max";
+            this->showSoundingQueryError(tankId);
+            return false ;
+        }
 
 
         qDebug()<<resultInfo.sounding<<resultInfo.capacity[0]<<resultInfo.capacity[1]<<resultInfo.capacity[2]\
@@ -263,8 +278,13 @@ float  MainWindow::queryTankCapacity(int tankId,int sounding)
     }
     else {
         qDebug()<<"will query one sounding -> "<<tankId << sounding  ;
-        resultInfo        = this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding);
+        if(!this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding,&resultInfo) )
+        {
+                qDebug()<<"tank exceed the max";
+                return false ;
+        }
     }
+
     qDebug()<<resultInfo.sounding<<resultInfo.capacity[0]<<resultInfo.capacity[1]<<resultInfo.capacity[2]\
               <<resultInfo.capacity[3]<<resultInfo.capacity[4]<<resultInfo.capacity[5]\
                 <<resultInfo.capacity[6]<<resultInfo.capacity[7];
@@ -294,16 +314,18 @@ float  MainWindow::queryTankCapacity(int tankId,int sounding)
     }
     if(trimFlag == 0){
         qDebug()<<"just ok  -> "<<i<<min<< max;
-        return resultInfo.capacity[i];
+        *cap = resultInfo.capacity[i];
     }
     else if(trimFlag == 1){
         qDebug()<<"not just ok ->  "<< this->currentShipTrim <<min << max;
         float capacity_1 =  resultInfo.capacity[i];
         float capacity_2 =  resultInfo.capacity[i+1];
-        return    ( (capacity_2 -capacity_1 ) /this->shipInfo.shipTrimStep )*(this->currentShipTrim -min)  + capacity_1 ;
+        *cap =    ( (capacity_2 -capacity_1 ) /this->shipInfo.shipTrimStep )*(this->currentShipTrim -min)  + capacity_1 ;
+
     }
     else
-        return resultInfo.capacity[i];
+        *cap = resultInfo.capacity[i];
+    return true;
 }
 void MainWindow::shipTrimChanged(QString d){
 
@@ -328,8 +350,14 @@ void MainWindow::pushButtonCalTotalCapacity(void){
             int tankId = tank->getTankId();
             int sounding = tank->getSounding();
            // qDebug()<<"foreach-->"<<tankId<<sounding ;
-            eachCapacity =  this->queryTankCapacity(tankId,sounding);
-            //     qDebug()<<"foreach-->"<<tankId<<sounding<<eachCapacity;
+            if(!this->queryTankCapacity(tankId,sounding,&eachCapacity))
+            {
+                qDebug()<<"show sounding error";
+                this->showSoundingQueryError(tankId);
+                return ;
+            }
+
+                 qDebug()<<"foreach-->"<<tankId<<sounding<<eachCapacity;
             if(eachCapacity >= 0){
                 tank->setTankCapacity(eachCapacity);
             }
@@ -439,4 +467,20 @@ void MainWindow::pushButtonAboutSlot(void)
 {
     DialogAbout about;
     about.exec();
+}
+void MainWindow::showSoundingQueryError(int tankId){
+    if(tankId < 0){
+        return ;
+    }
+    Tank *tank;
+    qDebug()<<"tank error show -> "<<tankId;
+    for(int i = 0;i<this->shipInfo.tankNumber;i++){
+        tank = (Tank *)( this->widgetTankItems[i] );
+        if(tankId == tank->getTankId()){
+            tank->setTankInvalid(true);
+            break;
+        }
+    }
+    QMessageBox::information(NULL, "Error", QString::fromUtf8("测深高度值超出最大值，请输入正确值"), QMessageBox::Yes , QMessageBox::Yes);
+
 }

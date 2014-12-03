@@ -80,7 +80,7 @@ ShipInfo sqlUtils::queryShipInfo(int shipId){
     return info;
 }
 
-TankInfo sqlUtils::queryTankInfo(int shipId,int tankId,int sounding){
+bool sqlUtils::queryTankInfo(int shipId,int tankId,int sounding,TankInfo *retInfo){
     TankInfo info ;
     memset(&info,0,sizeof(TankInfo));
     QSqlQuery query(this->db);
@@ -100,13 +100,16 @@ TankInfo sqlUtils::queryTankInfo(int shipId,int tankId,int sounding){
             info.capacity[i] = capacitys.at(i).toFloat();
         }
     }
+    qDebug()<<"sql affect lines -> "<<affectLines;
 //    showTankInfo(&info);
     if(affectLines == 0){
-        //qDebug("can find target data");
-        return info;
+        qDebug("can find target data");
+        return false;
     }
-    emit this->reportTankInfo(info);
-    return info;
+    *retInfo = info;
+    return true;
+//    emit this->reportTankInfo(info);
+//    return info;
 }
 
 int sqlUtils::queryShipNumber(void){
