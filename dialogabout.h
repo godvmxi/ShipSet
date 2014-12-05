@@ -2,6 +2,7 @@
 #define DIALOGABOUT_H
 
 #include <QDialog>
+#include <QMessageBox>
 
 namespace Ui {
 class DialogAbout;

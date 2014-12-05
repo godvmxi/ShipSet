@@ -102,8 +102,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //set backgroud
     this->pixmapBackgroud = new QPixmap();
-    qDebug()<<this->pixmapBackgroud->load(":/res/res/bk0.jpg");
-    qDebug()<<"bk ipeg --> "<<this->pixmapBackgroud->isNull();
+    this->pixmapBackgroud->load(":/res/res/bk0.jpg");
+    if(this->pixmapBackgroud->isNull()){
+        QMessageBox::critical(NULL, QString::fromUtf8("ERROR"), QString::fromUtf8("程序资源丢失1"), QMessageBox::Yes, QMessageBox::Yes);
+        exit(0);
+    }
 //    this->setAutoFillBackground(true);
     QPalette    palette = this->palette();
     palette.setBrush(this->backgroundRole(),
@@ -250,7 +253,8 @@ bool  MainWindow::queryTankCapacity(int tankId,int sounding,float *cap)
         int temp = sounding %10 ;
         int sounding_1 =  sounding -  temp;
         int sounding_2 =  sounding_1 +10;
-        TankInfo tempInfo = {0};
+        TankInfo tempInfo ;
+        memset(&tempInfo,0,sizeof(TankInfo));
         qDebug()<<"will query two sounding -> "<<tankId << sounding_1 << sounding_2;
 
         if ( !this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding_1,&resultInfo ) ){
@@ -316,7 +320,7 @@ bool  MainWindow::queryTankCapacity(int tankId,int sounding,float *cap)
         }
     }
     if(trimFlag == 0){
-        qDebug()<<"just ok  -> "<<i<<min<< max;
+//        qDebug()<<"just ok  -> "<<i<<min<< max;
         *cap = resultInfo.capacity[i];
     }
     else if(trimFlag == 1){

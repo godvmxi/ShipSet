@@ -116,12 +116,19 @@ bool Tank::checkDataValidator(void){
         this->setTankInvalid(true);
         return false;
     }
-    qDebug()<<stringSounding << stringSounding.toDouble() *1000 <<(stringSounding.toDouble() *10000)/10;
-    this->sounding = (stringSounding.toDouble() *10000)/10 ;
-    //    stringSounding.remove(".");
-    qDebug()<<"sounding --> "<<stringSounding  << this->sounding;
-//    this->sounding = int(stringSounding.toInt());
-    if(this->sounding < 0 ){
+
+    bool ret = true;
+    double temp = (stringSounding.toDouble(&ret) *1000);
+    if((ret == false)){
+        this->setTankInvalid(true);
+        return false;
+    };
+
+    QString stringTemp = QString("%1").arg(temp);
+//   这里把double转换成浮点，是避免浮点数转整数，精度丢失
+
+    this->sounding =stringTemp.toInt(&ret,10)  ;
+    if((this->sounding < 0 ) && (ret == false)){
         this->setTankInvalid(true);
         return false;
     }
@@ -129,10 +136,12 @@ bool Tank::checkDataValidator(void){
         this->setTankInvalid(false);
     }
 
+    qDebug()<<stringSounding << temp<<stringTemp <<this->sounding;
 
-//    return true;
+    qDebug()<<"sounding --> "<<stringSounding  << this->sounding;
+
     this->temprature = stringTemperature.toFloat();
-//    this->sounding =int  (stringSounding.toDouble() * 1000);
+
     this->setTankInvalid(false);
     return true;
 }

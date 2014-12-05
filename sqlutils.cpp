@@ -100,7 +100,7 @@ bool sqlUtils::queryTankInfo(int shipId,int tankId,int sounding,TankInfo *retInf
             info.capacity[i] = capacitys.at(i).toFloat();
         }
     }
-    qDebug()<<"sql affect lines -> "<<affectLines;
+//    qDebug()<<"sql affect lines -> "<<affectLines;
 //    showTankInfo(&info);
     if(affectLines == 0){
         qDebug("can find target data");
