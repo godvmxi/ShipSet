@@ -63,6 +63,19 @@ private:
     QScrollArea *scrollAreaTankItemsTable;
     QWidget *widgetTankItemsTable ;
     QVBoxLayout *vBoxLayoutTankItemsTable;
+    //middle left layout
+    //middle right layout
+
+    //middle right widgets
+    QWidget *widgetMiddleRightInfo;
+    //middle h layout
+    QHBoxLayout *hBoxLayoutMiddleMain;
+    //middle right v layout
+    QVBoxLayout *hBoxLayoutMiddleRight;
+    //middle widgets
+    QWidget *widgetMiddleMain;
+    //middle right widgets
+    QWidget *widgetMiddleRight;
 
     //widget head info
     QLabel *labelCrt ;
@@ -75,6 +88,7 @@ private:
     QHBoxLayout *hBoxLayoutHeadInfo ;
     //widget table title
     QLabel   *labelTableTitle;
+
     //widget foot info
     QLabel *labelFinalDate;
     QPushButton *pushButtonTotalCapacity;

@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->mainLayout =  new QVBoxLayout();
-    this->setFixedWidth(480);
+//    this->setFixedWidth(480);
 //    this->setWindowIcon(QIcon(":/icon.bmp"));
 
     this->shipId = 0;
@@ -93,7 +93,31 @@ MainWindow::MainWindow(QWidget *parent) :
     this->widgetTankItemsTable->setLayout(this->vBoxLayoutTankItemsTable);
     this->scrollAreaTankItemsTable->setWidget(this->widgetTankItemsTable);
     this->scrollAreaTankItemsTable->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    this->mainLayout->addWidget(this->scrollAreaTankItemsTable);
+
+    //this->mainLayout->addWidget(this->scrollAreaTankItemsTable);
+    this->widgetMiddleMain = new QWidget();
+    this->widgetMiddleRight = new QWidget();
+    this->hBoxLayoutMiddleMain = new QHBoxLayout();
+    this->hBoxLayoutMiddleRight = new QVBoxLayout();
+
+    this->widgetMiddleRight->setFixedWidth(100);
+
+//    this->hBoxLayoutMiddleRight->addWidget(this->widgetMiddleRight);
+
+//    this->hBoxLayoutMiddleRight->addWidget();
+//    this->hBoxLayoutMiddleRight->addWidget();
+
+//    this->widgetMiddleRight->setLayout(this->hBoxLayoutMiddleRight);
+
+    this->hBoxLayoutMiddleMain->addWidget(this->scrollAreaTankItemsTable);
+    this->hBoxLayoutMiddleMain->addWidget(this->widgetMiddleRight);
+    this->widgetMiddleMain->setLayout(this->hBoxLayoutMiddleMain);
+
+
+
+    this->mainLayout->addWidget((this->widgetMiddleMain));
+
+
 
     this->addWidgeFootInfo();
     this->mainLayout->addWidget(this->widgetFootInfo);
@@ -113,6 +137,7 @@ MainWindow::MainWindow(QWidget *parent) :
                      QBrush(this->pixmapBackgroud->scaled(this->size(),
                                           Qt::IgnoreAspectRatio,
                                           Qt::SmoothTransformation)));
+//    this->centralWidget()->setPalette(palette);
     this->setPalette(palette);
 
 //   this->scrollAreaTankItemsTable->setStyleSheet("border:1px; background-color:transparent ");
