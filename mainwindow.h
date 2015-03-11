@@ -15,6 +15,8 @@
 #include <QPaintEvent>
 #include <dialogabout.h>
 #include <QPixmap>
+#include <QFormLayout>
+#include <QLineEdit>
 namespace Ui {
 class MainWindow;
 }
@@ -70,8 +72,8 @@ private:
     QWidget *widgetMiddleRightInfo;
     //middle h layout
     QHBoxLayout *hBoxLayoutMiddleMain;
-    //middle right v layout
-    QVBoxLayout *hBoxLayoutMiddleRight;
+    //middle right form layout
+    QFormLayout *formLayoutMiddleRight;
     //middle widgets
     QWidget *widgetMiddleMain;
     //middle right widgets
@@ -100,6 +102,14 @@ private:
     QPixmap *pixmapBackgroud;
     //status bar
     QLabel *labelError ;
+
+    QLineEdit *lineEditHSounding;
+    QLineEdit *lineEditVSounding;
+    QLineEdit *lineEditOil;
+    QLineEdit *lineEditDensity;
+    QLineEdit *lineEditVolume ;
+    QLineEdit *lineEditTotalCapity ;
+
 };
 
 #endif // MAINWINDOW_H

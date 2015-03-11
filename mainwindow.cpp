@@ -98,16 +98,34 @@ MainWindow::MainWindow(QWidget *parent) :
     this->widgetMiddleMain = new QWidget();
     this->widgetMiddleRight = new QWidget();
     this->hBoxLayoutMiddleMain = new QHBoxLayout();
-    this->hBoxLayoutMiddleRight = new QVBoxLayout();
+    this->formLayoutMiddleRight = new QFormLayout();
 
-    this->widgetMiddleRight->setFixedWidth(100);
+//    this->widgetMiddleRight->setFixedWidth(00);
+    this->lineEditHSounding  = new QLineEdit();
+    this->lineEditVSounding = new QLineEdit();
+    this->lineEditOil  = new QLineEdit();
+    this->lineEditDensity  = new QLineEdit();
+    this->lineEditVolume  = new QLineEdit();
+    this->lineEditTotalCapity = new QLineEdit();
+    this->lineEditTotalCapity->setEnabled(false);
+    this->lineEditTotalCapity->setText("0.0");
 
-//    this->hBoxLayoutMiddleRight->addWidget(this->widgetMiddleRight);
+    this->formLayoutMiddleRight->addRow(QString::fromUtf8("横    倾"),this->lineEditHSounding);
+    this->formLayoutMiddleRight->addRow(QString::fromUtf8("纵    倾"),this->lineEditVSounding);
+    this->formLayoutMiddleRight->addRow(QString::fromUtf8("管内油量"),this->lineEditOil);
+    this->formLayoutMiddleRight->addRow(QString::fromUtf8("标准密度"),this->lineEditDensity);
+    this->formLayoutMiddleRight->addRow(QString::fromUtf8("体积修正"),this->lineEditVolume);
+    this->formLayoutMiddleRight->addRow(QString::fromUtf8("总 容 积"),this->lineEditTotalCapity);
 
-//    this->hBoxLayoutMiddleRight->addWidget();
-//    this->hBoxLayoutMiddleRight->addWidget();
+    this->formLayoutMiddleRight->setVerticalSpacing(25);
+    this->formLayoutMiddleRight->setHorizontalSpacing(10);
+    this->pushButtonTotalCapacity = new QPushButton();
+    this->pushButtonTotalCapacity->setText(QString::fromUtf8("   总容量  "));
+    this->formLayoutMiddleRight->addRow(this->pushButtonTotalCapacity);
 
-//    this->widgetMiddleRight->setLayout(this->hBoxLayoutMiddleRight);
+
+
+    this->widgetMiddleRight->setLayout(this->formLayoutMiddleRight);
 
     this->hBoxLayoutMiddleMain->addWidget(this->scrollAreaTankItemsTable);
     this->hBoxLayoutMiddleMain->addWidget(this->widgetMiddleRight);
@@ -203,8 +221,8 @@ void MainWindow::addWidgeHeadInfo(void){
 
 }
 void MainWindow::addWidgeFootInfo(void){
-    this->pushButtonTotalCapacity = new QPushButton();
-    this->pushButtonTotalCapacity->setText(QString::fromUtf8("   总容量  "));
+//    this->pushButtonTotalCapacity = new QPushButton();
+//    this->pushButtonTotalCapacity->setText(QString::fromUtf8("   总容量  "));
     this->labelTotalCapacity = new QLabel();
     this->pushButtonAbout = new QPushButton(QString::fromUtf8("更多"));
     this->labelTotalCapacity->setText("      0.000");
@@ -217,18 +235,19 @@ void MainWindow::addWidgeFootInfo(void){
 
     this->labelFinalDate->setFixedWidth(400);
 
-    this->hBoxLayoutFootInfo->addWidget(this->labelFinalDate);
-    this->hBoxLayoutFootInfo->addWidget(this->pushButtonAbout);
-    this->hBoxLayoutFootInfo->addWidget(this->pushButtonTotalCapacity);
-    this->hBoxLayoutFootInfo->addWidget(this->labelTotalCapacity);
-    this->hBoxLayoutFootInfo->setAlignment(Qt::AlignRight);
-    this->widgetFootInfo->setLayout(this->hBoxLayoutFootInfo);
+//    this->hBoxLayoutFootInfo->addWidget(this->labelFinalDate);
+//    this->hBoxLayoutFootInfo->addWidget(this->pushButtonAbout);
+//    this->hBoxLayoutFootInfo->addWidget(this->pushButtonTotalCapacity);
+//    this->hBoxLayoutFootInfo->addWidget(this->labelTotalCapacity);
+//    this->hBoxLayoutFootInfo->setAlignment(Qt::AlignRight);
+//    this->widgetFootInfo->setLayout(this->hBoxLayoutFootInfo);
 
 
 
 
-    connect(this->pushButtonTotalCapacity,SIGNAL(clicked()),this,SLOT(pushButtonCalTotalCapacity()) );
+   /* connect(this->pushButtonTotalCapacity,SIGNAL(clicked()),this,SLOT(pushButtonCalTotalCapacity()) );
     connect(this->pushButtonAbout,SIGNAL(clicked()),this,SLOT(pushButtonAboutSlot()) );
+    */
 }
 
 void MainWindow::updateWidgetTankTrim(void){
