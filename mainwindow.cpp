@@ -107,7 +107,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->lineEditDensity  = new QLineEdit();
     this->lineEditVolume  = new QLineEdit();
     this->lineEditTotalCapity = new QLineEdit();
-    this->lineEditTotalCapity->setEnabled(false);
+    this->lineEditTotalCapity->setReadOnly(true);
     this->lineEditTotalCapity->setText("0.0");
 
     this->formLayoutMiddleRight->addRow(QString::fromUtf8("横    倾"),this->lineEditHSounding);
