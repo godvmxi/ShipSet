@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->labelTableTitle = new QLabel();
 #ifdef Q_OS_WIN32
     //modify here ,xuelong for windows
-    this->labelTableTitle->setText(QString::fromUtf8("   舱名       测深高度       温度           计算         容量值"));
+    this->labelTableTitle->setText(QString::fromUtf8("     舱名       测深高度       温度           计算         容量值                公共参数设定"));
   #else
     this->labelTableTitle->setText(QString::fromUtf8("      舱名              测深高度            温度                    计算                    容量值"));
 #endif
@@ -137,8 +137,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
-    this->addWidgeFootInfo();
-    this->mainLayout->addWidget(this->widgetFootInfo);
+//    this->mainLayout->addWidget(this->widgetFootInfo);
     ui->centralWidget->setLayout(this->mainLayout);
     this->setFixedHeight(this->getWindowsHeight());
 
@@ -173,81 +172,52 @@ MainWindow::~MainWindow()
 void MainWindow::addWidgeHeadInfo(void){
 
 
-    this->labelCrt = new QLabel();
+    this->labelCrtName = new QLabel();
     this->labelShipName = new QLabel();
-    this->comboBoxShipCrt =  new QComboBox();
+    this->comboBoxShipCrtName =  new QComboBox();
 
-//    this->comboBoxShipCrt->setStyleSheet("border:1px; background-color:transparent ");
+//    this->comboBoxShipCrtName->setStyleSheet("border:1px; background-color:transparent ");
     this->labelTrim = new QLabel();
     this->doubleSpinBoxTrim = new QDoubleSpinBox();
 
     this->widgetHeadInfo = new QWidget();
     this->hBoxLayoutHeadInfo = new QHBoxLayout();
 
-    this->labelCrt->setText(QString::fromUtf8("  证书号 : "));
-    this->labelCrt->setFixedWidth(50);
+    this->labelCrtName->setText(QString::fromUtf8("  证书号 : "));
+    this->labelCrtName->setFixedWidth(50);
     this->labelShipName->setText(QString::fromUtf8("  船名 :    ") +this->shipInfo.shipName);
-    this->comboBoxShipCrt->setFixedWidth(100);
+    this->labelShipName->setFixedWidth(150);
+    this->comboBoxShipCrtName->setFixedWidth(100);
     for(int i = 0;i<this->shipNumber;i++){
-        this->comboBoxShipCrt->addItem(this->shipArray[i].crt);
+        this->comboBoxShipCrtName->addItem(this->shipArray[i].crtName);
     }
 
-    this->labelTrim->setText(QString::fromUtf8("纵倾值 : "));
-    this->labelTrim->setFixedWidth(50);
-    this->doubleSpinBoxTrim->setMinimum(this->shipInfo.shipTrimMin);
-    this->doubleSpinBoxTrim->setSingleStep(double(this->shipInfo.shipTrimStep));
-    this->doubleSpinBoxTrim->setDecimals(4);
-    this->doubleSpinBoxTrim->setMaximum(this->shipInfo.shipTrimMin + this->shipInfo.shipTrimStep*this->shipInfo.capacityNumber);
-    this->doubleSpinBoxTrim->setFixedWidth(60);
-    this->doubleSpinBoxTrim->setValue(this->shipInfo.shipTrimMin);
 
-
-    this->shipTrimMax = this->shipInfo.shipTrimMin +  this->shipInfo.shipTrimStep * (this->shipInfo.capacityNumber - 1) ;
-    this->currentShipTrim = this->doubleSpinBoxTrim->value();
-
-    this->hBoxLayoutHeadInfo->addWidget(this->labelCrt);
-    this->hBoxLayoutHeadInfo->addWidget(this->comboBoxShipCrt);
+    this->hBoxLayoutHeadInfo->addWidget(this->labelCrtName);
+    this->hBoxLayoutHeadInfo->addWidget(this->comboBoxShipCrtName);
     this->hBoxLayoutHeadInfo->addWidget(this->labelShipName);
 
-    this->hBoxLayoutHeadInfo->addWidget(this->labelTrim);
-    this->hBoxLayoutHeadInfo->addWidget(this->doubleSpinBoxTrim);
+    this->labelTotalCapacity = new QLabel();
+//    this->pushButtonAbout = new QPushButton(QString::fromUtf8("更多"));
+//    this->labelTotalCapacity->setText("      0.000");
+//    this->labelTotalCapacity->setFixedWidth(100);
+
+    this->labelFinalDate =  new QLabel();
+    this->labelFinalDate->setText(QString::fromUtf8("软件有效期 : ")+this->shipInfo.finalDate.toString("dd/MM/yyyy"));
+
+    this->labelFinalDate->setFixedWidth(400);
+    this->hBoxLayoutHeadInfo->addWidget(this->labelFinalDate);
+
+//    this->hBoxLayoutHeadInfo->addWidget(this->labelTrim);
+//    this->hBoxLayoutHeadInfo->addWidget(this->doubleSpinBoxTrim);
 //    this->hBoxLayoutHeadInfo->addWidget(this->labelFinalDate);
 
     this->widgetHeadInfo->setLayout(this->hBoxLayoutHeadInfo);
     connect(this->doubleSpinBoxTrim,SIGNAL(valueChanged(QString)),this,SLOT(shipTrimChanged(QString)) );
-    connect(this->comboBoxShipCrt,SIGNAL(currentIndexChanged(int)),this,SLOT(comboBoxShipCrtChanged(int )) );
+    connect(this->comboBoxShipCrtName,SIGNAL(currentIndexChanged(int)),this,SLOT(comboBoxShipCrtNameChanged(int )) );
 
 
 
-}
-void MainWindow::addWidgeFootInfo(void){
-//    this->pushButtonTotalCapacity = new QPushButton();
-//    this->pushButtonTotalCapacity->setText(QString::fromUtf8("   总容量  "));
-    this->labelTotalCapacity = new QLabel();
-    this->pushButtonAbout = new QPushButton(QString::fromUtf8("更多"));
-    this->labelTotalCapacity->setText("      0.000");
-    this->labelTotalCapacity->setFixedWidth(100);
-
-    this->labelFinalDate =  new QLabel();
-    this->labelFinalDate->setText(QString::fromUtf8("软件有效期 : ")+this->shipInfo.finalDate.toString("dd/MM/yyyy"));
-    this->widgetFootInfo =  new QWidget();
-    this->hBoxLayoutFootInfo = new QHBoxLayout();
-
-    this->labelFinalDate->setFixedWidth(400);
-
-//    this->hBoxLayoutFootInfo->addWidget(this->labelFinalDate);
-//    this->hBoxLayoutFootInfo->addWidget(this->pushButtonAbout);
-//    this->hBoxLayoutFootInfo->addWidget(this->pushButtonTotalCapacity);
-//    this->hBoxLayoutFootInfo->addWidget(this->labelTotalCapacity);
-//    this->hBoxLayoutFootInfo->setAlignment(Qt::AlignRight);
-//    this->widgetFootInfo->setLayout(this->hBoxLayoutFootInfo);
-
-
-
-
-   /* connect(this->pushButtonTotalCapacity,SIGNAL(clicked()),this,SLOT(pushButtonCalTotalCapacity()) );
-    connect(this->pushButtonAbout,SIGNAL(clicked()),this,SLOT(pushButtonAboutSlot()) );
-    */
 }
 
 void MainWindow::updateWidgetTankTrim(void){
@@ -429,9 +399,9 @@ void MainWindow::pushButtonCalTotalCapacity(void){
     this->labelTotalCapacity->setText(QString("      %1").arg(totalCapacity));
 
 }
-void MainWindow::comboBoxShipCrtChanged(int index)
+void MainWindow::comboBoxShipCrtNameChanged(int index)
 {
-    qDebug()<<index <<this->shipArray[index].shipName << this->shipArray[index].crt;
+    qDebug()<<index <<this->shipArray[index].shipName << this->shipArray[index].crtName;
     //update class info
     this->oldShipInfo =  this->shipInfo;
     this->shipInfo =  this->shipArray[index];

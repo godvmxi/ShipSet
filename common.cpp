@@ -15,7 +15,7 @@ void showTankInfo(TankInfo *info){
 void showShipInfo(ShipInfo *info){
     qDebug()<<"Show ship info ";
     qDebug()<<"shipId         "<< info->shipId;
-    qDebug()<<"crt            "<< info->crt;
+    qDebug()<<"crt            "<< info->crtName;
     qDebug()<<"shipName       "<< info->shipName;
     qDebug()<<"tankNumber     "<< info->tankNumber;
     qDebug()<<"capacityNumber "<< info->capacityNumber;

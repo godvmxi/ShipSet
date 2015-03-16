@@ -44,7 +44,7 @@ bool sqlUtils::queryShipsInfo(ShipInfo *info){
     while(query.next()) {
         //qDebug()<<query.value(0) << query.value(1)<< query.value(2)<< query.value(3)<< query.value(4)<< query.value(5)<< query.value(6)<< query.value(7);
         info[i].shipId = query.value(0).toInt();
-        info[i].crt = query.value(1).toString();
+        info[i].crtName = query.value(1).toString();
         info[i].shipName = query.value(2).toString();
         info[i].tankNumber = query.value(3).toInt();
         info[i].capacityNumber = query.value(4).toInt();
@@ -68,7 +68,7 @@ ShipInfo sqlUtils::queryShipInfo(int shipId){
 
         //qDebug()<<query.value(0) << query.value(1)<< query.value(2)<< query.value(3)<< query.value(4)<< query.value(5)<< query.value(6)<< query.value(7);
         info.shipId = query.value(0).toInt();
-        info.crt = query.value(1).toString();
+        info.crtName = query.value(1).toString();
         info.shipName = query.value(2).toString();
         info.tankNumber = query.value(3).toInt();
         info.capacityNumber = query.value(4).toInt();

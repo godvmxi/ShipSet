@@ -33,7 +33,7 @@ public slots :
     void queryTankInfoSlot(int tankId,int sounding);
     void shipTrimChanged(QString d);
     void pushButtonCalTotalCapacity(void);
-    void comboBoxShipCrtChanged(int index);
+    void comboBoxShipCrtNameChanged(int index);
     void pushButtonAboutSlot(void);
     void showSoundingQueryError(int tankId);
 
@@ -80,9 +80,9 @@ private:
     QWidget *widgetMiddleRight;
 
     //widget head info
-    QLabel *labelCrt ;
+    QLabel *labelCrtName ;
     QLabel *labelShipName ;
-    QComboBox *comboBoxShipCrt;
+    QComboBox *comboBoxShipCrtName;
     QLabel *labelTrim ;
     QDoubleSpinBox *doubleSpinBoxTrim ;
 

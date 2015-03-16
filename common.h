@@ -8,7 +8,7 @@
 
 typedef struct {
     int shipId;
-    QString crt;
+    QString crtName;
     QString shipName;
     int tankNumber;
     int capacityNumber;
