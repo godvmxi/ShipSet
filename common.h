@@ -12,15 +12,23 @@ typedef struct {
     QString shipName;
     int tankNumber;
     int capacityNumber;
+    float soundingLimit[2];
+    float shipTrimH[MAX_CAPACITY_PER_TANK];
+    float shipTrimV[MAX_CAPACITY_PER_TANK];
+
+    QDate crtValidDate;
     float shipTrimMin;
     float shipTrimStep;
-    QDate finalDate;
 }ShipInfo;
 
+#define  TANK_TRIM_H_VALUE    0
+#define  TANK_TRIM_V_VALUE    1
+#define  TANK_CAPICITY_VALUE  2
 typedef struct {
     int shipId;
     int tankId;
     int sounding;
+    int soundingType;
     float  capacity[MAX_CAPACITY_PER_TANK];
 }TankInfo;
 void showTankInfo(TankInfo *info);

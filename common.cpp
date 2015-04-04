@@ -21,6 +21,6 @@ void showShipInfo(ShipInfo *info){
     qDebug()<<"capacityNumber "<< info->capacityNumber;
     qDebug()<<"shipTrimMin    "<< info->shipTrimMin;
     qDebug()<<"shipTrimStep   "<< info->shipTrimStep;
-    qDebug()<<"finaldate      "<< info->finalDate;
+    qDebug()<<"finaldate      "<< info->crtValidDate;
     qDebug()<<"==============";
 }

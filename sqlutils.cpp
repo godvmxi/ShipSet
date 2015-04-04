@@ -2,6 +2,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QSqlQuery>
+#include <assert.h>
 
 sqlUtils::sqlUtils(QObject *parent) :
     QObject(parent)
@@ -34,6 +35,18 @@ int sqlUtils::setDbFile(QString fileName){
 
     return true;
 }
+bool convertStringValueToList(float *value,QString source,int maxNum){
+    QStringList list =  source.split("_");
+    int listCount =  list.count();
+    qDebug()<< listCount << maxNum;
+    assert(listCount <= maxNum);
+    assert(value !=  NULL);
+    for (int i = 0 ;i < listCount ;i++){
+        value[i] = list.at(i).toFloat();
+    }
+    return true;
+}
+
 bool sqlUtils::queryShipsInfo(ShipInfo *info){
     if(info == NULL)
         return false;
@@ -47,11 +60,11 @@ bool sqlUtils::queryShipsInfo(ShipInfo *info){
         info[i].crtName = query.value(1).toString();
         info[i].shipName = query.value(2).toString();
         info[i].tankNumber = query.value(3).toInt();
-        info[i].capacityNumber = query.value(4).toInt();
-        info[i].shipTrimMin = query.value(5).toFloat();
-        info[i].shipTrimStep = query.value(6).toFloat();
-        info[i].finalDate = query.value(7).toDate();
-        i++;
+        convertStringValueToList(info->soundingLimit,query.value(4).toString(),2);
+        info[i].capacityNumber = query.value(5).toInt();
+        convertStringValueToList(info->shipTrimH,query.value(6).toString(),MAX_CAPACITY_PER_TANK);
+        convertStringValueToList(info->shipTrimV,query.value(7).toString(),MAX_CAPACITY_PER_TANK);
+        info->crtValidDate = query.value(8).toDate();
     }
     return true;
 }
@@ -63,7 +76,7 @@ ShipInfo sqlUtils::queryShipInfo(int shipId){
     QString sql = QString("SELECT * FROM shipInfo where shipId = %1").arg(shipId);
 //    qDebug()<< sql;
     query.exec(sql);
-
+    QString temp ;
     while(query.next()) {
 
         //qDebug()<<query.value(0) << query.value(1)<< query.value(2)<< query.value(3)<< query.value(4)<< query.value(5)<< query.value(6)<< query.value(7);
@@ -71,10 +84,11 @@ ShipInfo sqlUtils::queryShipInfo(int shipId){
         info.crtName = query.value(1).toString();
         info.shipName = query.value(2).toString();
         info.tankNumber = query.value(3).toInt();
+        temp = query.value(4).toInt();
         info.capacityNumber = query.value(4).toInt();
-        info.shipTrimMin = query.value(5).toFloat();
-        info.shipTrimStep = query.value(6).toFloat();
-        info.finalDate = query.value(7).toDate();
+        info.shipTrimMin = query.value(6).toFloat();
+        info.shipTrimStep = query.value(7).toFloat();
+        info.crtValidDate = query.value(8).toDate();
     }
 //    showShipInfo(&info);
     return info;

@@ -15,6 +15,7 @@ Tank::Tank(QWidget *parent) :
     this->lineEditTrim  = new QLineEdit();
     this->lineEditCapacity = new QLineEdit();
 
+
 //    this->regExpValidatorTemperature  = new QRegExpValidator(QRegExp("^(-?\d+)(\.\d+)?$" ));
 //    this->regExpValidatorSounding   = new QRegExpValidator(QRegExp("^\d+(\.\d+)?$"));
 //    this->lineEditSounding->setValidator(this->regExpValidatorSounding);
@@ -28,8 +29,7 @@ Tank::Tank(QWidget *parent) :
     this->mainLayout->addWidget(this->labelName);
     this->mainLayout->addWidget(this->lineEditSounding);
     this->mainLayout->addWidget(this->lineEditTemrature);
-//    this->mainLayout->addWidget(this->lineEditTrim);
-//    this->mainLayout->addWidget(this->labelEqual);
+
     this->mainLayout->addWidget(this->pushButtonEqual);
     this->mainLayout->addWidget(this->lineEditCapacity);
 
@@ -43,6 +43,7 @@ Tank::Tank(QWidget *parent) :
     this->lineEditSounding->setText("4.200");
     this->lineEditTemrature->setText("20");
     this->lineEditCapacity->setText("0");
+    this->lineEditCapacity->setEnabled(false);
 }
 
 

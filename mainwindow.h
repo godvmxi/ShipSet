@@ -36,6 +36,7 @@ public slots :
     void comboBoxShipCrtNameChanged(int index);
     void pushButtonAboutSlot(void);
     void showSoundingQueryError(int tankId);
+    void updateWidgetsToolTips(void);
 
 private:
     void addWidgeHeadInfo(void);
@@ -103,8 +104,8 @@ private:
     //status bar
     QLabel *labelError ;
 
-    QLineEdit *lineEditHSounding;
-    QLineEdit *lineEditVSounding;
+    QLineEdit *lineEditTrimH;
+    QLineEdit *lineEditTrimV;
     QLineEdit *lineEditOil;
     QLineEdit *lineEditDensity;
     QLineEdit *lineEditVolume ;

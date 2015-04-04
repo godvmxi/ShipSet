@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->shipInfo = this->shipArray[0];
 
 
+
     this->addWidgeHeadInfo();
     this->mainLayout->addWidget(this->widgetHeadInfo);
     this->labelTableTitle = new QLabel();
@@ -101,8 +102,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->formLayoutMiddleRight = new QFormLayout();
 
 //    this->widgetMiddleRight->setFixedWidth(00);
-    this->lineEditHSounding  = new QLineEdit();
-    this->lineEditVSounding = new QLineEdit();
+    this->lineEditTrimH  = new QLineEdit();
+    this->lineEditTrimV = new QLineEdit();
     this->lineEditOil  = new QLineEdit();
     this->lineEditDensity  = new QLineEdit();
     this->lineEditVolume  = new QLineEdit();
@@ -110,8 +111,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->lineEditTotalCapity->setReadOnly(true);
     this->lineEditTotalCapity->setText("0.0");
 
-    this->formLayoutMiddleRight->addRow(QString::fromUtf8("横    倾"),this->lineEditHSounding);
-    this->formLayoutMiddleRight->addRow(QString::fromUtf8("纵    倾"),this->lineEditVSounding);
+    this->formLayoutMiddleRight->addRow(QString::fromUtf8("横    倾"),this->lineEditTrimH);
+    this->formLayoutMiddleRight->addRow(QString::fromUtf8("纵    倾"),this->lineEditTrimV);
     this->formLayoutMiddleRight->addRow(QString::fromUtf8("管内油量"),this->lineEditOil);
     this->formLayoutMiddleRight->addRow(QString::fromUtf8("标准密度"),this->lineEditDensity);
     this->formLayoutMiddleRight->addRow(QString::fromUtf8("体积修正"),this->lineEditVolume);
@@ -163,6 +164,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->labelError = new QLabel();
     this->statusBar()->addWidget(this->labelError);
 
+    updateWidgetsToolTips();
+
 }
 
 MainWindow::~MainWindow()
@@ -203,7 +206,7 @@ void MainWindow::addWidgeHeadInfo(void){
 //    this->labelTotalCapacity->setFixedWidth(100);
 
     this->labelFinalDate =  new QLabel();
-    this->labelFinalDate->setText(QString::fromUtf8("软件有效期 : ")+this->shipInfo.finalDate.toString("dd/MM/yyyy"));
+    this->labelFinalDate->setText(QString::fromUtf8("软件有效期 : ")+this->shipInfo.crtValidDate.toString("dd/MM/yyyy"));
 
     this->labelFinalDate->setFixedWidth(400);
     this->hBoxLayoutHeadInfo->addWidget(this->labelFinalDate);
@@ -220,9 +223,7 @@ void MainWindow::addWidgeHeadInfo(void){
 
 }
 
-void MainWindow::updateWidgetTankTrim(void){
 
-}
 
 void MainWindow::queryTankInfoSlot(int tankId,int sounding)
 {
@@ -507,4 +508,14 @@ void MainWindow::showSoundingQueryError(int tankId){
 
 //    QMessageBox::information(NULL, "Error",tank->getTankName()+ QString::fromUtf8("  测深高度值超出最大值，请输入正确值"), QMessageBox::Yes , QMessageBox::Yes);
 
+}
+void MainWindow::updateWidgetsToolTips(void){
+    this->lineEditTrimH->setToolTip(
+                QString("%1~~%2").arg(this->shipInfo.shipTrimH[0])
+                .arg(this->shipInfo.shipTrimH[this->shipInfo.capacityNumber-1]));
+    this->lineEditTrimV->setToolTip(
+                QString("%1~~%2").arg(this->shipInfo.shipTrimV[0])
+                .arg(this->shipInfo.shipTrimV[this->shipInfo.capacityNumber-1]));
+
+    //update all tank tool tips
 }
