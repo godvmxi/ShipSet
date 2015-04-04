@@ -27,9 +27,6 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     this->sqlCore->queryShipsInfo(this->shipArray);
 
-//    for(int i = 0 ;i<this->shipNumber;i++){
-//        qDebug()<<"shipName --> "<<this->shipArray[i].shipName;
-//    }
     this->shipInfo = this->shipArray[0];
 
 
@@ -51,46 +48,9 @@ MainWindow::MainWindow(QWidget *parent) :
     this->vBoxLayoutTankItemsTable = new QVBoxLayout();
     this->scrollAreaTankItemsTable = new QScrollArea();
     this->scrollAreaTankItemsTable->setFixedWidth(460);
-#if 0
-    QString left = QString::fromUtf8("左 ");
-    QString right = QString::fromUtf8("右 ");
-    QString room = QString::fromUtf8(" 舱");
-    char numberChar[] = "一二三四五六七八九十";
-    for(int i = 0 ; i< this->shipInfo.tankNumber;i++)
-    {
-        int tankId = i /2 + 1;
-        QString tankName ;
-//        char name[64];
-        Tank *itemTank = new Tank();
-        char tmp[32] = {0};
-        QString index ;
-//        qDebug()<<strlen(numberChar);
-        if(i%2 == 0){
-            tankId -= 1;
-            memcpy(tmp,numberChar + tankId*3,3);
-            index =  QString::fromUtf8(tmp);
-            tankName = left + index + room;
-        }
-        else {
-            tankId -= 1;
-            memcpy(tmp,numberChar + tankId*3,3);
-            index =  QString::fromUtf8(tmp);
-            tankName = right + index + room;
-//            sprintf(name,"右 %d 舱",tankId);
-        }
 
-        itemTank->setTankName(tankName);
-        itemTank->setTankId(i+1);
-        itemTank->setShipId(this->shipId);
-        this->vBoxLayoutTankItemsTable->addWidget(itemTank);
-        this->widgetTankItems[i] = (size_t)itemTank;
-        //connect
-
-        connect(itemTank,SIGNAL(tryQueryBankInfo(int,int)),this,SLOT(queryTankInfoSlot(int,int)));
-    }
-#else
     this->addTankItemsTable(false);
-#endif
+
     this->widgetTankItemsTable->setLayout(this->vBoxLayoutTankItemsTable);
     this->scrollAreaTankItemsTable->setWidget(this->widgetTankItemsTable);
     this->scrollAreaTankItemsTable->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -468,6 +428,7 @@ void MainWindow::addTankItemsTable(bool clearOld)
         itemTank->setTankName(tankName);
         itemTank->setTankId(i+1);
         itemTank->setShipId(this->shipId);
+        itemTank->setSoundingLimit(this->shipInfo.soundingLimit[0],this->shipInfo.soundingLimit[1]);
         this->vBoxLayoutTankItemsTable->addWidget(itemTank);
         this->widgetTankItems[i] = (size_t)itemTank;
         //connect

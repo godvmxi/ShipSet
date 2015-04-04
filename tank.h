@@ -29,6 +29,7 @@ public:
     void setTankName(QString name);
     void setTankCapacity(TankInfo info);
     void setTankCapacity(float value);
+    void setSoundingLimit(int min,int max);
     bool checkDataValidator(void);
 
     int getTankId(void);
@@ -46,6 +47,8 @@ public slots:
 private:
 
     int sounding ;
+    int soundingMin;
+    int soundingMax ;
     float temprature ;
     float trim ;
 

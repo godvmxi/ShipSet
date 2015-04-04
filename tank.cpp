@@ -64,6 +64,14 @@ void Tank::setShipId( int id){
 void Tank::setTankId( int id){
     this->tankId = id;
 }
+void Tank::setSoundingLimit(int min,int max){
+    this->soundingMin = min;
+    this->soundingMax = max;
+    this->lineEditSounding->setText(QString("%1").arg((max +min )/20 * 10) );
+
+    this->lineEditSounding->setToolTip( \
+                QString("%1~~%2").arg(this->soundingMin).arg(this->soundingMax) );
+}
 
 
 void Tank::setTankName( QString name){
@@ -129,7 +137,8 @@ bool Tank::checkDataValidator(void){
 //   这里把double转换成浮点，是避免浮点数转整数，精度丢失
 
     this->sounding =stringTemp.toInt(&ret,10)  ;
-    if((this->sounding < 0 ) && (ret == false)){
+    if((this->sounding < this->soundingMin || this->sounding > this->soundingMax ) && (ret == false)){
+
         this->setTankInvalid(true);
         return false;
     }
