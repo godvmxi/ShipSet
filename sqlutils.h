@@ -25,6 +25,7 @@ public slots:
     int queryShipNumber(void);
     bool queryShipsInfo(ShipInfo *info);
     ShipInfo queryShipInfo(int shipId);
+    int queryTankReferSounding(TankInfo *,int soundingMax,int soundingMin);
     bool queryTankInfo(int shipId,int tankId,int sounding,TankInfo *retInfo);
 
 private :

@@ -93,10 +93,29 @@ ShipInfo sqlUtils::queryShipInfo(int shipId){
 //    showShipInfo(&info);
     return info;
 }
+int sqlUtils::queryTankReferSounding(TankInfo *info,int soundingMax,int soundingMin){
+    int soundingStep = 5000;
+    int sounding = info[0].sounding;
+    int soundingRef1 = sounding - soundingStep >=soundingMin ? sounding - soundingStep :\
+                                                                soundingMin;
+    int soundingRef2 = sounding + soundingStep <=soundingMax ? sounding + soundingStep :\
+                                                                soundingMax;
+    qDebug()<<"query->" << soundingMin<<soundingMax;
+    QString sql = QString("SELECT sounding FROM tankInfo where shipId = %1 and tankId = %2 and sounding >= %3  and sounding <= %4")\
+            .arg(info->shipId).arg(info->tankId).arg(soundingRef1).arg(soundingRef2);
+    QSqlQuery query(this->db);
+    query.exec(sql);
+
+
+
+    return true;
+}
 
 bool sqlUtils::queryTankInfo(int shipId,int tankId,int sounding,TankInfo *retInfo){
     TankInfo info ;
     memset(&info,0,sizeof(TankInfo));
+    qDebug()<<"try query tank info";
+    return false;
     QSqlQuery query(this->db);
     QString sql = QString("SELECT * FROM tankInfo where shipId = %1 and tankId = %2 and sounding = %3").arg(shipId).arg(tankId).arg(sounding);
 //    //qDebug()<< sql;
