@@ -30,8 +30,10 @@ typedef struct {
     int sounding;
     int soundingType;
     float  capacity[MAX_CAPACITY_PER_TANK];
+    QString strValue;
 }TankInfo;
 void showTankInfo(TankInfo *info);
 void showShipInfo(ShipInfo *info);
+#define MAX_RESULT_PER_SQL  100
 
 #endif // COMMON_H

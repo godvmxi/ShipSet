@@ -188,23 +188,7 @@ void MainWindow::addWidgeHeadInfo(void){
 void MainWindow::queryTankInfoSlot(int tankId,int sounding)
 {
     float capacity = 0;
-//    if(sounding%10 != 0){
-//        int temp = sounding %10 ;
-//        int sounding_1 =  sounding -  temp;
-//        int sounding_2 =  sounding_1 +10;
-//        qDebug()<<"will query two sounding -> "<<tankId << sounding_1 << sounding_2;
-//        float capacity_1 = this->queryTankCapacity(tankId,sounding_1);
-//        float capacity_2 = this->queryTankCapacity(tankId,sounding_2);
-//        if((capacity_1 < 0) || capacity_2 < 0)
-//            return ;
-//        capacity = (capacity_2 - capacity_1 ) /10 * temp + capacity_1 ;
-//        qDebug()<<capacity <<capacity_1<<capacity_2;
-//    }
-//    else {
-//        capacity = this->queryTankCapacity(tankId,sounding);
-//        if(capacity< 0)
-//            return;
-//    }
+
     if( !queryTankCapacity(tankId,sounding,&capacity) )
     {
         this->showSoundingQueryError(tankId);
@@ -222,8 +206,16 @@ void MainWindow::queryTankInfoSlot(int tankId,int sounding)
 }
 bool  MainWindow::queryTankCapacity(int tankId,int sounding,float *cap)
 {
-
+    qDebug()<<__func__ ;
     TankInfo resultInfo;
+    if ( this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding,&resultInfo ) ){
+        qDebug()<<"find capacity";
+        return true;
+    }
+    qDebug()<<"can find directly ,try more ";
+    this->showSoundingQueryError(tankId);
+    return false ;
+/*
     if(sounding%10 != 0){
         int temp = sounding %10 ;
         int sounding_1 =  sounding -  temp;
@@ -309,6 +301,7 @@ bool  MainWindow::queryTankCapacity(int tankId,int sounding,float *cap)
         *cap = resultInfo.capacity[i];
     this->labelError->setText("");
     return true;
+    */
 }
 void MainWindow::shipTrimChanged(QString d){
 
@@ -457,7 +450,7 @@ void MainWindow::showSoundingQueryError(int tankId){
         return ;
     }
     Tank *tank;
-    qDebug()<<"tank error show -> "<<tankId;
+   // qDebug()<<"tank error show -> "<<tankId;
     for(int i = 0;i<this->shipInfo.tankNumber;i++){
         tank = (Tank *)( this->widgetTankItems[i] );
         if(tankId == tank->getTankId()){

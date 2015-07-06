@@ -40,7 +40,7 @@ Tank::Tank(QWidget *parent) :
     this->shipId = 0;
     connect(this->pushButtonEqual,SIGNAL(clicked()),this,SLOT(updateTankInfo()) );
 
-    this->lineEditSounding->setText("4.200");
+    this->lineEditSounding->setText("2.001");
     this->lineEditTemrature->setText("20");
     this->lineEditCapacity->setText("0");
     this->lineEditCapacity->setEnabled(false);
@@ -67,7 +67,7 @@ void Tank::setTankId( int id){
 void Tank::setSoundingLimit(int min,int max){
     this->soundingMin = min;
     this->soundingMax = max;
-    this->lineEditSounding->setText(QString("%1").arg((max +min )/20 * 10) );
+  //  this->lineEditSounding->setText(QString("%1").arg((max +min )/20 * 10) );
 
     this->lineEditSounding->setToolTip( \
                 QString("%1~~%2").arg(this->soundingMin).arg(this->soundingMax) );
@@ -118,6 +118,7 @@ void Tank:: setTankCapacity(float value)
     this->lineEditCapacity->setText(QString("%1").arg(new_value));
 }
 bool Tank::checkDataValidator(void){
+   // qDebug()<<"sounding limit ->" << this->soundingMin<<this->soundingMax;
     QString stringTemperature = this->lineEditTemrature->text();
     QString stringSounding =  this->lineEditSounding->text();
     if (stringTemperature.size() == 0 || stringSounding == 0){
