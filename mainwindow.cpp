@@ -210,6 +210,7 @@ void MainWindow::queryTankInfoSlot(int tankId,int sounding)
     this->shipTrimH = this->spinBoxTrimH->value();
     this->shipTrimV = this->spinBoxTrimV->value();
 
+
     if( !this->sqlCore->queryTankValueArray(this->shipInfo.shipId,tankId,sounding,TANK_TRIM_V_VALUE,infoV) ){
         return ;
     }
@@ -222,10 +223,10 @@ void MainWindow::queryTankInfoSlot(int tankId,int sounding)
 //    showTankInfo(infoH);
 //    showTankInfo(infoH+1);
     qDebug()<<"cal real data";
-    if(! calTankFixValue(infoH,sounding,&shipTrimFixH) ){
+    if(! calTankFixCapacityValue(infoH,sounding,TANK_TRIM_H_VALUE,&shipTrimFixH) ){
         qDebug()<<"fix trim H -> "<< shipTrimFixH;
     }
-//    if(! calTankFixValue(infoV,sounding,&shipTrimFixV) ){
+//    if(! calTankFixValue(infoV,sounding,TANK_TRIM_H_VALUE,&shipTrimFixV) ){
 //        qDebug()<<"fix trim V -> "<< shipTrimFixV;
 //    }
 
@@ -240,7 +241,7 @@ void MainWindow::queryTankInfoSlot(int tankId,int sounding)
     Tank *tank =  (Tank *)this->widgetTankItems[tankId - 1];
     //temprature modify
     //add trim fix
-    //
+
 
     tank->setTankCapacity(capacity);
 
@@ -515,7 +516,7 @@ void MainWindow::updateWidgetsToolTips(void){
 
     //update all tank tool tips
 }
-bool MainWindow::calTankFixValue(TankInfo *info  ,float sounding ,float *retValue){
+bool MainWindow::calTankFixCapacityValue(TankInfo *info  ,float sounding ,int capType,float *retValue){
 
     if(!convertStringValueToList(info[0].capacity,info[0].strValue,this->shipInfo.capacityNumber) ){
         return false;
@@ -548,5 +549,35 @@ bool MainWindow::calTankFixValue(TankInfo *info  ,float sounding ,float *retValu
     }
     qDebug()<<"info ok -> " << sounding << info[0].sounding;
     showTankInfo(info);
-    return false;
+
+    float *trimValue = NULL;
+    float shipTrim ;
+    if (capType == TANK_TRIM_H_VALUE) {
+        trimValue = this->shipInfo.shipTrimH;
+        shipTrim = this->shipTrimH;
+    }
+    else  if (capType == TANK_TRIM_V_VALUE) {
+        trimValue = this->shipInfo.shipTrimV;
+        shipTrim = this->shipTrimV;
+    }
+    else {
+        trimValue = NULL;
+        return false;
+    }
+    for (int i = 1 ;i< this->shipInfo.capacityNumber;i++){
+        if (shipTrim == trimValue[i-1]){
+            *retValue = info[0].capacity[i-1];
+            break;
+        }
+        else if (shipTrim == trimValue[i]){
+            *retValue = info[0].capacity[i];
+            break;
+        }
+        else if(  (shipTrim > trimValue[i-1]  )&& (shipTrim < trimValue[i])) {
+            *retValue = trimValue[i-1] + (shipTrim -  trimValue[i-1]) *(info->capacity[i]- info->capacity[i-1]) /(trimValue[i]-trimValue[i-1]) ;
+            break;
+        }
+    }
+    qDebug()<<"capacity -> " <<*retValue ;
+    return true;
 }

@@ -44,7 +44,7 @@ private:
     void updateWidgetTankTrim(void);
     bool queryTankCapacity(int tankId,int sounding,float *info);
     void  addTankItemsTable(bool clearOld);
-    bool calTankFixValue(TankInfo *info ,float sounding  ,float *retValue);
+    bool calTankFixCapacityValue(TankInfo *info ,float sounding  ,int capType,float *retValue);
 //    void paintEvent(QPaintEvent *e);
     int getWindowsHeight(void);
     Ui::MainWindow *ui;
@@ -60,7 +60,7 @@ private:
     ShipInfo shipInfo;
     float currentShipTrim ;
     float shipTrimV ;
-    float shipTrimH;
+    float shipTrimH ;
     float shipTrimMax ;
 
 //    QVector<Tank> widgetTankItems;
