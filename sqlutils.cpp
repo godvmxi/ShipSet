@@ -2,7 +2,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QSqlQuery>
-#include <assert.h>
+
 
 sqlUtils::sqlUtils(QObject *parent) :
     QObject(parent)
@@ -33,18 +33,6 @@ int sqlUtils::setDbFile(QString fileName){
         //qDebug()<<"support not size ";
    }
 
-    return true;
-}
-bool convertStringValueToList(float *value,QString source,int maxNum){
-//    qDebug()<<"convert string -> "<<source;
-    QStringList list =  source.split("_");
-    int listCount =  list.count();
-//    qDebug()<<"string deal"<< listCount << maxNum;
-    assert(listCount <= maxNum);
-    assert(value !=  NULL);
-    for (int i = 0 ;i < listCount ;i++){
-        value[i] = list.at(i).toFloat();
-    }
     return true;
 }
 

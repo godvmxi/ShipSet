@@ -201,9 +201,15 @@ void MainWindow::addWidgeHeadInfo(void){
 void MainWindow::queryTankInfoSlot(int tankId,int sounding)
 {
     float capacity = 0;
+    float shipTrimFixV = 0;
+    float shipTrimFixH = 0;
+
     TankInfo infoV[2] = {0};
     TankInfo infoH[2] = {0};
-    TankInfo infoCap[2] = {0};
+  //  TankInfo infoCap[2] = {0};
+    this->shipTrimH = this->spinBoxTrimH->value();
+    this->shipTrimV = this->spinBoxTrimV->value();
+
     if( !this->sqlCore->queryTankValueArray(this->shipInfo.shipId,tankId,sounding,TANK_TRIM_V_VALUE,infoV) ){
         return ;
     }
@@ -211,11 +217,17 @@ void MainWindow::queryTankInfoSlot(int tankId,int sounding)
         return ;
     }
     //cal accruate capicity
-    showTankInfo(infoV);
-    showTankInfo(infoV+1);
-    showTankInfo(infoH);
-    showTankInfo(infoH+1);
+//    showTankInfo(infoV);
+//    showTankInfo(infoV+1);
+//    showTankInfo(infoH);
+//    showTankInfo(infoH+1);
     qDebug()<<"cal real data";
+    if(! calTankFixValue(infoH,sounding,&shipTrimFixH) ){
+        qDebug()<<"fix trim H -> "<< shipTrimFixH;
+    }
+//    if(! calTankFixValue(infoV,sounding,&shipTrimFixV) ){
+//        qDebug()<<"fix trim V -> "<< shipTrimFixV;
+//    }
 
     return ;
 
@@ -503,16 +515,38 @@ void MainWindow::updateWidgetsToolTips(void){
 
     //update all tank tool tips
 }
-bool MainWindow::calTankFixValue(TankInfo *info  ,float *retValue){
-    if ( info[0].sounding =  info[1].sounding ){
+bool MainWindow::calTankFixValue(TankInfo *info  ,float sounding ,float *retValue){
+
+    if(!convertStringValueToList(info[0].capacity,info[0].strValue,this->shipInfo.capacityNumber) ){
+        return false;
+    }
+    if(!convertStringValueToList(info[1].capacity,info[1].strValue,this->shipInfo.capacityNumber) ){
+        return false;
+    }
+    qDebug()<<"info 0";
+    showTankInfo(info);
+    qDebug()<<"info 1";
+    qDebug()<<"origin sounding -> "<<sounding;
+    showTankInfo(info+1);
+    if ( info[0].sounding ==  info[1].sounding ){
         //do simple cal
-        *retValue = 111;
-        return true;
+        qDebug()<<"do simple cal";
+
+        //just call trim
+
     }
     else {
-        //do comlex cal
+        //do comlex cal,first call capcity
         *retValue = 222;
-        return true;
+        qDebug()<<"do complex cal";
+
+        for (int i = 0 ;i <this->shipInfo.capacityNumber;i++){
+            info[0].capacity[i] = info[0].capacity[i] + ((sounding-info[0].sounding) *(info[1].capacity[i] - info[0].capacity[i]) /(info[1].sounding-info[0].sounding)  );
+        }
+        info[0].sounding =  sounding;
+
     }
+    qDebug()<<"info ok -> " << sounding << info[0].sounding;
+    showTankInfo(info);
     return false;
 }

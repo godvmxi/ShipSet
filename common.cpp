@@ -2,6 +2,7 @@
 #include <QDebug>
 
 void showTankInfo(TankInfo *info){
+//    return ;
     qDebug()<<"Show tank info ";
     qDebug()<<"shipId         "<< info->shipId;
 
@@ -9,11 +10,12 @@ void showTankInfo(TankInfo *info){
     qDebug()<<"souding       "<< info->sounding;
     qDebug()<<"type       "<< info->soundingType;
     qDebug()<<"value       "<< info->strValue;
-  //  qDebug()<<"tankNumber     "<< info->tankNumber;
-//    for(int i = 0 ;i<13;i++){
-//        qDebug()<<"capcacity"<<i<<" ->"<< info->capacity[i];
-//    }
-    qDebug()<<"==============";
+
+    fprintf(stderr,"capcity -> \n");
+    for(int i = 0 ;i<13;i++){
+        fprintf(stderr,"%2.2f ",info->capacity[i]);
+    }
+    qDebug()<<"\n==============";
 }
 void showShipInfo(ShipInfo *info){
     qDebug()<<"Show ship info ";
@@ -38,3 +40,16 @@ void showShipInfo(ShipInfo *info){
     qDebug()<<"\nfinaldate      "<< info->crtValidDate;
     qDebug()<<"==============";
 }
+bool convertStringValueToList(float *value,QString source,int maxNum){
+  //  qDebug()<<"convert string -> "<<source;
+    QStringList list =  source.split("_");
+    int listCount =  list.count();
+    //qDebug()<<"string deal"<< listCount << maxNum;
+    assert(listCount <= maxNum);
+    assert(value !=  NULL);
+    for (int i = 0 ;i < listCount ;i++){
+        value[i] = list.at(i).toFloat();
+    }
+    return true;
+}
+

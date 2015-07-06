@@ -5,6 +5,7 @@
 //#pragma execution_character_set("utf-8")
 #define MAX_CAPACITY_PER_TANK    40
 #define MAX_SHIP_NUMBER          40
+#include <assert.h>
 
 typedef struct {
     int shipId;
@@ -34,6 +35,7 @@ typedef struct {
 }TankInfo;
 void showTankInfo(TankInfo *info);
 void showShipInfo(ShipInfo *info);
+bool convertStringValueToList(float *value,QString source,int maxNum);
 #define MAX_RESULT_PER_SQL  100
 
 #endif // COMMON_H
