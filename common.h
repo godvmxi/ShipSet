@@ -21,8 +21,8 @@ typedef struct {
     float shipTrimStep;
 }ShipInfo;
 
-#define  TANK_TRIM_H_VALUE    0
-#define  TANK_TRIM_V_VALUE    1
+#define  TANK_TRIM_V_VALUE    0
+#define  TANK_TRIM_H_VALUE    1
 #define  TANK_CAPICITY_VALUE  2
 typedef struct {
     int shipId;

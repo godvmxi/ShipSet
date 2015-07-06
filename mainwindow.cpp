@@ -188,6 +188,23 @@ void MainWindow::addWidgeHeadInfo(void){
 void MainWindow::queryTankInfoSlot(int tankId,int sounding)
 {
     float capacity = 0;
+    TankInfo infoV[2] = {0};
+    TankInfo infoH[2] = {0};
+    TankInfo infoCap[2] = {0};
+    if( !this->sqlCore->queryTankValueArray(this->shipInfo.shipId,tankId,sounding,TANK_TRIM_V_VALUE,infoV) ){
+        return ;
+    }
+    if( !this->sqlCore->queryTankValueArray(this->shipInfo.shipId,tankId,sounding,TANK_TRIM_H_VALUE,infoH) ){
+        return ;
+    }
+    //cal accruate capicity
+    showTankInfo(infoV);
+    showTankInfo(infoV+1);
+    showTankInfo(infoH);
+    showTankInfo(infoH+1);
+    qDebug()<<"cal real data";
+
+    return ;
 
     if( !queryTankCapacity(tankId,sounding,&capacity) )
     {
@@ -472,4 +489,17 @@ void MainWindow::updateWidgetsToolTips(void){
                 .arg(this->shipInfo.shipTrimV[this->shipInfo.capacityNumber-1]));
 
     //update all tank tool tips
+}
+bool MainWindow::calTankFixValue(TankInfo *info  ,float *retValue){
+    if ( info[0].sounding =  info[1].sounding ){
+        //do simple cal
+        *retValue = 111;
+        return true;
+    }
+    else {
+        //do comlex cal
+        *retValue = 222;
+        return true;
+    }
+    return false;
 }

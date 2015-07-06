@@ -44,6 +44,7 @@ private:
     void updateWidgetTankTrim(void);
     bool queryTankCapacity(int tankId,int sounding,float *info);
     void  addTankItemsTable(bool clearOld);
+    bool calTankFixValue(TankInfo *info  ,float *retValue);
 //    void paintEvent(QPaintEvent *e);
     int getWindowsHeight(void);
     Ui::MainWindow *ui;

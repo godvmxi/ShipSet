@@ -5,11 +5,14 @@ void showTankInfo(TankInfo *info){
     qDebug()<<"Show tank info ";
     qDebug()<<"shipId         "<< info->shipId;
 
-    qDebug()<<"shipName       "<< info->tankId;
+    qDebug()<<"tank id       "<< info->tankId;
+    qDebug()<<"souding       "<< info->sounding;
+    qDebug()<<"type       "<< info->soundingType;
+    qDebug()<<"value       "<< info->strValue;
   //  qDebug()<<"tankNumber     "<< info->tankNumber;
-    for(int i = 0 ;i<13;i++){
-        qDebug()<<"capcacity"<<i<<" ->"<< info->capacity[i];
-    }
+//    for(int i = 0 ;i<13;i++){
+//        qDebug()<<"capcacity"<<i<<" ->"<< info->capacity[i];
+//    }
     qDebug()<<"==============";
 }
 void showShipInfo(ShipInfo *info){
@@ -31,6 +34,7 @@ void showShipInfo(ShipInfo *info){
         fprintf(stderr,"%2.2f ",info->shipTrimV[i]);
     }
     fflush(stderr);
+
     qDebug()<<"\nfinaldate      "<< info->crtValidDate;
     qDebug()<<"==============";
 }
