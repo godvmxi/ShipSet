@@ -105,8 +105,8 @@ private:
     //status bar
     QLabel *labelError ;
 
-    QLineEdit *lineEditTrimH;
-    QLineEdit *lineEditTrimV;
+    QDoubleSpinBox *spinBoxTrimH;
+    QDoubleSpinBox *spinBoxTrimV;
     QLineEdit *lineEditOil;
     QLineEdit *lineEditDensity;
     QLineEdit *lineEditVolume ;

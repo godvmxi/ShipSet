@@ -62,17 +62,30 @@ MainWindow::MainWindow(QWidget *parent) :
     this->formLayoutMiddleRight = new QFormLayout();
 
 //    this->widgetMiddleRight->setFixedWidth(00);
-    this->lineEditTrimH  = new QLineEdit();
-    this->lineEditTrimV = new QLineEdit();
+    this->spinBoxTrimH  = new QDoubleSpinBox();
+    this->spinBoxTrimV = new QDoubleSpinBox();
     this->lineEditOil  = new QLineEdit();
     this->lineEditDensity  = new QLineEdit();
     this->lineEditVolume  = new QLineEdit();
     this->lineEditTotalCapity = new QLineEdit();
     this->lineEditTotalCapity->setReadOnly(true);
     this->lineEditTotalCapity->setText("0.0");
+    //init spinBox TrimH
+    qDebug()<<"Trim H->"<<this->shipInfo.shipTrimH[0] << this->shipInfo.shipTrimH[this->shipInfo.capacityNumber-1];
+    this->spinBoxTrimH->setMinimum(this->shipInfo.shipTrimH[0]);
+    this->spinBoxTrimH->setMaximum(this->shipInfo.shipTrimH[this->shipInfo.capacityNumber-1]);
+    this->spinBoxTrimH->setSingleStep(0.05);
+    this->spinBoxTrimH->setValue((this->spinBoxTrimH->maximum() + this->spinBoxTrimH->minimum() ) /2 );
+    qDebug()<<"Trim V->"<<this->shipInfo.shipTrimV[0] << this->shipInfo.shipTrimV[this->shipInfo.capacityNumber-1];
+    this->spinBoxTrimV->setMinimum(this->shipInfo.shipTrimV[0]);
+    this->spinBoxTrimV->setMaximum(this->shipInfo.shipTrimV[this->shipInfo.capacityNumber-1]);
+    this->spinBoxTrimV->setSingleStep(0.05);
+    this->spinBoxTrimV->setValue((this->spinBoxTrimV->maximum() + this->spinBoxTrimV->minimum() ) /2 );
 
-    this->formLayoutMiddleRight->addRow(QString::fromUtf8("横    倾"),this->lineEditTrimH);
-    this->formLayoutMiddleRight->addRow(QString::fromUtf8("纵    倾"),this->lineEditTrimV);
+
+
+    this->formLayoutMiddleRight->addRow(QString::fromUtf8("横    倾"),this->spinBoxTrimH);
+    this->formLayoutMiddleRight->addRow(QString::fromUtf8("纵    倾"),this->spinBoxTrimV);
     this->formLayoutMiddleRight->addRow(QString::fromUtf8("管内油量"),this->lineEditOil);
     this->formLayoutMiddleRight->addRow(QString::fromUtf8("标准密度"),this->lineEditDensity);
     this->formLayoutMiddleRight->addRow(QString::fromUtf8("体积修正"),this->lineEditVolume);
@@ -481,10 +494,10 @@ void MainWindow::showSoundingQueryError(int tankId){
 
 }
 void MainWindow::updateWidgetsToolTips(void){
-    this->lineEditTrimH->setToolTip(
+    this->spinBoxTrimH->setToolTip(
                 QString("%1~~%2").arg(this->shipInfo.shipTrimH[0])
                 .arg(this->shipInfo.shipTrimH[this->shipInfo.capacityNumber-1]));
-    this->lineEditTrimV->setToolTip(
+    this->spinBoxTrimV->setToolTip(
                 QString("%1~~%2").arg(this->shipInfo.shipTrimV[0])
                 .arg(this->shipInfo.shipTrimV[this->shipInfo.capacityNumber-1]));
 
