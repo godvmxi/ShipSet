@@ -36,9 +36,10 @@ int sqlUtils::setDbFile(QString fileName){
     return true;
 }
 bool convertStringValueToList(float *value,QString source,int maxNum){
+//    qDebug()<<"convert string -> "<<source;
     QStringList list =  source.split("_");
     int listCount =  list.count();
-    qDebug()<< listCount << maxNum;
+//    qDebug()<<"string deal"<< listCount << maxNum;
     assert(listCount <= maxNum);
     assert(value !=  NULL);
     for (int i = 0 ;i < listCount ;i++){
@@ -62,7 +63,10 @@ bool sqlUtils::queryShipsInfo(ShipInfo *info){
         info[i].tankNumber = query.value(3).toInt();
         convertStringValueToList(info->soundingLimit,query.value(4).toString(),2);
         info[i].capacityNumber = query.value(5).toInt();
+
+
         convertStringValueToList(info->shipTrimH,query.value(6).toString(),MAX_CAPACITY_PER_TANK);
+
         convertStringValueToList(info->shipTrimV,query.value(7).toString(),MAX_CAPACITY_PER_TANK);
         info->crtValidDate = query.value(8).toDate();
     }

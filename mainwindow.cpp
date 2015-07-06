@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->shipInfo = this->shipArray[0];
 
 
-
+    showShipInfo(&this->shipInfo);
     this->addWidgeHeadInfo();
     this->mainLayout->addWidget(this->widgetHeadInfo);
     this->labelTableTitle = new QLabel();
