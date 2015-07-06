@@ -115,14 +115,76 @@ int sqlUtils::queryTankReferSounding(TankInfo *info,int soundingMax,int sounding
     return true;
 }
 bool sqlUtils::queryTankValue(int shipId,int tankId ,int sounding,int queryType,TankInfo *retInfo){
-    int sounding_min = 0;
-    int sounding_max = 0;
+
+    qDebug()<<__func__<<shipId<<tankId<<sounding<<queryType;
     TankInfo temp[MAX_RESULT_PER_SQL] = {0};
 //    memset(temp,0,MAX_RESULT_PER_SQL);
     QSqlQuery query(this->db);
-    qDebug()<<__func__<<shipId<<tankId<<sounding<<queryType;
-    QString sql = QString("SELECT * FROM tankInfo where shipId = %1 and tankId = %2 and sounding = %3 and soundingType = %4")
-            .arg(shipId).arg(tankId).arg(sounding).arg(queryType);
+    QString sql ;
+    int rangeSize[] =  {10,100,500,1000,2000,5000};
+    qDebug()<<"range size ->%s" << sizeof(rangeSize);
+    int sounding_min = 0;
+    int sounding_max = 0;
+    for (int i = 0 ;i < sizeof(rangeSize);i++){
+        sounding_min =  sounding  - rangeSize[i];
+        if (sounding_min < 0 )
+            sounding_min = 0;
+        sounding_max = sounding  + rangeSize[i] ;
+        sql = QString("SELECT * FROM tankInfo where shipId = %1 and tankId = %2 and sounding >=  %3 and sounding <= %4 and soundingType = %5")
+                .arg(shipId).arg(tankId).arg(sounding_min).arg(sounding_max).arg(queryType);
+        qDebug()<<sql;
+        query.exec(sql);
+        int affectLines = 0;
+
+        while(query.next()) {
+            temp[affectLines].shipId = query.value(0).toInt();
+            temp[affectLines].tankId = query.value(1).toInt();
+            temp[affectLines].sounding = query.value(2).toInt();
+            temp[affectLines].soundingType = query.value(3).toInt();
+            temp[affectLines].strValue = query.value(4).toString();
+            qDebug()<<"sql value--> "<<query.value(0).toInt() <<query.value(1).toInt()
+                  <<query.value(2).toInt()
+                    <<query.value(3).toInt()
+                   <<temp[affectLines].strValue;
+            affectLines++;
+           }
+        qDebug()<<"sql result--> " << affectLines;
+        int matchFlag = 0;
+        int min ,max = 0;
+        for (int index = 1;(index < MAX_RESULT_PER_SQL )&&(index < affectLines) ;index++){
+            if (sounding == temp[index].sounding ){
+                min  = index ;
+                max = index ;
+                matchFlag = 1;
+                qDebug()<<"find match value 1 -> " << min << sounding;
+                break;
+            }
+            else if (sounding == temp[index-1].sounding ){
+                min  = index - 1 ;
+                max = index - 1 ;
+                matchFlag = 1;
+                qDebug()<<"find match value 2 -> " << min <<sounding ;
+                break;
+            }
+            else if (sounding > temp[index-1].sounding && sounding < temp[index].sounding){
+                min  = index -  1;
+                max = index ;
+                matchFlag =  2;
+                qDebug()<<"find match value 3 -> " << min << max << temp[index-1].sounding << temp[index].sounding;
+                break;
+            }
+        }
+        if  (matchFlag > 0 ){
+            break;
+        }
+        else {
+            qDebug()<<"try to enlarge the range ->"<<rangeSize[i+1];
+        }
+
+    }
+    return false;
+//    QString sql = QString("SELECT * FROM tankInfo where shipId = %1 and tankId = %2 and sounding = %3 and soundingType = %4")
+//            .arg(shipId).arg(tankId).arg(sounding).arg(queryType);
     qDebug()<<sql;
     query.exec(sql);
 
