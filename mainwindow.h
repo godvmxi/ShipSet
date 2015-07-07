@@ -43,9 +43,11 @@ private:
     void addWidgeFootInfo(void);
     void updateWidgetTankTrim(void);
     bool queryTankCapacity(int tankId,int sounding,float *info);
-    void  addTankItemsTable(bool clearOld);
+    void addTankItemsTable(bool clearOld);
+    bool queryTankCapacity(int shipId,int tankId,int sounding);
     bool calTankFixCapacityValue(TankInfo *info ,float sounding  ,int capType,float *retValue);
-//    void paintEvent(QPaintEvent *e);
+    bool calTankFixValueByTrim(TankInfo *info ,int trimType,float *retValue);
+    //    void paintEvent(QPaintEvent *e);
     int getWindowsHeight(void);
     Ui::MainWindow *ui;
     sqlUtils *sqlCore;

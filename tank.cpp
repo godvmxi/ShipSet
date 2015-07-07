@@ -40,7 +40,7 @@ Tank::Tank(QWidget *parent) :
     this->shipId = 0;
     connect(this->pushButtonEqual,SIGNAL(clicked()),this,SLOT(updateTankInfo()) );
 
-    this->lineEditSounding->setText("2.001");
+    this->lineEditSounding->setText("2.205");
     this->lineEditTemrature->setText("20");
     this->lineEditCapacity->setText("0");
     this->lineEditCapacity->setEnabled(false);
