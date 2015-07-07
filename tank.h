@@ -29,11 +29,13 @@ public:
     void setTankName(QString name);
     void setTankCapacity(TankInfo info);
     void setTankCapacity(float value);
+    void setSoundingLimit(int min,int max);
     bool checkDataValidator(void);
 
     int getTankId(void);
     int getSounding(void);
     void setTankInvalid(bool enable);
+    QString getTankName(void);
 
 signals :
     void tryQueryBankInfo(int shipId , int tankId,int sounding);
@@ -45,6 +47,8 @@ public slots:
 private:
 
     int sounding ;
+    int soundingMin;
+    int soundingMax ;
     float temprature ;
     float trim ;
 

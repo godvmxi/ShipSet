@@ -15,6 +15,8 @@
 #include <QPaintEvent>
 #include <dialogabout.h>
 #include <QPixmap>
+#include <QFormLayout>
+#include <QLineEdit>
 namespace Ui {
 class MainWindow;
 }
@@ -31,15 +33,18 @@ public slots :
     void queryTankInfoSlot(int tankId,int sounding);
     void shipTrimChanged(QString d);
     void pushButtonCalTotalCapacity(void);
-    void comboBoxShipCrtChanged(int index);
+    void comboBoxShipCrtNameChanged(int index);
     void pushButtonAboutSlot(void);
+    void showSoundingQueryError(int tankId);
+    void updateWidgetsToolTips(void);
 
 private:
     void addWidgeHeadInfo(void);
     void addWidgeFootInfo(void);
     void updateWidgetTankTrim(void);
-    float queryTankCapacity(int tankId,int sounding);
+    bool queryTankCapacity(int tankId,int sounding,float *info);
     void  addTankItemsTable(bool clearOld);
+    bool calTankFixCapacityValue(TankInfo *info ,float sounding  ,int capType,float *retValue);
 //    void paintEvent(QPaintEvent *e);
     int getWindowsHeight(void);
     Ui::MainWindow *ui;
@@ -54,6 +59,8 @@ private:
     ShipInfo oldShipInfo;
     ShipInfo shipInfo;
     float currentShipTrim ;
+    float shipTrimV ;
+    float shipTrimH ;
     float shipTrimMax ;
 
 //    QVector<Tank> widgetTankItems;
@@ -62,11 +69,24 @@ private:
     QScrollArea *scrollAreaTankItemsTable;
     QWidget *widgetTankItemsTable ;
     QVBoxLayout *vBoxLayoutTankItemsTable;
+    //middle left layout
+    //middle right layout
+
+    //middle right widgets
+    QWidget *widgetMiddleRightInfo;
+    //middle h layout
+    QHBoxLayout *hBoxLayoutMiddleMain;
+    //middle right form layout
+    QFormLayout *formLayoutMiddleRight;
+    //middle widgets
+    QWidget *widgetMiddleMain;
+    //middle right widgets
+    QWidget *widgetMiddleRight;
 
     //widget head info
-    QLabel *labelCrt ;
+    QLabel *labelCrtName ;
     QLabel *labelShipName ;
-    QComboBox *comboBoxShipCrt;
+    QComboBox *comboBoxShipCrtName;
     QLabel *labelTrim ;
     QDoubleSpinBox *doubleSpinBoxTrim ;
 
@@ -74,6 +94,7 @@ private:
     QHBoxLayout *hBoxLayoutHeadInfo ;
     //widget table title
     QLabel   *labelTableTitle;
+
     //widget foot info
     QLabel *labelFinalDate;
     QPushButton *pushButtonTotalCapacity;
@@ -83,6 +104,16 @@ private:
     QPushButton *pushButtonAbout;
     //backgroud
     QPixmap *pixmapBackgroud;
+    //status bar
+    QLabel *labelError ;
+
+    QDoubleSpinBox *spinBoxTrimH;
+    QDoubleSpinBox *spinBoxTrimV;
+    QLineEdit *lineEditOil;
+    QLineEdit *lineEditDensity;
+    QLineEdit *lineEditVolume ;
+    QLineEdit *lineEditTotalCapity ;
+
 };
 
 #endif // MAINWINDOW_H

@@ -15,6 +15,7 @@ Tank::Tank(QWidget *parent) :
     this->lineEditTrim  = new QLineEdit();
     this->lineEditCapacity = new QLineEdit();
 
+
 //    this->regExpValidatorTemperature  = new QRegExpValidator(QRegExp("^(-?\d+)(\.\d+)?$" ));
 //    this->regExpValidatorSounding   = new QRegExpValidator(QRegExp("^\d+(\.\d+)?$"));
 //    this->lineEditSounding->setValidator(this->regExpValidatorSounding);
@@ -28,8 +29,7 @@ Tank::Tank(QWidget *parent) :
     this->mainLayout->addWidget(this->labelName);
     this->mainLayout->addWidget(this->lineEditSounding);
     this->mainLayout->addWidget(this->lineEditTemrature);
-//    this->mainLayout->addWidget(this->lineEditTrim);
-//    this->mainLayout->addWidget(this->labelEqual);
+
     this->mainLayout->addWidget(this->pushButtonEqual);
     this->mainLayout->addWidget(this->lineEditCapacity);
 
@@ -40,9 +40,10 @@ Tank::Tank(QWidget *parent) :
     this->shipId = 0;
     connect(this->pushButtonEqual,SIGNAL(clicked()),this,SLOT(updateTankInfo()) );
 
-    this->lineEditSounding->setText("4.200");
+    this->lineEditSounding->setText("2.001");
     this->lineEditTemrature->setText("20");
     this->lineEditCapacity->setText("0");
+    this->lineEditCapacity->setEnabled(false);
 }
 
 
@@ -62,6 +63,14 @@ void Tank::setShipId( int id){
 }
 void Tank::setTankId( int id){
     this->tankId = id;
+}
+void Tank::setSoundingLimit(int min,int max){
+    this->soundingMin = min;
+    this->soundingMax = max;
+  //  this->lineEditSounding->setText(QString("%1").arg((max +min )/20 * 10) );
+
+    this->lineEditSounding->setToolTip( \
+                QString("%1~~%2").arg(this->soundingMin).arg(this->soundingMax) );
 }
 
 
@@ -109,6 +118,7 @@ void Tank:: setTankCapacity(float value)
     this->lineEditCapacity->setText(QString("%1").arg(new_value));
 }
 bool Tank::checkDataValidator(void){
+   // qDebug()<<"sounding limit ->" << this->soundingMin<<this->soundingMax;
     QString stringTemperature = this->lineEditTemrature->text();
     QString stringSounding =  this->lineEditSounding->text();
     if (stringTemperature.size() == 0 || stringSounding == 0){
@@ -116,8 +126,33 @@ bool Tank::checkDataValidator(void){
         this->setTankInvalid(true);
         return false;
     }
+
+    bool ret = true;
+    double temp = (stringSounding.toDouble(&ret) *1000);
+    if((ret == false)){
+        this->setTankInvalid(true);
+        return false;
+    };
+
+    QString stringTemp = QString("%1").arg(temp);
+//   这里把double转换成浮点，是避免浮点数转整数，精度丢失
+
+    this->sounding =stringTemp.toInt(&ret,10)  ;
+    if((this->sounding < this->soundingMin || this->sounding > this->soundingMax ) && (ret == false)){
+
+        this->setTankInvalid(true);
+        return false;
+    }
+    else {
+        this->setTankInvalid(false);
+    }
+
+    qDebug()<<stringSounding << temp<<stringTemp <<this->sounding;
+
+    qDebug()<<"sounding --> "<<stringSounding  << this->sounding;
+
     this->temprature = stringTemperature.toFloat();
-    this->sounding =int  (stringSounding.toDouble() * 1000);
+
     this->setTankInvalid(false);
     return true;
 }
@@ -142,4 +177,7 @@ void Tank::setTankInvalid(bool enable)
 //    setPalette(pal);
 
 //    this->update();
+}
+QString Tank::getTankName(void){
+    return this->labelName->text();
 }

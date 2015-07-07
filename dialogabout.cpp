@@ -10,8 +10,11 @@ DialogAbout::DialogAbout(QWidget *parent) :
     ui->setupUi(this);
     //set backgroud
     this->pixmapBackgroud = new QPixmap();
-    qDebug()<<this->pixmapBackgroud->load(":/res/res/bk0.jpg");
-    qDebug()<<"bk ipeg --> "<<this->pixmapBackgroud->isNull();
+    this->pixmapBackgroud->load(":/res/res/bk0.jpg");
+    if(this->pixmapBackgroud->isNull()){
+        QMessageBox::critical(NULL, QString::fromUtf8("船只数据库损坏"), QString::fromUtf8("程序资源丢失2"), QMessageBox::Yes, QMessageBox::Yes);
+        exit(0);
+    }
 //    this->setAutoFillBackground(true);
     QPalette    palette = this->palette();
     palette.setBrush(this->backgroundRole(),
@@ -19,6 +22,7 @@ DialogAbout::DialogAbout(QWidget *parent) :
                                           Qt::IgnoreAspectRatio,
                                           Qt::SmoothTransformation)));
     this->setPalette(palette);
+
 }
 
 DialogAbout::~DialogAbout()

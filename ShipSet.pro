@@ -10,6 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = ShipSet
 TEMPLATE = app
+#DEFINES += QT_NO_DEBUG_OUTPUT
 
 
 SOURCES += main.cpp\
@@ -33,7 +34,6 @@ RESOURCES += \
 
 RC_FILE =    myapp.rc
 
-OTHER_FILES += \
-    tools/db_tools.py
+
 
 

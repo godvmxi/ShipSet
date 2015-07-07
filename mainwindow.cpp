@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->mainLayout =  new QVBoxLayout();
-    this->setFixedWidth(480);
+//    this->setFixedWidth(480);
 //    this->setWindowIcon(QIcon(":/icon.bmp"));
 
     this->shipId = 0;
@@ -27,18 +27,16 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     this->sqlCore->queryShipsInfo(this->shipArray);
 
-//    for(int i = 0 ;i<this->shipNumber;i++){
-//        qDebug()<<"shipName --> "<<this->shipArray[i].shipName;
-//    }
     this->shipInfo = this->shipArray[0];
 
 
+    showShipInfo(&this->shipInfo);
     this->addWidgeHeadInfo();
     this->mainLayout->addWidget(this->widgetHeadInfo);
     this->labelTableTitle = new QLabel();
 #ifdef Q_OS_WIN32
     //modify here ,xuelong for windows
-    this->labelTableTitle->setText(QString::fromUtf8("   舱名       测深高度       温度           计算         容量值"));
+    this->labelTableTitle->setText(QString::fromUtf8("     舱名       测深高度       温度           计算         容量值                公共参数设定"));
   #else
     this->labelTableTitle->setText(QString::fromUtf8("      舱名              测深高度            温度                    计算                    容量值"));
 #endif
@@ -50,70 +48,96 @@ MainWindow::MainWindow(QWidget *parent) :
     this->vBoxLayoutTankItemsTable = new QVBoxLayout();
     this->scrollAreaTankItemsTable = new QScrollArea();
     this->scrollAreaTankItemsTable->setFixedWidth(460);
-#if 0
-    QString left = QString::fromUtf8("左 ");
-    QString right = QString::fromUtf8("右 ");
-    QString room = QString::fromUtf8(" 舱");
-    char numberChar[] = "一二三四五六七八九十";
-    for(int i = 0 ; i< this->shipInfo.tankNumber;i++)
-    {
-        int tankId = i /2 + 1;
-        QString tankName ;
-//        char name[64];
-        Tank *itemTank = new Tank();
-        char tmp[32] = {0};
-        QString index ;
-//        qDebug()<<strlen(numberChar);
-        if(i%2 == 0){
-            tankId -= 1;
-            memcpy(tmp,numberChar + tankId*3,3);
-            index =  QString::fromUtf8(tmp);
-            tankName = left + index + room;
-        }
-        else {
-            tankId -= 1;
-            memcpy(tmp,numberChar + tankId*3,3);
-            index =  QString::fromUtf8(tmp);
-            tankName = right + index + room;
-//            sprintf(name,"右 %d 舱",tankId);
-        }
 
-        itemTank->setTankName(tankName);
-        itemTank->setTankId(i+1);
-        itemTank->setShipId(this->shipId);
-        this->vBoxLayoutTankItemsTable->addWidget(itemTank);
-        this->widgetTankItems[i] = (size_t)itemTank;
-        //connect
-
-        connect(itemTank,SIGNAL(tryQueryBankInfo(int,int)),this,SLOT(queryTankInfoSlot(int,int)));
-    }
-#else
     this->addTankItemsTable(false);
-#endif
+
     this->widgetTankItemsTable->setLayout(this->vBoxLayoutTankItemsTable);
     this->scrollAreaTankItemsTable->setWidget(this->widgetTankItemsTable);
     this->scrollAreaTankItemsTable->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    this->mainLayout->addWidget(this->scrollAreaTankItemsTable);
 
-    this->addWidgeFootInfo();
-    this->mainLayout->addWidget(this->widgetFootInfo);
+    //this->mainLayout->addWidget(this->scrollAreaTankItemsTable);
+    this->widgetMiddleMain = new QWidget();
+    this->widgetMiddleRight = new QWidget();
+    this->hBoxLayoutMiddleMain = new QHBoxLayout();
+    this->formLayoutMiddleRight = new QFormLayout();
+
+//    this->widgetMiddleRight->setFixedWidth(00);
+    this->spinBoxTrimH  = new QDoubleSpinBox();
+    this->spinBoxTrimV = new QDoubleSpinBox();
+    this->lineEditOil  = new QLineEdit();
+    this->lineEditDensity  = new QLineEdit();
+    this->lineEditVolume  = new QLineEdit();
+    this->lineEditTotalCapity = new QLineEdit();
+    this->lineEditTotalCapity->setReadOnly(true);
+    this->lineEditTotalCapity->setText("0.0");
+    //init spinBox TrimH
+    qDebug()<<"Trim H->"<<this->shipInfo.shipTrimH[0] << this->shipInfo.shipTrimH[this->shipInfo.capacityNumber-1];
+    this->spinBoxTrimH->setMinimum(this->shipInfo.shipTrimH[0]);
+    this->spinBoxTrimH->setMaximum(this->shipInfo.shipTrimH[this->shipInfo.capacityNumber-1]);
+    this->spinBoxTrimH->setSingleStep(0.05);
+    this->spinBoxTrimH->setValue((this->spinBoxTrimH->maximum() + this->spinBoxTrimH->minimum() ) /2 );
+    qDebug()<<"Trim V->"<<this->shipInfo.shipTrimV[0] << this->shipInfo.shipTrimV[this->shipInfo.capacityNumber-1];
+    this->spinBoxTrimV->setMinimum(this->shipInfo.shipTrimV[0]);
+    this->spinBoxTrimV->setMaximum(this->shipInfo.shipTrimV[this->shipInfo.capacityNumber-1]);
+    this->spinBoxTrimV->setSingleStep(0.05);
+    this->spinBoxTrimV->setValue((this->spinBoxTrimV->maximum() + this->spinBoxTrimV->minimum() ) /2 );
+
+
+
+    this->formLayoutMiddleRight->addRow(QString::fromUtf8("横    倾"),this->spinBoxTrimH);
+    this->formLayoutMiddleRight->addRow(QString::fromUtf8("纵    倾"),this->spinBoxTrimV);
+    this->formLayoutMiddleRight->addRow(QString::fromUtf8("管内油量"),this->lineEditOil);
+    this->formLayoutMiddleRight->addRow(QString::fromUtf8("标准密度"),this->lineEditDensity);
+    this->formLayoutMiddleRight->addRow(QString::fromUtf8("体积修正"),this->lineEditVolume);
+    this->formLayoutMiddleRight->addRow(QString::fromUtf8("总 容 积"),this->lineEditTotalCapity);
+
+    this->formLayoutMiddleRight->setVerticalSpacing(25);
+    this->formLayoutMiddleRight->setHorizontalSpacing(10);
+    this->pushButtonTotalCapacity = new QPushButton();
+    this->pushButtonTotalCapacity->setText(QString::fromUtf8("   总容量  "));
+    this->formLayoutMiddleRight->addRow(this->pushButtonTotalCapacity);
+
+
+
+    this->widgetMiddleRight->setLayout(this->formLayoutMiddleRight);
+
+    this->hBoxLayoutMiddleMain->addWidget(this->scrollAreaTankItemsTable);
+    this->hBoxLayoutMiddleMain->addWidget(this->widgetMiddleRight);
+    this->widgetMiddleMain->setLayout(this->hBoxLayoutMiddleMain);
+
+
+
+    this->mainLayout->addWidget((this->widgetMiddleMain));
+
+
+
+//    this->mainLayout->addWidget(this->widgetFootInfo);
     ui->centralWidget->setLayout(this->mainLayout);
     this->setFixedHeight(this->getWindowsHeight());
 
     //set backgroud
     this->pixmapBackgroud = new QPixmap();
-    qDebug()<<this->pixmapBackgroud->load(":/res/res/bk0.jpg");
-    qDebug()<<"bk ipeg --> "<<this->pixmapBackgroud->isNull();
+    this->pixmapBackgroud->load(":/res/res/bk0.jpg");
+    if(this->pixmapBackgroud->isNull()){
+        QMessageBox::critical(NULL, QString::fromUtf8("ERROR"), QString::fromUtf8("程序资源丢失1"), QMessageBox::Yes, QMessageBox::Yes);
+        exit(0);
+    }
 //    this->setAutoFillBackground(true);
     QPalette    palette = this->palette();
     palette.setBrush(this->backgroundRole(),
                      QBrush(this->pixmapBackgroud->scaled(this->size(),
                                           Qt::IgnoreAspectRatio,
                                           Qt::SmoothTransformation)));
+//    this->centralWidget()->setPalette(palette);
     this->setPalette(palette);
 
 //   this->scrollAreaTankItemsTable->setStyleSheet("border:1px; background-color:transparent ");
 //    this->scrollAreaTankItemsTable->
+
+    this->labelError = new QLabel();
+    this->statusBar()->addWidget(this->labelError);
+
+    updateWidgetsToolTips();
 
 }
 
@@ -124,128 +148,136 @@ MainWindow::~MainWindow()
 void MainWindow::addWidgeHeadInfo(void){
 
 
-    this->labelCrt = new QLabel();
+    this->labelCrtName = new QLabel();
     this->labelShipName = new QLabel();
-    this->comboBoxShipCrt =  new QComboBox();
+    this->comboBoxShipCrtName =  new QComboBox();
 
-//    this->comboBoxShipCrt->setStyleSheet("border:1px; background-color:transparent ");
+//    this->comboBoxShipCrtName->setStyleSheet("border:1px; background-color:transparent ");
     this->labelTrim = new QLabel();
     this->doubleSpinBoxTrim = new QDoubleSpinBox();
 
     this->widgetHeadInfo = new QWidget();
     this->hBoxLayoutHeadInfo = new QHBoxLayout();
 
-    this->labelCrt->setText(QString::fromUtf8("  证书号 : "));
-    this->labelCrt->setFixedWidth(50);
+    this->labelCrtName->setText(QString::fromUtf8("  证书号 : "));
+    this->labelCrtName->setFixedWidth(50);
     this->labelShipName->setText(QString::fromUtf8("  船名 :    ") +this->shipInfo.shipName);
-    this->comboBoxShipCrt->setFixedWidth(100);
+    this->labelShipName->setFixedWidth(150);
+    this->comboBoxShipCrtName->setFixedWidth(100);
     for(int i = 0;i<this->shipNumber;i++){
-        this->comboBoxShipCrt->addItem(this->shipArray[i].crt);
+        this->comboBoxShipCrtName->addItem(this->shipArray[i].crtName);
     }
 
-    this->labelTrim->setText(QString::fromUtf8("纵倾值 : "));
-    this->labelTrim->setFixedWidth(50);
-    this->doubleSpinBoxTrim->setMinimum(this->shipInfo.shipTrimMin);
-    this->doubleSpinBoxTrim->setSingleStep(double(this->shipInfo.shipTrimStep));
-    this->doubleSpinBoxTrim->setDecimals(4);
-    this->doubleSpinBoxTrim->setMaximum(this->shipInfo.shipTrimMin + this->shipInfo.shipTrimStep*this->shipInfo.capacityNumber);
-    this->doubleSpinBoxTrim->setFixedWidth(60);
-    this->doubleSpinBoxTrim->setValue(this->shipInfo.shipTrimMin);
 
-
-    this->shipTrimMax = this->shipInfo.shipTrimMin +  this->shipInfo.shipTrimStep * (this->shipInfo.capacityNumber - 1) ;
-    this->currentShipTrim = this->doubleSpinBoxTrim->value();
-
-    this->hBoxLayoutHeadInfo->addWidget(this->labelCrt);
-    this->hBoxLayoutHeadInfo->addWidget(this->comboBoxShipCrt);
+    this->hBoxLayoutHeadInfo->addWidget(this->labelCrtName);
+    this->hBoxLayoutHeadInfo->addWidget(this->comboBoxShipCrtName);
     this->hBoxLayoutHeadInfo->addWidget(this->labelShipName);
 
-    this->hBoxLayoutHeadInfo->addWidget(this->labelTrim);
-    this->hBoxLayoutHeadInfo->addWidget(this->doubleSpinBoxTrim);
+    this->labelTotalCapacity = new QLabel();
+//    this->pushButtonAbout = new QPushButton(QString::fromUtf8("更多"));
+//    this->labelTotalCapacity->setText("      0.000");
+//    this->labelTotalCapacity->setFixedWidth(100);
+
+    this->labelFinalDate =  new QLabel();
+    this->labelFinalDate->setText(QString::fromUtf8("软件有效期 : ")+this->shipInfo.crtValidDate.toString("dd/MM/yyyy"));
+
+    this->labelFinalDate->setFixedWidth(400);
+    this->hBoxLayoutHeadInfo->addWidget(this->labelFinalDate);
+
+//    this->hBoxLayoutHeadInfo->addWidget(this->labelTrim);
+//    this->hBoxLayoutHeadInfo->addWidget(this->doubleSpinBoxTrim);
 //    this->hBoxLayoutHeadInfo->addWidget(this->labelFinalDate);
 
     this->widgetHeadInfo->setLayout(this->hBoxLayoutHeadInfo);
     connect(this->doubleSpinBoxTrim,SIGNAL(valueChanged(QString)),this,SLOT(shipTrimChanged(QString)) );
-    connect(this->comboBoxShipCrt,SIGNAL(currentIndexChanged(int)),this,SLOT(comboBoxShipCrtChanged(int )) );
+    connect(this->comboBoxShipCrtName,SIGNAL(currentIndexChanged(int)),this,SLOT(comboBoxShipCrtNameChanged(int )) );
 
 
 
 }
-void MainWindow::addWidgeFootInfo(void){
-    this->pushButtonTotalCapacity = new QPushButton();
-    this->pushButtonTotalCapacity->setText(QString::fromUtf8("   总容量  "));
-    this->labelTotalCapacity = new QLabel();
-    this->pushButtonAbout = new QPushButton(QString::fromUtf8("更多"));
-    this->labelTotalCapacity->setText("      0.000");
-    this->labelTotalCapacity->setFixedWidth(100);
-
-    this->labelFinalDate =  new QLabel();
-    this->labelFinalDate->setText(QString::fromUtf8("软件有效期 : ")+this->shipInfo.finalDate.toString("dd/MM/yyyy"));
-    this->widgetFootInfo =  new QWidget();
-    this->hBoxLayoutFootInfo = new QHBoxLayout();
-
-    this->labelFinalDate->setFixedWidth(400);
-
-    this->hBoxLayoutFootInfo->addWidget(this->labelFinalDate);
-    this->hBoxLayoutFootInfo->addWidget(this->pushButtonAbout);
-    this->hBoxLayoutFootInfo->addWidget(this->pushButtonTotalCapacity);
-    this->hBoxLayoutFootInfo->addWidget(this->labelTotalCapacity);
-    this->hBoxLayoutFootInfo->setAlignment(Qt::AlignRight);
-    this->widgetFootInfo->setLayout(this->hBoxLayoutFootInfo);
 
 
-
-
-    connect(this->pushButtonTotalCapacity,SIGNAL(clicked()),this,SLOT(pushButtonCalTotalCapacity()) );
-    connect(this->pushButtonAbout,SIGNAL(clicked()),this,SLOT(pushButtonAboutSlot()) );
-}
-
-void MainWindow::updateWidgetTankTrim(void){
-
-}
 
 void MainWindow::queryTankInfoSlot(int tankId,int sounding)
 {
     float capacity = 0;
-//    if(sounding%10 != 0){
-//        int temp = sounding %10 ;
-//        int sounding_1 =  sounding -  temp;
-//        int sounding_2 =  sounding_1 +10;
-//        qDebug()<<"will query two sounding -> "<<tankId << sounding_1 << sounding_2;
-//        float capacity_1 = this->queryTankCapacity(tankId,sounding_1);
-//        float capacity_2 = this->queryTankCapacity(tankId,sounding_2);
-//        if((capacity_1 < 0) || capacity_2 < 0)
-//            return ;
-//        capacity = (capacity_2 - capacity_1 ) /10 * temp + capacity_1 ;
-//        qDebug()<<capacity <<capacity_1<<capacity_2;
+    float shipTrimFixV = 0;
+    float shipTrimFixH = 0;
+
+    TankInfo infoV[2] = {0};
+    TankInfo infoH[2] = {0};
+  //  TankInfo infoCap[2] = {0};
+    this->shipTrimH = this->spinBoxTrimH->value();
+    this->shipTrimV = this->spinBoxTrimV->value();
+
+
+    if( !this->sqlCore->queryTankValueArray(this->shipInfo.shipId,tankId,sounding,TANK_TRIM_V_VALUE,infoV) ){
+        return ;
+    }
+    if( !this->sqlCore->queryTankValueArray(this->shipInfo.shipId,tankId,sounding,TANK_TRIM_H_VALUE,infoH) ){
+        return ;
+    }
+    //cal accruate capicity
+//    showTankInfo(infoV);
+//    showTankInfo(infoV+1);
+//    showTankInfo(infoH);
+//    showTankInfo(infoH+1);
+    qDebug()<<"cal real data";
+    if(! calTankFixCapacityValue(infoH,sounding,TANK_TRIM_H_VALUE,&shipTrimFixH) ){
+        qDebug()<<"fix trim H -> "<< shipTrimFixH;
+    }
+//    if(! calTankFixValue(infoV,sounding,TANK_TRIM_H_VALUE,&shipTrimFixV) ){
+//        qDebug()<<"fix trim V -> "<< shipTrimFixV;
 //    }
-//    else {
-//        capacity = this->queryTankCapacity(tankId,sounding);
-//        if(capacity< 0)
-//            return;
-//    }
-    capacity = queryTankCapacity(tankId,sounding);
+
+    return ;
+
+    if( !queryTankCapacity(tankId,sounding,&capacity) )
+    {
+        this->showSoundingQueryError(tankId);
+        return ;
+    }
+
     Tank *tank =  (Tank *)this->widgetTankItems[tankId - 1];
     //temprature modify
     //add trim fix
-    //
+
 
     tank->setTankCapacity(capacity);
 
 
 }
-float  MainWindow::queryTankCapacity(int tankId,int sounding)
+bool  MainWindow::queryTankCapacity(int tankId,int sounding,float *cap)
 {
-
+    qDebug()<<__func__ ;
     TankInfo resultInfo;
+    if ( this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding,&resultInfo ) ){
+        qDebug()<<"find capacity";
+        return true;
+    }
+    qDebug()<<"can find directly ,try more ";
+    this->showSoundingQueryError(tankId);
+    return false ;
+/*
     if(sounding%10 != 0){
         int temp = sounding %10 ;
         int sounding_1 =  sounding -  temp;
         int sounding_2 =  sounding_1 +10;
+        TankInfo tempInfo ;
+        memset(&tempInfo,0,sizeof(TankInfo));
         qDebug()<<"will query two sounding -> "<<tankId << sounding_1 << sounding_2;
 
-        resultInfo        = this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding_1);
-        TankInfo tempInfo = this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding_2);
+        if ( !this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding_1,&resultInfo ) ){
+            qDebug()<<"tank exceed the max";
+            this->showSoundingQueryError(tankId);
+            return false ;
+        }
+        if( !this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding_2,&tempInfo) )
+        {
+            qDebug()<<"tank exceed the max";
+            this->showSoundingQueryError(tankId);
+            return false ;
+        }
 
 
         qDebug()<<resultInfo.sounding<<resultInfo.capacity[0]<<resultInfo.capacity[1]<<resultInfo.capacity[2]\
@@ -263,8 +295,13 @@ float  MainWindow::queryTankCapacity(int tankId,int sounding)
     }
     else {
         qDebug()<<"will query one sounding -> "<<tankId << sounding  ;
-        resultInfo        = this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding);
+        if(!this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding,&resultInfo) )
+        {
+                qDebug()<<"tank exceed the max";
+                return false ;
+        }
     }
+
     qDebug()<<resultInfo.sounding<<resultInfo.capacity[0]<<resultInfo.capacity[1]<<resultInfo.capacity[2]\
               <<resultInfo.capacity[3]<<resultInfo.capacity[4]<<resultInfo.capacity[5]\
                 <<resultInfo.capacity[6]<<resultInfo.capacity[7];
@@ -293,17 +330,21 @@ float  MainWindow::queryTankCapacity(int tankId,int sounding)
         }
     }
     if(trimFlag == 0){
-        qDebug()<<"just ok  -> "<<i<<min<< max;
-        return resultInfo.capacity[i];
+//        qDebug()<<"just ok  -> "<<i<<min<< max;
+        *cap = resultInfo.capacity[i];
     }
     else if(trimFlag == 1){
         qDebug()<<"not just ok ->  "<< this->currentShipTrim <<min << max;
         float capacity_1 =  resultInfo.capacity[i];
         float capacity_2 =  resultInfo.capacity[i+1];
-        return    ( (capacity_2 -capacity_1 ) /this->shipInfo.shipTrimStep )*(this->currentShipTrim -min)  + capacity_1 ;
+        *cap =    ( (capacity_2 -capacity_1 ) /this->shipInfo.shipTrimStep )*(this->currentShipTrim -min)  + capacity_1 ;
+
     }
     else
-        return resultInfo.capacity[i];
+        *cap = resultInfo.capacity[i];
+    this->labelError->setText("");
+    return true;
+    */
 }
 void MainWindow::shipTrimChanged(QString d){
 
@@ -328,8 +369,14 @@ void MainWindow::pushButtonCalTotalCapacity(void){
             int tankId = tank->getTankId();
             int sounding = tank->getSounding();
            // qDebug()<<"foreach-->"<<tankId<<sounding ;
-            eachCapacity =  this->queryTankCapacity(tankId,sounding);
-            //     qDebug()<<"foreach-->"<<tankId<<sounding<<eachCapacity;
+            if(!this->queryTankCapacity(tankId,sounding,&eachCapacity))
+            {
+                qDebug()<<"show sounding error";
+                this->showSoundingQueryError(tankId);
+                return ;
+            }
+
+                 qDebug()<<"foreach-->"<<tankId<<sounding<<eachCapacity;
             if(eachCapacity >= 0){
                 tank->setTankCapacity(eachCapacity);
             }
@@ -349,9 +396,9 @@ void MainWindow::pushButtonCalTotalCapacity(void){
     this->labelTotalCapacity->setText(QString("      %1").arg(totalCapacity));
 
 }
-void MainWindow::comboBoxShipCrtChanged(int index)
+void MainWindow::comboBoxShipCrtNameChanged(int index)
 {
-    qDebug()<<index <<this->shipArray[index].shipName << this->shipArray[index].crt;
+    qDebug()<<index <<this->shipArray[index].shipName << this->shipArray[index].crtName;
     //update class info
     this->oldShipInfo =  this->shipInfo;
     this->shipInfo =  this->shipArray[index];
@@ -417,6 +464,7 @@ void MainWindow::addTankItemsTable(bool clearOld)
         itemTank->setTankName(tankName);
         itemTank->setTankId(i+1);
         itemTank->setShipId(this->shipId);
+        itemTank->setSoundingLimit(this->shipInfo.soundingLimit[0],this->shipInfo.soundingLimit[1]);
         this->vBoxLayoutTankItemsTable->addWidget(itemTank);
         this->widgetTankItems[i] = (size_t)itemTank;
         //connect
@@ -439,4 +487,97 @@ void MainWindow::pushButtonAboutSlot(void)
 {
     DialogAbout about;
     about.exec();
+}
+void MainWindow::showSoundingQueryError(int tankId){
+    if(tankId < 0){
+        return ;
+    }
+    Tank *tank;
+   // qDebug()<<"tank error show -> "<<tankId;
+    for(int i = 0;i<this->shipInfo.tankNumber;i++){
+        tank = (Tank *)( this->widgetTankItems[i] );
+        if(tankId == tank->getTankId()){
+            tank->setTankInvalid(true);
+            this->labelError->setText(tank->getTankName() +QString::fromUtf8("  测深高度值超出最大值，请输入正确值"));
+            break;
+        }
+    }
+
+//    QMessageBox::information(NULL, "Error",tank->getTankName()+ QString::fromUtf8("  测深高度值超出最大值，请输入正确值"), QMessageBox::Yes , QMessageBox::Yes);
+
+}
+void MainWindow::updateWidgetsToolTips(void){
+    this->spinBoxTrimH->setToolTip(
+                QString("%1~~%2").arg(this->shipInfo.shipTrimH[0])
+                .arg(this->shipInfo.shipTrimH[this->shipInfo.capacityNumber-1]));
+    this->spinBoxTrimV->setToolTip(
+                QString("%1~~%2").arg(this->shipInfo.shipTrimV[0])
+                .arg(this->shipInfo.shipTrimV[this->shipInfo.capacityNumber-1]));
+
+    //update all tank tool tips
+}
+bool MainWindow::calTankFixCapacityValue(TankInfo *info  ,float sounding ,int capType,float *retValue){
+
+    if(!convertStringValueToList(info[0].capacity,info[0].strValue,this->shipInfo.capacityNumber) ){
+        return false;
+    }
+    if(!convertStringValueToList(info[1].capacity,info[1].strValue,this->shipInfo.capacityNumber) ){
+        return false;
+    }
+    qDebug()<<"info 0";
+    showTankInfo(info);
+    qDebug()<<"info 1";
+    qDebug()<<"origin sounding -> "<<sounding;
+    showTankInfo(info+1);
+    if ( info[0].sounding ==  info[1].sounding ){
+        //do simple cal
+        qDebug()<<"do simple cal";
+
+        //just call trim
+
+    }
+    else {
+        //do comlex cal,first call capcity
+        *retValue = 222;
+        qDebug()<<"do complex cal";
+
+        for (int i = 0 ;i <this->shipInfo.capacityNumber;i++){
+            info[0].capacity[i] = info[0].capacity[i] + ((sounding-info[0].sounding) *(info[1].capacity[i] - info[0].capacity[i]) /(info[1].sounding-info[0].sounding)  );
+        }
+        info[0].sounding =  sounding;
+
+    }
+    qDebug()<<"info ok -> " << sounding << info[0].sounding;
+    showTankInfo(info);
+
+    float *trimValue = NULL;
+    float shipTrim ;
+    if (capType == TANK_TRIM_H_VALUE) {
+        trimValue = this->shipInfo.shipTrimH;
+        shipTrim = this->shipTrimH;
+    }
+    else  if (capType == TANK_TRIM_V_VALUE) {
+        trimValue = this->shipInfo.shipTrimV;
+        shipTrim = this->shipTrimV;
+    }
+    else {
+        trimValue = NULL;
+        return false;
+    }
+    for (int i = 1 ;i< this->shipInfo.capacityNumber;i++){
+        if (shipTrim == trimValue[i-1]){
+            *retValue = info[0].capacity[i-1];
+            break;
+        }
+        else if (shipTrim == trimValue[i]){
+            *retValue = info[0].capacity[i];
+            break;
+        }
+        else if(  (shipTrim > trimValue[i-1]  )&& (shipTrim < trimValue[i])) {
+            *retValue = trimValue[i-1] + (shipTrim -  trimValue[i-1]) *(info->capacity[i]- info->capacity[i-1]) /(trimValue[i]-trimValue[i-1]) ;
+            break;
+        }
+    }
+    qDebug()<<"capacity -> " <<*retValue ;
+    return true;
 }
