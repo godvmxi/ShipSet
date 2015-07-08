@@ -114,13 +114,14 @@ bool sqlUtils::queryTankValueArray(TankInfo *info){
 //    memset(temp,0,MAX_RESULT_PER_SQL);
     QSqlQuery query(this->db);
     QString sql ;
-    int rangeSize[] =  {10,100,500,1000,2000,5000};
-    qDebug()<<"range size ->%s" << sizeof(rangeSize);
+    int rangeSize[] =  {10,100,500,1000,2000,5000,10000};
+    int rangeNumber = sizeof(rangeSize)/(sizeof(int)) ;
+    qDebug()<<"range size ->" <<rangeNumber ;
     int sounding_min = 0;
     int sounding_max = 0;
     int matchFlag = 0;
     int min ,max = 0;
-    for (int i = 0 ;i < sizeof(rangeSize);i++){
+    for (int i = 0 ;i < rangeNumber;i++){
         sounding_min =  sounding  - rangeSize[i];
         if (sounding_min < 0 )
             sounding_min = 0;
@@ -137,13 +138,13 @@ bool sqlUtils::queryTankValueArray(TankInfo *info){
             temp[affectLines].sounding = query.value(2).toInt();
             temp[affectLines].soundingType = query.value(3).toInt();
             temp[affectLines].strValue = query.value(4).toString();
-            qDebug()<<"sql value--> "<<query.value(0).toInt() <<query.value(1).toInt()
-                  <<query.value(2).toInt()
-                    <<query.value(3).toInt()
-                   <<temp[affectLines].strValue;
+//            qDebug()<<"sql value--> "<<query.value(0).toInt() <<query.value(1).toInt()
+//                  <<query.value(2).toInt()
+//                    <<query.value(3).toInt()
+//                   <<temp[affectLines].strValue;
             affectLines++;
            }
-        qDebug()<<"sql result--> " << affectLines;
+//        qDebug()<<"sql result--> " << affectLines;
         matchFlag = 0;
         min  = 0;
         max = 0;
@@ -174,15 +175,15 @@ bool sqlUtils::queryTankValueArray(TankInfo *info){
             break;
         }
         else {
-            qDebug()<<"try to enlarge the range ->"<<rangeSize[i+1];
+            qDebug()<<"try to enlarge the range ->"<<rangeSize[i+1] <<sounding <<queryType <<sounding_min<<sounding_max;
         }
 
     }
     if (matchFlag > 0){
         info[0] = temp[min];
         info[1] =  temp[max];
-        qDebug()<<"return value min -> " << info[0].sounding<<info[0].strValue;
-        qDebug()<<"return value max -> " << info[1].sounding<<info[1].strValue;
+        qDebug()<<"return value min -> " << info[0].sounding<<info[0].soundingType<<info[0].strValue;
+        qDebug()<<"return value max -> " << info[1].sounding<<info[0].soundingType<<info[1].strValue;
 
         return true;
     }

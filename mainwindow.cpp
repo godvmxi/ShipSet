@@ -216,6 +216,7 @@ void MainWindow::queryTankInfoSlot(int tankId,int sounding)
         //deal error
         return ;
     }
+    qDebug()<<"tankID -> "<<tankId ;
     //ok
     return ;
 
@@ -509,7 +510,7 @@ bool MainWindow::calTankFixCapacityValue(TankInfo *info ,float *retValue){
     int tankId = info->tankId;
     int shipId = info->shipId ;
     int trimType = info->soundingType;
-    TankInfo tankInfo = {0};
+//    TankInfo tankInfo = {0};
 
 
     TankInfo infoV[2] = {0};
@@ -524,23 +525,32 @@ bool MainWindow::calTankFixCapacityValue(TankInfo *info ,float *retValue){
     if( !this->sqlCore->queryTankValueArray(infoV) ){
         return false;
     }
-    if( !this->sqlCore->queryTankValueArray(infoH) ){
-        return false;
-    }
+
+//    if( !this->sqlCore->queryTankValueArray(infoH) ){
+//        return false;
+//    }
 
     //cal accruate capicity
 //    showTankInfo(infoV);
 //    showTankInfo(infoV+1);
 //    showTankInfo(infoH);
 //    showTankInfo(infoH+1);
-    qDebug()<<"cal real data";
-    if(! calTankFixValueFromInfo(infoH ,tankInfo.sounding) ){
+
+
+
+    if(! calTankFixValueFromInfo(infoV,info->sounding) ){
+        return  false;
+    }
+//    showTankInfo(infoV) ;
+
+    if(! calTankFixValueFromInfo(infoH ,info->sounding) ){
            return  false;
     }
 
-    if(! calTankFixValueFromInfo(infoV,tankInfo.sounding) ){
-        return  false;
-    }
+//    showTankInfo(infoH);
+
+    calTankFixValueByTrim(infoV,&shipTrimFixV);
+    calTankFixValueByTrim(infoH,&shipTrimFixH);
     qDebug()<<"fix trim H -> "<< shipTrimFixH;
     qDebug()<<"fix trim V -> "<< shipTrimFixV;
 
@@ -552,8 +562,14 @@ bool MainWindow::calTankFixCapacityValue(TankInfo *info ,float *retValue){
     if( !this->sqlCore->queryTankValueArray(infoC) ){
         return false;
     }
-
-
+    if(! calTankFixValueFromInfo(infoC,fixedSounding) ){
+        return  false;
+    }
+    showTankInfo(infoC);
+    float result = infoC->capacity[0] + infoC->capacity[1]*3/10 ;
+    qDebug()<<"release capacity ->" <<result;
+    Tank *tank =  (Tank *)this->widgetTankItems[info->tankId - 1];\
+    tank->setTankCapacity(result);
     return true;
 
     if( !queryTankCapacity(tankId,sounding,&capacity) )
@@ -562,7 +578,7 @@ bool MainWindow::calTankFixCapacityValue(TankInfo *info ,float *retValue){
         return false;
     }
 
-    Tank *tank =  (Tank *)this->widgetTankItems[info->shipId - 1];
+    tank =  (Tank *)this->widgetTankItems[info->tankId - 1];
     //temprature modify
     //add trim fix
 
@@ -579,11 +595,11 @@ bool MainWindow::calTankFixValueFromInfo(TankInfo *info ,int sounding){
     if(!convertStringValueToList(info[1].capacity,info[1].strValue,this->shipInfo.capacityNumber) ){
         return false;
     }
-    qDebug()<<"info 0";
-    showTankInfo(info);
-    qDebug()<<"info 1";
-    qDebug()<<"origin sounding -> "<<info[0].sounding;
-    showTankInfo(info+1);
+//    qDebug()<<"info 0";
+//    showTankInfo(info);
+//    qDebug()<<"info 1";
+//    qDebug()<<"origin sounding -> "<<info[0].sounding;
+//    showTankInfo(info+1);
     if ( info[0].sounding ==  info[1].sounding ){
         //do simple cal
         qDebug()<<"do simple cal";
@@ -601,7 +617,7 @@ bool MainWindow::calTankFixValueFromInfo(TankInfo *info ,int sounding){
         info[0].sounding =  sounding;
 
     }
-    qDebug()<<"info ok -> " << sounding << info[0].sounding;
+    qDebug()<<"info ok -> " << sounding << info[0].sounding ;
     showTankInfo(info);
 
 }
