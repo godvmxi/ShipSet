@@ -26,8 +26,8 @@ public slots:
     bool queryShipsInfo(ShipInfo *info);
     ShipInfo queryShipInfo(int shipId);
     int queryTankReferSounding(TankInfo *,int soundingMax,int soundingMin);
-    bool queryTankInfo(int shipId,int tankId,int sounding,TankInfo *retInfo);
-    bool queryTankValueArray(int shipId,int tankId ,int sounding,int queryType,TankInfo *retInfo);
+    bool queryTankInfo(int shipId,int tankId,int sounding,TankInfo *info);
+    bool queryTankValueArray(TankInfo *retInfo);
 private :
     QString      dbName;
     QSqlDatabase db;

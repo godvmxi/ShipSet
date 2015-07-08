@@ -45,8 +45,9 @@ private:
     bool queryTankCapacity(int tankId,int sounding,float *info);
     void addTankItemsTable(bool clearOld);
     bool queryTankCapacity(int shipId,int tankId,int sounding);
-    bool calTankFixCapacityValue(TankInfo *info ,float sounding  ,int capType,float *retValue);
-    bool calTankFixValueByTrim(TankInfo *info ,int trimType,float *retValue);
+    bool calTankFixCapacityValue(TankInfo *info ,float *retValue);
+    bool calTankFixValueFromInfo(TankInfo *info,int sounding);
+    bool calTankFixValueByTrim(TankInfo *info ,float *retValue);
     //    void paintEvent(QPaintEvent *e);
     int getWindowsHeight(void);
     Ui::MainWindow *ui;

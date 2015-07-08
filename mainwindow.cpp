@@ -203,49 +203,23 @@ void MainWindow::queryTankInfoSlot(int tankId,int sounding)
     float capacity = 0;
     float shipTrimFixV = 0;
     float shipTrimFixH = 0;
+    TankInfo tankInfo = {0};
+    tankInfo.shipId =  this->shipInfo.shipId;
+    tankInfo.tankId =  tankId;
+    tankInfo.sounding = sounding;
 
-    TankInfo infoV[2] = {0};
-    TankInfo infoH[2] = {0};
-    TankInfo infoCap[2] = {0};
+
     this->shipTrimH = this->spinBoxTrimH->value();
     this->shipTrimV = this->spinBoxTrimV->value();
 
-
-    if( !this->sqlCore->queryTankValueArray(this->shipInfo.shipId,tankId,sounding,TANK_TRIM_V_VALUE,infoV) ){
+    if( ! calTankFixCapacityValue(&tankInfo,&capacity) ){
+        //deal error
         return ;
     }
-    if( !this->sqlCore->queryTankValueArray(this->shipInfo.shipId,tankId,sounding,TANK_TRIM_H_VALUE,infoH) ){
-        return ;
-    }
-    //cal accruate capicity
-//    showTankInfo(infoV);
-//    showTankInfo(infoV+1);
-//    showTankInfo(infoH);
-//    showTankInfo(infoH+1);
-    qDebug()<<"cal real data";
-    if(! calTankFixCapacityValue(infoH,sounding,TANK_TRIM_H_VALUE,&shipTrimFixH) ){
-           return  ;
-    }
-
-    if(! calTankFixCapacityValue(infoV,sounding,TANK_TRIM_V_VALUE,&shipTrimFixV) ){
-        return  ;
-    }
-    qDebug()<<"fix trim H -> "<< shipTrimFixH;
-    qDebug()<<"fix trim V -> "<< shipTrimFixV;
-    int fixedSounding =  sounding + shipTrimFixH + shipTrimFixV;
-    qDebug()<<"fix sounding  -> "<< sounding <<fixedSounding ;
-    if( !this->sqlCore->queryTankValueArray(this->shipInfo.shipId,tankId,fixedSounding,TANK_CAPICITY_VALUE,infoCap) ){
-        return ;
-    }
-
-
+    //ok
     return ;
 
-    if( !queryTankCapacity(tankId,sounding,&capacity) )
-    {
-        this->showSoundingQueryError(tankId);
-        return ;
-    }
+
 
     Tank *tank =  (Tank *)this->widgetTankItems[tankId - 1];
     //temprature modify
@@ -525,7 +499,115 @@ void MainWindow::updateWidgetsToolTips(void){
 
     //update all tank tool tips
 }
-bool MainWindow::calTankFixValueByTrim(TankInfo *info ,int trimType,float *retValue){
+
+
+bool MainWindow::calTankFixCapacityValue(TankInfo *info ,float *retValue){
+    float capacity = 0;
+    float shipTrimFixV = 0;
+    float shipTrimFixH = 0;
+    int sounding = info->sounding ;
+    int tankId = info->tankId;
+    int shipId = info->shipId ;
+    int trimType = info->soundingType;
+    TankInfo tankInfo = {0};
+
+
+    TankInfo infoV[2] = {0};
+    TankInfo infoH[2] = {0};
+    TankInfo infoC[2] = {0};
+    infoV[0] =  *info;
+    infoV[0].soundingType =  TANK_TRIM_V_VALUE ;
+    infoH[0] =  *info;
+    infoH[0].soundingType =  TANK_TRIM_H_VALUE ;
+
+
+    if( !this->sqlCore->queryTankValueArray(infoV) ){
+        return false;
+    }
+    if( !this->sqlCore->queryTankValueArray(infoH) ){
+        return false;
+    }
+
+    //cal accruate capicity
+//    showTankInfo(infoV);
+//    showTankInfo(infoV+1);
+//    showTankInfo(infoH);
+//    showTankInfo(infoH+1);
+    qDebug()<<"cal real data";
+    if(! calTankFixValueFromInfo(infoH ,tankInfo.sounding) ){
+           return  false;
+    }
+
+    if(! calTankFixValueFromInfo(infoV,tankInfo.sounding) ){
+        return  false;
+    }
+    qDebug()<<"fix trim H -> "<< shipTrimFixH;
+    qDebug()<<"fix trim V -> "<< shipTrimFixV;
+
+    int fixedSounding =  sounding + shipTrimFixH + shipTrimFixV;
+    infoC[0] =  *info;
+    infoC[0].soundingType =  TANK_CAPICITY_VALUE ;
+    infoC[0].sounding =  fixedSounding;
+    qDebug()<<"fix sounding  -> "<< sounding <<fixedSounding ;
+    if( !this->sqlCore->queryTankValueArray(infoC) ){
+        return false;
+    }
+
+
+    return true;
+
+    if( !queryTankCapacity(tankId,sounding,&capacity) )
+    {
+        this->showSoundingQueryError(tankId);
+        return false;
+    }
+
+    Tank *tank =  (Tank *)this->widgetTankItems[info->shipId - 1];
+    //temprature modify
+    //add trim fix
+
+
+    tank->setTankCapacity(capacity);
+    //modify later
+
+}
+
+bool MainWindow::calTankFixValueFromInfo(TankInfo *info ,int sounding){
+    if(!convertStringValueToList(info[0].capacity,info[0].strValue,this->shipInfo.capacityNumber) ){
+        return false;
+    }
+    if(!convertStringValueToList(info[1].capacity,info[1].strValue,this->shipInfo.capacityNumber) ){
+        return false;
+    }
+    qDebug()<<"info 0";
+    showTankInfo(info);
+    qDebug()<<"info 1";
+    qDebug()<<"origin sounding -> "<<info[0].sounding;
+    showTankInfo(info+1);
+    if ( info[0].sounding ==  info[1].sounding ){
+        //do simple cal
+        qDebug()<<"do simple cal";
+
+        //just call trim
+
+    }
+    else {
+        //do comlex cal,first call capcity
+        qDebug()<<"do complex cal";
+
+        for (int i = 0 ;i <this->shipInfo.capacityNumber;i++){
+            info[0].capacity[i] = info[0].capacity[i] + ((sounding-info[0].sounding) *(info[1].capacity[i] - info[0].capacity[i]) /(info[1].sounding-info[0].sounding)  );
+        }
+        info[0].sounding =  sounding;
+
+    }
+    qDebug()<<"info ok -> " << sounding << info[0].sounding;
+    showTankInfo(info);
+
+}
+
+bool MainWindow::calTankFixValueByTrim(TankInfo *info ,float *retValue){
+    int trimType = info->soundingType;
     float *trimValue = NULL;
     float shipTrim ;
     if (trimType == TANK_TRIM_H_VALUE) {
@@ -556,70 +638,6 @@ bool MainWindow::calTankFixValueByTrim(TankInfo *info ,int trimType,float *retVa
     }
     qDebug()<<"capacity -> " <<*retValue ;
     return true;
-}
 
-bool MainWindow::calTankFixCapacityValue(TankInfo *info  ,float sounding ,int capType,float *retValue){
 
-    if(!convertStringValueToList(info[0].capacity,info[0].strValue,this->shipInfo.capacityNumber) ){
-        return false;
-    }
-    if(!convertStringValueToList(info[1].capacity,info[1].strValue,this->shipInfo.capacityNumber) ){
-        return false;
-    }
-    qDebug()<<"info 0";
-    showTankInfo(info);
-    qDebug()<<"info 1";
-    qDebug()<<"origin sounding -> "<<sounding;
-    showTankInfo(info+1);
-    if ( info[0].sounding ==  info[1].sounding ){
-        //do simple cal
-        qDebug()<<"do simple cal";
-
-        //just call trim
-
-    }
-    else {
-        //do comlex cal,first call capcity
-        *retValue = 222;
-        qDebug()<<"do complex cal";
-
-        for (int i = 0 ;i <this->shipInfo.capacityNumber;i++){
-            info[0].capacity[i] = info[0].capacity[i] + ((sounding-info[0].sounding) *(info[1].capacity[i] - info[0].capacity[i]) /(info[1].sounding-info[0].sounding)  );
-        }
-        info[0].sounding =  sounding;
-
-    }
-    qDebug()<<"info ok -> " << sounding << info[0].sounding;
-    showTankInfo(info);
-
-    float *trimValue = NULL;
-    float shipTrim ;
-    if (capType == TANK_TRIM_H_VALUE) {
-        trimValue = this->shipInfo.shipTrimH;
-        shipTrim = this->shipTrimH;
-    }
-    else  if (capType == TANK_TRIM_V_VALUE) {
-        trimValue = this->shipInfo.shipTrimV;
-        shipTrim = this->shipTrimV;
-    }
-    else {
-        trimValue = NULL;
-        return false;
-    }
-    for (int i = 1 ;i< this->shipInfo.capacityNumber;i++){
-        if (shipTrim == trimValue[i-1]){
-            *retValue = info[0].capacity[i-1];
-            break;
-        }
-        else if (shipTrim == trimValue[i]){
-            *retValue = info[0].capacity[i];
-            break;
-        }
-        else if(  (shipTrim > trimValue[i-1]  )&& (shipTrim < trimValue[i])) {
-            *retValue = trimValue[i-1] + (shipTrim -  trimValue[i-1]) *(info->capacity[i]- info->capacity[i-1]) /(trimValue[i]-trimValue[i-1]) ;
-            break;
-        }
-    }
-    qDebug()<<"capacity -> " <<*retValue ;
-    return true;
 }

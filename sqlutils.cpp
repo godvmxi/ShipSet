@@ -102,8 +102,13 @@ int sqlUtils::queryTankReferSounding(TankInfo *info,int soundingMax,int sounding
 
     return true;
 }
-bool sqlUtils::queryTankValueArray(int shipId,int tankId ,int sounding,int queryType,TankInfo *retInfo){
+bool sqlUtils::queryTankValueArray(TankInfo *info){
 
+
+    int queryType = info->soundingType;
+    int sounding = info->sounding ;
+    int shipId = info->shipId;
+    int tankId = info->tankId;
     qDebug()<<__func__<<shipId<<tankId<<sounding<<queryType;
     TankInfo temp[MAX_RESULT_PER_SQL] = {0};
 //    memset(temp,0,MAX_RESULT_PER_SQL);
@@ -174,10 +179,10 @@ bool sqlUtils::queryTankValueArray(int shipId,int tankId ,int sounding,int query
 
     }
     if (matchFlag > 0){
-        retInfo[0] = temp[min];
-        retInfo[1] =  temp[max];
-        qDebug()<<"return value min -> " << retInfo[0].sounding<<retInfo[0].strValue;
-        qDebug()<<"return value max -> " << retInfo[1].sounding<<retInfo[1].strValue;
+        info[0] = temp[min];
+        info[1] =  temp[max];
+        qDebug()<<"return value min -> " << info[0].sounding<<info[0].strValue;
+        qDebug()<<"return value max -> " << info[1].sounding<<info[1].strValue;
 
         return true;
     }
@@ -186,43 +191,7 @@ bool sqlUtils::queryTankValueArray(int shipId,int tankId ,int sounding,int query
 }
 
 bool sqlUtils::queryTankInfo(int shipId,int tankId,int sounding,TankInfo *retInfo){
-    TankInfo info ;
-    TankInfo tempInfo[2] = {0} ;
 
-    queryTankValueArray(shipId,tankId,sounding,2,tempInfo);
-//    qDebug()<<"return value min -> " << tempInfo[0].sounding<<tempInfo[0].strValue;
-//    qDebug()<<"return value max -> " << tempInfo[1].sounding<<tempInfo[1].strValue;
-    return false;
-    memset(&info,0,sizeof(TankInfo));
-    qDebug()<<"try query tank info";
-    return false;
-    QSqlQuery query(this->db);
-    QString sql = QString("SELECT * FROM tankInfo where shipId = %1 and tankId = %2 and sounding = %3").arg(shipId).arg(tankId).arg(sounding);
-//    //qDebug()<< sql;
-    query.exec(sql);
-    int affectLines = 0;
-
-    while(query.next()) {
-        affectLines++;
-        info.shipId = query.value(0).toInt();
-        info.tankId = query.value(1).toInt();
-        info.sounding = query.value(2).toInt();
-        QString temp = query.value(3).toString();
-        QStringList capacitys =  temp.split(" ");
-        for (int i = 0;i<capacitys.size();i++){
-            info.capacity[i] = capacitys.at(i).toFloat();
-        }
-    }
-//    qDebug()<<"sql affect lines -> "<<affectLines;
-//    showTankInfo(&info);
-    if(affectLines == 0){
-        qDebug("can find target data");
-        return false;
-    }
-    *retInfo = info;
-    return true;
-//    emit this->reportTankInfo(info);
-//    return info;
 }
 
 int sqlUtils::queryShipNumber(void){
