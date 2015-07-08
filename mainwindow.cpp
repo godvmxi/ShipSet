@@ -572,19 +572,9 @@ bool MainWindow::calTankFixCapacityValue(TankInfo *info ,float *retValue){
     tank->setTankCapacity(result);
     return true;
 
-    if( !queryTankCapacity(tankId,sounding,&capacity) )
-    {
-        this->showSoundingQueryError(tankId);
-        return false;
-    }
 
-    tank =  (Tank *)this->widgetTankItems[info->tankId - 1];
-    //temprature modify
-    //add trim fix
-
-
-    tank->setTankCapacity(capacity);
-    //modify later
+ERROR_PROCESS :
+    return false;
 
 }
 
