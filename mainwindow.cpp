@@ -91,6 +91,11 @@ MainWindow::MainWindow(QWidget *parent) :
     this->formLayoutMiddleRight->addRow(QString::fromUtf8("体积修正"),this->lineEditVolume);
     this->formLayoutMiddleRight->addRow(QString::fromUtf8("总 容 积"),this->lineEditTotalCapity);
 
+    this->lineEditOil->setText("0");
+    this->lineEditDensity->setText("0");
+    this->lineEditVolume->setText("0");
+    this->lineEditVolume->setText("0");
+
     this->formLayoutMiddleRight->setVerticalSpacing(25);
     this->formLayoutMiddleRight->setHorizontalSpacing(10);
     this->pushButtonTotalCapacity = new QPushButton();
@@ -216,20 +221,6 @@ void MainWindow::queryTankInfoSlot(int tankId,int sounding)
         //deal error
         return ;
     }
-    qDebug()<<"tankID -> "<<tankId ;
-    //ok
-    return ;
-
-
-
-    Tank *tank =  (Tank *)this->widgetTankItems[tankId - 1];
-    //temprature modify
-    //add trim fix
-
-
-    tank->setTankCapacity(capacity);
-
-
 }
 bool  MainWindow::queryTankCapacity(int tankId,int sounding,float *cap)
 {
@@ -523,12 +514,13 @@ bool MainWindow::calTankFixCapacityValue(TankInfo *info ,float *retValue){
 
 
     if( !this->sqlCore->queryTankValueArray(infoV) ){
+
         return false;
     }
 
-//    if( !this->sqlCore->queryTankValueArray(infoH) ){
-//        return false;
-//    }
+    if( !this->sqlCore->queryTankValueArray(infoH) ){
+        return false;
+    }
 
     //cal accruate capicity
 //    showTankInfo(infoV);
@@ -539,11 +531,13 @@ bool MainWindow::calTankFixCapacityValue(TankInfo *info ,float *retValue){
 
 
     if(! calTankFixValueFromInfo(infoV,info->sounding) ){
+
         return  false;
     }
 //    showTankInfo(infoV) ;
 
     if(! calTankFixValueFromInfo(infoH ,info->sounding) ){
+
            return  false;
     }
 
@@ -560,20 +554,23 @@ bool MainWindow::calTankFixCapacityValue(TankInfo *info ,float *retValue){
     infoC[0].sounding =  fixedSounding;
     qDebug()<<"fix sounding  -> "<< sounding <<fixedSounding ;
     if( !this->sqlCore->queryTankValueArray(infoC) ){
+
         return false;
     }
     if(! calTankFixValueFromInfo(infoC,fixedSounding) ){
+
         return  false;
     }
     showTankInfo(infoC);
     float result = infoC->capacity[0] + infoC->capacity[1]*3/10 ;
     qDebug()<<"release capacity ->" <<result;
     Tank *tank =  (Tank *)this->widgetTankItems[info->tankId - 1];\
+
     tank->setTankCapacity(result);
     return true;
 
 
-ERROR_PROCESS :
+
     return false;
 
 }

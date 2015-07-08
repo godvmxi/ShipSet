@@ -181,3 +181,6 @@ void Tank::setTankInvalid(bool enable)
 QString Tank::getTankName(void){
     return this->labelName->text();
 }
+float Tank::getTempratue(void){
+
+}
