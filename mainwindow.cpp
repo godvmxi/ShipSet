@@ -141,7 +141,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->labelError = new QLabel();
     this->statusBar()->addWidget(this->labelError);
-
+    connect(this->pushButtonTotalCapacity,SIGNAL(clicked()),this,SLOT(pushButtonCalTotalCapacity()) ) ;
     updateWidgetsToolTips();
 
 }
@@ -332,26 +332,50 @@ void MainWindow::shipTrimChanged(QString d){
 //    qDebug()<<"ship trim changed ->" <<d  << this->currentShipTrim;
 }
 
+/*
+    TankInfo tankInfo = {0};
+    tankInfo.shipId =  this->shipInfo.shipId;
+    tankInfo.tankId =  tankId;
+    tankInfo.sounding = sounding;
+
+
+    this->shipTrimH = this->spinBoxTrimH->value();
+    this->shipTrimV = this->spinBoxTrimV->value();
+
+    if( ! calTankFixCapacityValue(&tankInfo,&capacity) ){
+        //deal error
+        return ;
+    }
+*/
 void MainWindow::pushButtonCalTotalCapacity(void){
-    //qDebug()<<"cal total capacity";
+    qDebug()<<"cal total capacity";
     //qDebug()<<this->geometry();
     float totalCapacity = 0;
     float eachCapacity = 0;
+    TankInfo tankInfo = {0};
+    this->shipTrimH = this->spinBoxTrimH->value();
+    this->shipTrimV = this->spinBoxTrimV->value();
     Tank *tank;
     for(int i = 0;i<this->shipInfo.tankNumber;i++){
         tank = (Tank *)( this->widgetTankItems[i] );
+        memset(&tankInfo,0,sizeof(TankInfo));
         if (tank->checkDataValidator()){
-            int tankId = tank->getTankId();
-            int sounding = tank->getSounding();
-           // qDebug()<<"foreach-->"<<tankId<<sounding ;
-            if(!this->queryTankCapacity(tankId,sounding,&eachCapacity))
-            {
-                qDebug()<<"show sounding error";
-                this->showSoundingQueryError(tankId);
+            tankInfo.shipId = this->shipInfo.shipId;
+            tankInfo.tankId = tank->getTankId();
+            tankInfo.sounding = tank->getSounding();
+            if( ! calTankFixCapacityValue(&tankInfo,&eachCapacity) ){
+                //deal error
                 return ;
             }
+           // qDebug()<<"foreach-->"<<tankId<<sounding ;
+//            if(!this->queryTankCapacity(tankId,sounding,&eachCapacity))
+//            {
+//                qDebug()<<"show sounding error";
+//                this->showSoundingQueryError(tankId);
+//                return ;
+//            }
 
-                 qDebug()<<"foreach-->"<<tankId<<sounding<<eachCapacity;
+                 qDebug()<<"foreach-->"<<tankInfo.tankId<<tankInfo.sounding<<eachCapacity;
             if(eachCapacity >= 0){
                 tank->setTankCapacity(eachCapacity);
             }
