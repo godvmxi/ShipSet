@@ -5,7 +5,10 @@
 //#pragma execution_character_set("utf-8")
 #define MAX_CAPACITY_PER_TANK    40
 #define MAX_SHIP_NUMBER          40
-#define SOFTWARE_VERSION         "v1.00"
+
+#define SOFTWARE_VERSION         "1"
+#define FEEDBACK_URL             "http://analysis.16mb.com/services/index.php"
+#define FEEDBACK_USAGE_TYPES     "ship01"
 
 typedef struct {
     int shipId;

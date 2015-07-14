@@ -3,6 +3,8 @@
 QFeedBack::QFeedBack(QObject *parent,QString url) :
     QObject(parent)
 {
+    this->sysInfo =  this->getSystemDetail();
+    this->hostname = QHostInfo::localHostName();
     this->url = url;
     this->network_manager = new QNetworkAccessManager(this);
     this->network_request = new QNetworkRequest();
@@ -26,12 +28,28 @@ void QFeedBack::replyFinished(QNetworkReply *reply){
 
 
 }
-void QFeedBack::report(QString key ,QString value ){
-    this->post_data.append("u=ship01&");
-    this->post_data.append("c=ship01c&");
-    this->post_data.append("v=ship01v");
+void QFeedBack::report(QString value ){
+    this->post_data.append(QString("u=%1&").arg(FEEDBACK_USAGE_TYPES));
+    this->post_data.append(QString("c=%1&").arg(this->hostname));
+    this->post_data.append("v=extradata");
     this->network_request->setUrl(this->url);
     this->network_manager->post(*this->network_request,this->post_data);
 
 }
 
+QString QFeedBack::getSystemDetail(void){
+     QList<QNetworkInterface> list = QNetworkInterface::allInterfaces();
+     QString hostinfo = QHostInfo::localHostName();
+     foreach(QNetworkInterface i, list) {
+            if (i.flags() & QNetworkInterface::IsLoopBack)
+                continue;
+            else
+            {
+
+                hostinfo = QString("%1#%2").arg(hostinfo).arg(i.hardwareAddress());
+            }
+         }
+//     qDebug()<<hostinfo;
+//     qDebug()<<QHostInfo::localHostName();
+     return hostinfo;
+}

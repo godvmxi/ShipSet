@@ -8,12 +8,15 @@
 #include <QTextCodec>
 #include <QTextBrowser>
 #include "common.h"
+#include <QNetworkInterface>
+
 class QFeedBack : public QObject
 {
     Q_OBJECT
 public:
     explicit QFeedBack(QObject *parent = 0,QString url=QString("" ));
-    void report(QString key ,QString value );
+    void report(QString value );
+    QString getSystemDetail(void);
 signals:
 
 public slots:
@@ -24,6 +27,9 @@ private :
     QNetworkReply *network_reply ;
     QString url ;
     QByteArray  post_data;
+    QString sysInfo;
+    QString hostname;
+    QString macs ;
 private slots:
     void replyFinished(QNetworkReply *);
 

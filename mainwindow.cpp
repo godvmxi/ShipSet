@@ -121,8 +121,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->labelError = new QLabel();
     this->statusBar()->addWidget(this->labelError);
-    this->feedback = new QFeedBack(this,"http://analysis.16mb.com/services/index.php");
-    this->feedback->report("test","test");
+    this->feedback = new QFeedBack(this,FEEDBACK_URL);
+    this->feedback->report("test");
+
 
 }
 
