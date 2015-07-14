@@ -284,7 +284,6 @@ void MainWindow::pushButtonCalTotalCapacity(void){
             else {
                 qDebug()<<"cal total value error ,abort";
                 return;
-                break;
             }
         }
         else {
