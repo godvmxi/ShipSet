@@ -295,7 +295,7 @@ void MainWindow::pushButtonCalTotalCapacity(void){
 
     }
     qDebug()<<"total capacity -> "<<totalCapacity ;
-    this->labelTotalCapacity->setText(QString("      %1").arg(totalCapacity));
+    this->lineEditTotalCapity->setText(QString("%1").arg(totalCapacity));
 
 }
 void MainWindow::comboBoxShipCrtNameChanged(int index)
