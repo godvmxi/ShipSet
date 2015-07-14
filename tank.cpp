@@ -176,10 +176,7 @@ void Tank::setTankInvalid(bool enable)
         this->lineEditTemrature->setStyleSheet("background-color:white;");
         this->lineEditCapacity->setStyleSheet("background-color:white;");
     }
-//    this->setAutoFillBackground(true);
-//    setPalette(pal);
 
-//    this->update();
 }
 QString Tank::getTankName(void){
     return this->labelName->text();

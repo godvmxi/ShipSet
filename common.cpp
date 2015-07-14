@@ -53,3 +53,9 @@ bool convertStringValueToList(float *value,QString source,int maxNum){
     return true;
 }
 
+void initTankInfo(TankInfo *info){
+    info->soundingType = 0;
+    info->strValue = "" ;
+    for (int i = 0;i < MAX_CAPACITY_PER_TANK ;i++)
+        info->capacity[i] = 0;
+}

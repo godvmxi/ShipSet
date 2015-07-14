@@ -254,18 +254,22 @@ void MainWindow::pushButtonCalTotalCapacity(void){
     //qDebug()<<this->geometry();
     float totalCapacity = 0;
     float eachCapacity = 0;
-    TankInfo tankInfo ;
-    memset(&tankInfo,0,sizeof(TankInfo));
+
+    TankInfo tankInfo = {0} ;
+
+
     this->shipTrimH = this->spinBoxTrimH->value();
     this->shipTrimV = this->spinBoxTrimV->value();
+
 
     Tank *tank;
     for(int i = 0;i<this->shipInfo.tankNumber;i++){
 
         tank = (Tank *)( this->widgetTankItems[i] );
-        memset(&tankInfo,0,sizeof(TankInfo));
+
         qDebug()<<"cal total capacity  2";
         if (tank->checkDataValidator()){
+            initTankInfo(&tankInfo);
             tankInfo.shipId = this->shipInfo.shipId;
             tankInfo.tankId = tank->getTankId();
             tankInfo.sounding = tank->getSounding();
@@ -274,11 +278,8 @@ void MainWindow::pushButtonCalTotalCapacity(void){
                 //deal error
                 return ;
             }
-
-
-
             if(eachCapacity >= 0){
-                tank->setTankCapacity(eachCapacity);
+//                tank->setTankCapacity(eachCapacity);
             }
             else {
                 qDebug()<<"cal total value error ,abort";
@@ -293,6 +294,7 @@ void MainWindow::pushButtonCalTotalCapacity(void){
          totalCapacity += eachCapacity;
 
     }
+    qDebug()<<"total capacity -> "<<totalCapacity ;
     this->labelTotalCapacity->setText(QString("      %1").arg(totalCapacity));
 
 }
@@ -488,15 +490,14 @@ bool MainWindow::calTankFixCapacityValue(TankInfo *info ,float *retValue){
     }
     showTankInfo(infoC);
     float result = infoC->capacity[0] + infoC->capacity[1]*3/10 ;
-    qDebug()<<"release capacity ->" <<result;
+
     Tank *tank =  (Tank *)this->widgetTankItems[info->tankId - 1];\
 
     tank->setTankCapacity(result);
+    *retValue =  tank->getCapicaity();
+    qDebug()<<"tank capacity ->" <<result << *retValue;
     return true;
 
-
-
-    return false;
 
 }
 

@@ -38,6 +38,7 @@ typedef struct {
 void showTankInfo(TankInfo *info);
 void showShipInfo(ShipInfo *info);
 bool convertStringValueToList(float *value,QString source,int maxNum);
+void initTankInfo(TankInfo *info);
 #define MAX_RESULT_PER_SQL  100
 
 #endif // COMMON_H
