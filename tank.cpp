@@ -122,9 +122,12 @@ bool Tank::checkDataValidator(void){
     QString stringTemperature = this->lineEditTemrature->text();
     QString stringSounding =  this->lineEditSounding->text();
     if (stringTemperature.size() == 0 || stringSounding == 0){
-//        qDebug()<<"temp or sounding can not be empty";
+        qDebug()<<"temp or sounding can not be empty";
         this->setTankInvalid(true);
         return false;
+    }
+    else {
+//        qDebug()<<"data ready??";
     }
 
     bool ret = true;
@@ -149,10 +152,10 @@ bool Tank::checkDataValidator(void){
 
     qDebug()<<stringSounding << temp<<stringTemp <<this->sounding;
 
-    qDebug()<<"sounding --> "<<stringSounding  << this->sounding;
+
 
     this->temprature = stringTemperature.toFloat();
-
+      qDebug()<<"sounding --> "<<stringSounding  << this->sounding << this->temprature;
     this->setTankInvalid(false);
     return true;
 }

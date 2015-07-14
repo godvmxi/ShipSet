@@ -236,93 +236,7 @@ bool  MainWindow::queryTankCapacity(int tankId,int sounding,float *cap)
     qDebug()<<"can find directly ,try more ";
     this->showSoundingQueryError(tankId);
     return false ;
-/*
-    if(sounding%10 != 0){
-        int temp = sounding %10 ;
-        int sounding_1 =  sounding -  temp;
-        int sounding_2 =  sounding_1 +10;
-        TankInfo tempInfo ;
-        memset(&tempInfo,0,sizeof(TankInfo));
-        qDebug()<<"will query two sounding -> "<<tankId << sounding_1 << sounding_2;
 
-        if ( !this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding_1,&resultInfo ) ){
-            qDebug()<<"tank exceed the max";
-            this->showSoundingQueryError(tankId);
-            return false ;
-        }
-        if( !this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding_2,&tempInfo) )
-        {
-            qDebug()<<"tank exceed the max";
-            this->showSoundingQueryError(tankId);
-            return false ;
-        }
-
-
-        qDebug()<<resultInfo.sounding<<resultInfo.capacity[0]<<resultInfo.capacity[1]<<resultInfo.capacity[2]\
-                  <<resultInfo.capacity[3]<<resultInfo.capacity[4]<<resultInfo.capacity[5]\
-                    <<resultInfo.capacity[6]<<resultInfo.capacity[7];
-        qDebug()<<tempInfo.sounding<<tempInfo.capacity[0]<<tempInfo.capacity[1]<<tempInfo.capacity[2]\
-                  <<tempInfo.capacity[3]<<tempInfo.capacity[4]<<tempInfo.capacity[5]\
-                    <<tempInfo.capacity[6]<<tempInfo.capacity[7];
-
-        for(int i = 0 ;i <this->shipInfo.capacityNumber;i++){
-            resultInfo.capacity[i] += (tempInfo.capacity[i] - resultInfo.capacity[i] ) /10 * temp ;
-        }
-        resultInfo.sounding = sounding;
-
-    }
-    else {
-        qDebug()<<"will query one sounding -> "<<tankId << sounding  ;
-        if(!this->sqlCore->queryTankInfo(this->shipInfo.shipId,tankId,sounding,&resultInfo) )
-        {
-                qDebug()<<"tank exceed the max";
-                return false ;
-        }
-    }
-
-    qDebug()<<resultInfo.sounding<<resultInfo.capacity[0]<<resultInfo.capacity[1]<<resultInfo.capacity[2]\
-              <<resultInfo.capacity[3]<<resultInfo.capacity[4]<<resultInfo.capacity[5]\
-                <<resultInfo.capacity[6]<<resultInfo.capacity[7];
-
-    //cal trim .add soon
-//    float temp= (this->currentShipTrim -this->shipInfo.shipTrimMin );
-    int trimFlag = -1; // 0:正好整除, 1:介于二者之间,具体查看min ~max
-    float min = 0;
-    float max;
-    int i =0;
-    min = this->shipInfo.shipTrimMin;
-    max = min + this->shipInfo.shipTrimStep ;
-    for(i=0;i<this->shipInfo.capacityNumber;i++){
-        min = this->shipInfo.shipTrimMin + i * this->shipInfo.shipTrimStep ;
-        max = min + this->shipInfo.shipTrimStep ;
-        if((this->currentShipTrim - min ) < 0.001){
-            trimFlag = 0;
-            break;
-        }
-        else {
-            if (this->currentShipTrim < max){
-                trimFlag = 1;
-                break;
-            }
-
-        }
-    }
-    if(trimFlag == 0){
-//        qDebug()<<"just ok  -> "<<i<<min<< max;
-        *cap = resultInfo.capacity[i];
-    }
-    else if(trimFlag == 1){
-        qDebug()<<"not just ok ->  "<< this->currentShipTrim <<min << max;
-        float capacity_1 =  resultInfo.capacity[i];
-        float capacity_2 =  resultInfo.capacity[i+1];
-        *cap =    ( (capacity_2 -capacity_1 ) /this->shipInfo.shipTrimStep )*(this->currentShipTrim -min)  + capacity_1 ;
-
-    }
-    else
-        *cap = resultInfo.capacity[i];
-    this->labelError->setText("");
-    return true;
-    */
 }
 void MainWindow::shipTrimChanged(QString d){
 
@@ -332,53 +246,37 @@ void MainWindow::shipTrimChanged(QString d){
         return ;
     }
     this->currentShipTrim = trim;
-//    qDebug()<<"ship trim changed ->" <<d  << this->currentShipTrim;
 }
 
-/*
-    TankInfo tankInfo = {0};
-    tankInfo.shipId =  this->shipInfo.shipId;
-    tankInfo.tankId =  tankId;
-    tankInfo.sounding = sounding;
 
-
-    this->shipTrimH = this->spinBoxTrimH->value();
-    this->shipTrimV = this->spinBoxTrimV->value();
-
-    if( ! calTankFixCapacityValue(&tankInfo,&capacity) ){
-        //deal error
-        return ;
-    }
-*/
 void MainWindow::pushButtonCalTotalCapacity(void){
     qDebug()<<"cal total capacity";
     //qDebug()<<this->geometry();
     float totalCapacity = 0;
     float eachCapacity = 0;
-    TankInfo tankInfo = {0};
+    TankInfo tankInfo ;
+    memset(&tankInfo,0,sizeof(TankInfo));
     this->shipTrimH = this->spinBoxTrimH->value();
     this->shipTrimV = this->spinBoxTrimV->value();
+
     Tank *tank;
     for(int i = 0;i<this->shipInfo.tankNumber;i++){
+
         tank = (Tank *)( this->widgetTankItems[i] );
         memset(&tankInfo,0,sizeof(TankInfo));
+        qDebug()<<"cal total capacity  2";
         if (tank->checkDataValidator()){
             tankInfo.shipId = this->shipInfo.shipId;
             tankInfo.tankId = tank->getTankId();
             tankInfo.sounding = tank->getSounding();
+            qDebug()<<"foreach-->"<<tankInfo.tankId<<tankInfo.sounding ;
             if( ! calTankFixCapacityValue(&tankInfo,&eachCapacity) ){
                 //deal error
                 return ;
             }
-           // qDebug()<<"foreach-->"<<tankId<<sounding ;
-//            if(!this->queryTankCapacity(tankId,sounding,&eachCapacity))
-//            {
-//                qDebug()<<"show sounding error";
-//                this->showSoundingQueryError(tankId);
-//                return ;
-//            }
 
-                 qDebug()<<"foreach-->"<<tankInfo.tankId<<tankInfo.sounding<<eachCapacity;
+
+
             if(eachCapacity >= 0){
                 tank->setTankCapacity(eachCapacity);
             }
