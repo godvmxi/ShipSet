@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
     this->mainLayout =  new QVBoxLayout();
     this->setFixedWidth(480);
@@ -120,6 +121,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->labelError = new QLabel();
     this->statusBar()->addWidget(this->labelError);
+    this->feedback = new QFeedBack(this,"http://analysis.16mb.com/services/index.php");
+    this->feedback->report("test","test");
 
 }
 

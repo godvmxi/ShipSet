@@ -5,6 +5,7 @@
 //#pragma execution_character_set("utf-8")
 #define MAX_CAPACITY_PER_TANK    40
 #define MAX_SHIP_NUMBER          40
+#define SOFTWARE_VERSION         "v1.00"
 
 typedef struct {
     int shipId;

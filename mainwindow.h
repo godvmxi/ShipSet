@@ -15,6 +15,7 @@
 #include <QPaintEvent>
 #include <dialogabout.h>
 #include <QPixmap>
+#include "feedback.h"
 namespace Ui {
 class MainWindow;
 }
@@ -59,6 +60,9 @@ private:
 
 //    QVector<Tank> widgetTankItems;
     size_t widgetTankItems[24];
+
+    //log feed back
+    QFeedBack *feedback;
 
     QScrollArea *scrollAreaTankItemsTable;
     QWidget *widgetTankItemsTable ;
