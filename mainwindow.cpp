@@ -267,17 +267,17 @@ void MainWindow::pushButtonCalTotalCapacity(void){
 
         tank = (Tank *)( this->widgetTankItems[i] );
 
-        qDebug()<<"cal total capacity  2";
         if (tank->checkDataValidator()){
             initTankInfo(&tankInfo);
             tankInfo.shipId = this->shipInfo.shipId;
             tankInfo.tankId = tank->getTankId();
             tankInfo.sounding = tank->getSounding();
-            qDebug()<<"foreach-->"<<tankInfo.tankId<<tankInfo.sounding ;
+
             if( ! calTankFixCapacityValue(&tankInfo,&eachCapacity) ){
                 //deal error
                 return ;
             }
+            qDebug()<<"foreach-->"<<tankInfo.tankId<<tankInfo.sounding << eachCapacity;
             if(eachCapacity >= 0){
 //                tank->setTankCapacity(eachCapacity);
             }
