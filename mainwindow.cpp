@@ -144,6 +144,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this->pushButtonTotalCapacity,SIGNAL(clicked()),this,SLOT(pushButtonCalTotalCapacity()) ) ;
     updateWidgetsToolTips();
 
+    this->feedback  = new QFeedBack(this,FEEDBACK_SERVER_URL);
+    this->feedback->report("starting");
+
 }
 
 MainWindow::~MainWindow()

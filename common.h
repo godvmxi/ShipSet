@@ -6,7 +6,9 @@
 #define MAX_CAPACITY_PER_TANK    40
 #define MAX_SHIP_NUMBER          40
 #include <assert.h>
-
+#define SOFTWARE_VERSION         "2"
+#define FEEDBACK_SERVER_URL             "http://analysis.16mb.com/services/index.php"
+#define FEEDBACK_USAGE_TYPES     "ship02"
 typedef struct {
     int shipId;
     QString crtName;

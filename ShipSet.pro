@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql
+QT       += core gui sql network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,13 +18,15 @@ SOURCES += main.cpp\
     tank.cpp \
     sqlutils.cpp \
     common.cpp \
-    dialogabout.cpp
+    dialogabout.cpp \
+    feedback.cpp
 
 HEADERS  += mainwindow.h \
     tank.h \
     sqlutils.h \
     common.h \
-    dialogabout.h
+    dialogabout.h \
+    feedback.h
 
 FORMS    += mainwindow.ui \
     dialogabout.ui

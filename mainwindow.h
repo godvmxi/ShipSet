@@ -17,6 +17,7 @@
 #include <QPixmap>
 #include <QFormLayout>
 #include <QLineEdit>
+#include "feedback.h"
 namespace Ui {
 class MainWindow;
 }
@@ -52,6 +53,7 @@ private:
     int getWindowsHeight(void);
     Ui::MainWindow *ui;
     sqlUtils *sqlCore;
+    QFeedBack *feedback ;
 
     QVBoxLayout *mainLayout;
     QHBoxLayout *layoutCommon ;
